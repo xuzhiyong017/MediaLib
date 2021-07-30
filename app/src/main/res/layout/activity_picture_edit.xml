@@ -28,4 +28,20 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/edit_menu_bg"
+        android:layout_width="fill_parent"
+        android:layout_height="150.0dip"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/edit_background" />
+
+
+    <com.sky.medialib.ui.kit.view.editmenu.EditMenu
+        android:id="@+id/edit_menu"
+        android:layout_width="match_parent"
+        android:layout_height="85.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="37.5dip"
+        android:layout_marginRight="37.5dip" />
 </RelativeLayout>

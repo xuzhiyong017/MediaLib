@@ -1,31 +1,178 @@
 package com.sky.medialib
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
+import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.sky.media.image.core.process.ImageProcessExt
-import com.sky.media.kit.filter.BlackWhite
-import com.sky.media.kit.filter.GaussianBlur
-import com.sky.media.kit.filter.HighlightShadow
-import com.sky.media.kit.filter.WhiteningTool
+import com.sky.medialib.ui.kit.common.animate.ViewAnimator
+import com.sky.medialib.ui.kit.view.editmenu.EditMenu
+import com.sky.medialib.ui.kit.view.editmenu.EditMenuItem
+import com.sky.medialib.ui.picture.helper.PictureBeautyHelper
+import com.sky.medialib.ui.picture.helper.PictureBitmapHolder
 import kotlinx.android.synthetic.main.activity_picture_edit.*
+import px
+import kotlin.math.roundToInt
 
-class PictureEditActivity : AppCompatActivity() {
+class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
 
-    var mEditImageProcessExt:ImageProcessExt? = null
+    private var mMenuHeight = 0
+    private var mFrameHeight = 0
+    lateinit var mEditImageProcessExt:ImageProcessExt
+    var mState = 0
+    var mCurrentTab:EditMenuItem? = null
+    lateinit var mBeautyHelper:PictureBeautyHelper
+    private var mIsTouchToShowOriginal = true
+    private var mIsLongClick = false
+    private var mScreenHeight = 0
+    private var mScreenWidth = 0
+    private var mCurrentPhoto = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picture_edit)
-
+        initParams()
         mEditImageProcessExt = ImageProcessExt(frame,processing_view)
-        mEditImageProcessExt?.initInputBitmap(BitmapFactory.decodeResource(resources,R.drawable.image1),
+        mEditImageProcessExt.initInputBitmap(BitmapFactory.decodeResource(resources,R.drawable.image1),
             resources.displayMetrics.widthPixels,resources.displayMetrics.heightPixels,null)
 
 
-        mEditImageProcessExt?.addFilter(HighlightShadow())
-        mEditImageProcessExt?.addFilter(WhiteningTool())
-        mEditImageProcessExt?.addFilter(BlackWhite(this))
-        mEditImageProcessExt?.addFilter(GaussianBlur())
+        mBeautyHelper = PictureBeautyHelper(this,"beautyHelper",object :PictureBeautyHelper.OnImageProcessListener{
+            override fun showAllView() {
+                showAllCommonFunctionView()
+            }
+
+            override fun getProcess(): ImageProcessExt {
+               return mEditImageProcessExt
+            }
+        })
+
+        edit_menu.setOnItemClickListener(this)
+        processing_view.setOnTouchListener { _, event ->
+            when (event!!.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    mIsLongClick = false
+                }
+                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
+                    if (!mIsTouchToShowOriginal || !mIsLongClick) {
+                        if (!mIsLongClick && (mCurrentTab === EditMenuItem.STICKER || mCurrentTab === EditMenuItem.FILTER || mCurrentTab === EditMenuItem.MAGIC || mCurrentTab === EditMenuItem.TOOL || mCurrentTab === EditMenuItem.TEXT || mCurrentTab === EditMenuItem.AT)) {
+                            hideAllTab()
+                            showAllCommonFunctionView()
+                        }
+                    }
+                    mEditImageProcessExt!!.refreshAllFilters()
+                }
+            }
+            true
+        }
+    }
+
+    private fun initParams() {
+        mScreenHeight = resources.displayMetrics.heightPixels
+        mScreenWidth = resources.displayMetrics.widthPixels
+        mMenuHeight = (mScreenHeight - 75.0f.px).toInt()
+        mFrameHeight = (mMenuHeight - 55.0f.px).toInt()
+    }
+
+    private fun showAllCommonFunctionView() {
+        edit_menu.visibility = View.VISIBLE
+        edit_menu_bg.visibility = View.VISIBLE
+        mCurrentTab = EditMenuItem.NONE
+        fixProcessingAreaCenterVertex()
+    }
+
+    override fun onItemClick(editMenuItem: EditMenuItem) {
+        mState = 0
+        mCurrentTab = editMenuItem
+        hideAllTab()
+        showTab()
+        selectCommonFunctionView()
+        fixProcessingAreaCenterVertex()
+    }
+
+    private fun fixProcessingAreaCenterVertex() {
+        var height = when(mCurrentTab){
+            EditMenuItem.BEAUTY ->  mScreenHeight - 55.0f.px
+            else -> mMenuHeight
+        }
+
+        if(mEditImageProcessExt!!.getSourceBitmap() == null
+            || mEditImageProcessExt!!.getSourceBitmap()!!.height == 0
+            || mEditImageProcessExt!!.getSourceBitmap()!!
+                .width.toFloat() * 1.0f / mEditImageProcessExt!!.getSourceBitmap()!!
+                .height.toFloat() != mScreenWidth.toFloat() * 1.0f / mScreenHeight.toFloat()
+        ){
+            changePreviewFrameLayoutPosition(height.toInt(), true)
+        }else{
+            changePreviewFrameLayoutPosition(mScreenHeight, true)
+        }
+    }
+
+    private fun changePreviewFrameLayoutPosition(i: Int, z: Boolean) {
+        val frameWidth: Int
+        val frameHeight: Int
+//        if (this.mStickerHelper.isUseFrame()) {
+//            frameWidth = this.mFrameView.getFrameWidth()
+//            frameHeight = this.mFrameView.getFrameHeight()
+//        } else {
+            var g: Bitmap? = this.mEditImageProcessExt.getSourceBitmap()
+            if (g == null) {
+                g = PictureBitmapHolder.getInstance().getOriginalImage(this.mCurrentPhoto)
+            }
+            if (g != null) {
+                frameWidth = g.width
+                frameHeight = g.height
+            } else {
+                frameHeight = 0
+                frameWidth = 0
+            }
+//        }
+        if (frameWidth != 0) {
+            val f: Float
+            var i2 = mScreenWidth * frameHeight / frameWidth
+            if (i > 0) {
+                if (i2 > i) {
+                    i2 = i
+                }
+                f = if (frameWidth >= frameHeight) {
+                    (i - i2).toFloat() / 2.0f
+                } else if (i2 > i) {
+                    0.0f
+                } else {
+                    (i - i2).toFloat() / 2.0f
+                }
+            } else {
+                f = 0.0f
+            }
+            if (z) {
+                ViewAnimator.animate(frame).translationY(frame.y,f).setDuration(200).start()
+                return
+            }
+            val layoutParams = frame.layoutParams as RelativeLayout.LayoutParams
+            layoutParams.topMargin = f.roundToInt()
+            this.frame.layoutParams = layoutParams
+        }
+    }
+
+
+    private fun selectCommonFunctionView() {
+        edit_menu.visibility = View.GONE
+        edit_menu_bg.visibility = View.GONE
+    }
+
+    private fun showTab() {
+        when(mCurrentTab){
+            EditMenuItem.BEAUTY -> {
+                mBeautyHelper.showBeautyAdjustWindow()
+                mIsTouchToShowOriginal = true
+            }
+        }
+    }
+
+    private fun hideAllTab() {
+        mBeautyHelper.hideWindow()
     }
 }

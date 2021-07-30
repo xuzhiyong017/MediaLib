@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    >
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/edit_menu_pager"
+        android:paddingBottom="30.0dip"
+        android:fadingEdgeLength="0.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:overScrollMode="never" />
+
+    <com.sky.medialib.ui.kit.common.view.ViewPagerIndicator
+        android:id="@+id/edit_menu_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:dividerLength="15.0dip"
+        app:littleDotRes="@drawable/indicator_unselected"
+        app:littleDotResSelect="@drawable/indicator_selected" />
+</RelativeLayout>

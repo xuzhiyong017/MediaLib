@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_width="0.0dip"
+    android:layout_height="fill_parent"
+    android:layout_weight="1.0"
+    >
+    <ImageView android:id="@+id/item_edit_menu_icon"
+        android:layout_width="32.0dip"
+        android:layout_height="32.0dip"
+        android:layout_marginLeft="12.5dip"
+        android:layout_marginRight="12.5dip" />
+    <TextView
+        android:textSize="11.0sp"
+        android:textColor="@color/white"
+        android:id="@+id/item_edit_menu_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5.0dip"
+        android:shadowColor="#ff000000"
+        android:shadowDx="1.0"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.0" />
+</LinearLayout>
