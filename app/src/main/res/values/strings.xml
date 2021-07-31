@@ -10,4 +10,7 @@
     <string name="frame">边框</string>
     <string name="cut">裁剪</string>
     <string name="mosaic">马赛克</string>
+    <string name="more_stickers">贴纸库</string>
+    <string name="camera_sticker_input_hint">单击输入</string>
+    <string name="intelligence_filter">智能滤镜</string>
 </resources>

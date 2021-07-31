@@ -13,6 +13,8 @@ import com.sky.medialib.ui.kit.view.editmenu.EditMenu
 import com.sky.medialib.ui.kit.view.editmenu.EditMenuItem
 import com.sky.medialib.ui.picture.helper.PictureBeautyHelper
 import com.sky.medialib.ui.picture.helper.PictureBitmapHolder
+import com.sky.medialib.ui.picture.helper.PictureFilterHelper
+import com.sky.medialib.ui.picture.helper.PictureStickerHelper
 import kotlinx.android.synthetic.main.activity_picture_edit.*
 import px
 import kotlin.math.roundToInt
@@ -25,6 +27,8 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
     var mState = 0
     var mCurrentTab:EditMenuItem? = null
     lateinit var mBeautyHelper:PictureBeautyHelper
+    lateinit var mStickerHelper: PictureStickerHelper
+    lateinit var mFilterHelper: PictureFilterHelper
     private var mIsTouchToShowOriginal = true
     private var mIsLongClick = false
     private var mScreenHeight = 0
@@ -40,34 +44,8 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
             resources.displayMetrics.widthPixels,resources.displayMetrics.heightPixels,null)
 
 
-        mBeautyHelper = PictureBeautyHelper(this,"beautyHelper",object :PictureBeautyHelper.OnImageProcessListener{
-            override fun showAllView() {
-                showAllCommonFunctionView()
-            }
-
-            override fun getProcess(): ImageProcessExt {
-               return mEditImageProcessExt
-            }
-        })
-
-        edit_menu.setOnItemClickListener(this)
-        processing_view.setOnTouchListener { _, event ->
-            when (event!!.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    mIsLongClick = false
-                }
-                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
-                    if (!mIsTouchToShowOriginal || !mIsLongClick) {
-                        if (!mIsLongClick && (mCurrentTab === EditMenuItem.STICKER || mCurrentTab === EditMenuItem.FILTER || mCurrentTab === EditMenuItem.MAGIC || mCurrentTab === EditMenuItem.TOOL || mCurrentTab === EditMenuItem.TEXT || mCurrentTab === EditMenuItem.AT)) {
-                            hideAllTab()
-                            showAllCommonFunctionView()
-                        }
-                    }
-                    mEditImageProcessExt!!.refreshAllFilters()
-                }
-            }
-            true
-        }
+        initHelper()
+        initListener()
     }
 
     private fun initParams() {
@@ -75,6 +53,83 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
         mScreenWidth = resources.displayMetrics.widthPixels
         mMenuHeight = (mScreenHeight - 75.0f.px).toInt()
         mFrameHeight = (mMenuHeight - 55.0f.px).toInt()
+    }
+
+    private fun initHelper() {
+
+        val listener = object :PictureBeautyHelper.OnImageProcessListener{
+            override fun showAllView() {
+                showAllCommonFunctionView()
+            }
+
+            override fun getProcess(): ImageProcessExt {
+                return mEditImageProcessExt
+            }
+        }
+
+        mBeautyHelper = PictureBeautyHelper(this,"beautyHelper",listener)
+        mFilterHelper = PictureFilterHelper(this,listener)
+        mStickerHelper = PictureStickerHelper(this,mScreenWidth,mScreenHeight)
+        mFilterHelper.stickerHelper = mStickerHelper
+
+    }
+
+    private fun initListener() {
+        edit_menu.setOnItemClickListener(this)
+        processing_view.setOnLongClickListener {
+            mIsLongClick = true
+            if(mIsTouchToShowOriginal){
+                mEditImageProcessExt.disableAllFilters()
+            }
+            return@setOnLongClickListener true
+        }
+        processing_view.setOnTouchListener { _, event ->
+            when (event!!.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    mIsLongClick = false
+                }
+                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> run {
+                    if (!mIsTouchToShowOriginal || !mIsLongClick) {
+                        if (!mIsLongClick && (mCurrentTab === EditMenuItem.STICKER || mCurrentTab === EditMenuItem.FILTER || mCurrentTab === EditMenuItem.MAGIC || mCurrentTab === EditMenuItem.TOOL || mCurrentTab === EditMenuItem.TEXT || mCurrentTab === EditMenuItem.AT)) {
+                            hideAllTab()
+                            showAllCommonFunctionView()
+                            return@run
+                        }
+                    }else{
+                        mEditImageProcessExt!!.refreshAllFilters()
+                        return@run
+                    }
+                }
+            }
+            false
+        }
+
+        show_area_layout.setOnClickListener {
+            if (this.mCurrentTab == EditMenuItem.STICKER || this.mCurrentTab == EditMenuItem.FILTER || this.mCurrentTab == EditMenuItem.MAGIC || this.mCurrentTab == EditMenuItem.TOOL || this.mCurrentTab == EditMenuItem.TEXT || this.mCurrentTab == EditMenuItem.AT) {
+                hideAllTab();
+                showAllCommonFunctionView();
+            }
+        }
+        pic_save.setOnClickListener {
+            savePic(true)
+        }
+
+        edit_pic_cancel.setOnClickListener {
+            if(mCurrentTab == EditMenuItem.NONE){
+                showFinishDialog()
+            }else{
+                hideAllTab()
+                showAllCommonFunctionView()
+            }
+        }
+    }
+
+    private fun savePic(needWaterMark: Boolean) {
+        mFilterHelper.savePic(needWaterMark)
+    }
+
+    private fun showFinishDialog() {
+
     }
 
     private fun showAllCommonFunctionView() {
@@ -169,10 +224,14 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
                 mBeautyHelper.showBeautyAdjustWindow()
                 mIsTouchToShowOriginal = true
             }
+            EditMenuItem.STICKER -> {
+                mStickerHelper.showStickerListView()
+            }
         }
     }
 
     private fun hideAllTab() {
         mBeautyHelper.hideWindow()
+        mStickerHelper.hideStickerListView()
     }
 }

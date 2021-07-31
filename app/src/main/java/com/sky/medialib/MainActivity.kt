@@ -1,9 +1,12 @@
 package com.sky.medialib
 
+import android.Manifest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import com.permissionx.guolindev.PermissionX
 import com.sky.media.image.core.view.GLSurfaceView
 import com.sky.media.image.core.view.GLTextureView
 import com.sky.medialib.render.Square
@@ -29,7 +32,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun jumpPictureEdit(view: View) {
-        startActivity(Intent(this,PictureEditActivity::class.java))
+        PermissionX.init(this)
+            .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+            .request { allGranted, grantedList, deniedList ->
+                if (allGranted) {
+                    startActivity(Intent(this,PictureEditActivity::class.java))
+                } else {
+                    Toast.makeText(this, "you denied the File permission for read and write ", Toast.LENGTH_SHORT).show()
+                }
+            }
+
     }
 
 

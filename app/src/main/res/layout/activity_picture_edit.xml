@@ -24,7 +24,36 @@
                 android:layout_height="match_parent" />
 
 
+            <RelativeLayout
+                android:id="@+id/sticker_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
         </com.sky.media.image.core.view.ProcessRelativeContainer>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48.0dip"
+        android:layout_marginTop="13.0dip">
+
+        <ImageView
+            android:id="@+id/edit_pic_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/selector_titlebar_back" />
+
+        <ImageView
+            android:id="@+id/pic_save"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentEnd="true"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/edit_save_selector_41" />
 
     </RelativeLayout>
 
@@ -44,4 +73,353 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="37.5dip"
         android:layout_marginRight="37.5dip" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sticker_gallery"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#80000000"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:id="@+id/tools_gallery_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="55.0dip"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#80000000" />
+
+            <RelativeLayout
+                android:id="@+id/intelligence_filter_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:background="#00202223"
+                android:orientation="vertical"
+                android:padding="7.0dip"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/intelligence_filter_view"
+                    android:layout_width="58.0dip"
+                    android:layout_height="58.0dip"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/intelligence_filter_textview"
+                    android:layout_width="58.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/intelligence_filter_view"
+                    android:gravity="center"
+                    android:paddingTop="2.5dip"
+                    android:singleLine="true"
+                    android:text="@string/intelligence_filter"
+                    android:textColor="@color/selector_magic_name_txt_color"
+                    android:textSize="11.0sp" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/scribble_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="90.0dip"
+            android:layout_above="@+id/bottom_bar"
+            android:gravity="center"
+            android:visibility="invisible">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#ff202223" />
+
+            <RadioGroup
+                android:id="@+id/textures"
+                android:layout_width="fill_parent"
+                android:layout_height="46.0dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/huabi1"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:layout_marginLeft="14.0dip"
+                    android:background="@drawable/brush_huabi1_icon"
+                    android:button="@drawable/selector_brush"
+                    android:checked="true" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/huabi2"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:background="@drawable/brush_huabi2_icon"
+                    android:button="@drawable/selector_brush" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/aixing"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:background="@drawable/brush_aixin_icon"
+                    android:button="@drawable/selector_brush" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/caisedian"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:background="@drawable/brush_caisedian_icon"
+                    android:button="@drawable/selector_brush" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/houzi"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:background="@drawable/brush_houzi_icon"
+                    android:button="@drawable/selector_brush" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/shuye"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:background="@drawable/brush_shuye_icon"
+                    android:button="@drawable/selector_brush" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/songshu"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:background="@drawable/brush_songshu_icon"
+                    android:button="@drawable/selector_brush" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/tanhao"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:background="@drawable/brush_tanhao_icon"
+                    android:button="@drawable/selector_brush" />
+
+                <View
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+
+                <RadioButton
+                    android:id="@+id/xingxing"
+                    android:layout_width="29.0dip"
+                    android:layout_height="29.0dip"
+                    android:layout_marginRight="14.0dip"
+                    android:background="@drawable/brush_xingxing_icon"
+                    android:button="@drawable/selector_brush" />
+            </RadioGroup>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textures"
+                >
+
+                <Button
+                    android:id="@+id/scribble_ca"
+                    style="?android:borderlessButtonStyle"
+                    android:layout_width="32.0dip"
+                    android:layout_height="32.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="14.0dip"
+                    android:layout_marginRight="7.0dip"
+                    android:background="@drawable/selector_photo_ca" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="4.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="7.0dip"
+                    android:layout_marginRight="7.0dip"
+                    android:layout_toLeftOf="@+id/scribble_cx"
+                    android:layout_toRightOf="@+id/scribble_ca"
+                    android:background="#ffdcdcdc" />
+
+                <RadioGroup
+                    android:id="@+id/brush_size"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/scribble_cx"
+                    android:layout_toRightOf="@+id/scribble_ca"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="7.0dip"
+                    android:paddingRight="7.0dip">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/selector_scribble_22"
+                        android:paddingLeft="4.0dip"
+                        android:paddingTop="4.0dip"
+                        android:paddingRight="4.0dip"
+                        android:paddingBottom="4.0dip" />
+
+                    <View
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/selector_scribble_30"
+                        android:paddingLeft="2.0dip"
+                        android:paddingTop="2.0dip"
+                        android:paddingRight="2.0dip"
+                        android:paddingBottom="2.0dip" />
+
+                    <View
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <RadioButton
+                        android:id="@+id/brush_size_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/selector_scribble_38"
+                        android:checked="true" />
+
+                    <View
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/selector_scribble_46" />
+
+                    <View
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/selector_scribble_54" />
+                </RadioGroup>
+
+                <ImageView
+                    android:id="@+id/scribble_cx"
+                    android:layout_width="32.0dip"
+                    android:layout_height="32.0dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="7.0dip"
+                    android:layout_marginRight="14.0dip"
+                    android:src="@drawable/selector_photo_cx" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0px"
+                android:background="#ff303233" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="55.0dip"
+                android:background="#ff1a1c21"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/foot_nav_cancel"
+                    android:layout_width="55.0dip"
+                    android:layout_height="55.0dip"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/edit_foot_nav_button_cancel_selector" />
+
+                <View
+                    android:layout_width="1.0px"
+                    android:layout_height="fill_parent"
+                    android:background="#ff303233" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="15.0sp" />
+
+                <View
+                    android:layout_width="1.0px"
+                    android:layout_height="fill_parent"
+                    android:background="#ff303233" />
+
+                <ImageView
+                    android:id="@+id/foot_nav_done"
+                    android:layout_width="55.0dip"
+                    android:layout_height="55.0dip"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/edit_foot_nav_button_ok_selector" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ImageView
+        android:id="@+id/sticker_selected_icon"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sticker_red_line" />
+    <ImageView
+        android:id="@+id/sticker_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2.5dip"
+        android:layout_marginTop="7.0dip"
+        android:layout_marginRight="2.5dip"
+        android:layout_marginBottom="5.0dip"
+        android:src="@drawable/album_sticker_bag_background"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true" />
+
+    <com.sky.medialib.ui.kit.common.view.RectImageView
+        android:id="@+id/frame_icon"
+        android:background="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5.0dip"
+        android:layout_marginBottom="5.0dip"
+        android:scaleType="centerCrop"
+        android:layout_alignLeft="@+id/sticker_icon"
+        android:layout_alignTop="@+id/sticker_icon"
+        android:layout_alignRight="@+id/sticker_icon"
+        android:layout_alignBottom="@+id/sticker_icon"
+        app:boundColor="#ffff5f5f"
+        app:boundFillColor="#00000000"
+        app:boundWidth="1.0dip"
+        app:showBound="false" />
+
+    <TextView
+        android:textSize="11.0sp"
+        android:textColor="@color/selector_filter_name_txt_color"
+        android:gravity="center"
+        android:id="@+id/sticker_name"
+        android:duplicateParentState="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2.5dip"
+        android:layout_marginBottom="7.0dip"
+        android:singleLine="true"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

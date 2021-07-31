@@ -41,6 +41,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("com.google.android.material:material:1.2.1")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("com.guolindev.permissionx:permissionx:1.5.0")
+    implementation("com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.6")
     implementation(project(mapOf("path" to ":media")))
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
