@@ -14,6 +14,8 @@ import com.sky.medialib.R
 import com.sky.medialib.ui.kit.model.StickerModel
 import com.sky.medialib.ui.kit.view.StickerView
 import com.sky.medialib.ui.picture.adapter.StickersAdapter
+import px
+import kotlin.math.roundToInt
 
 
 /**
@@ -36,6 +38,10 @@ class PictureStickerHelper(val mContext: Activity, val screenWidth:Int, val scre
     init {
         mStickerRecyclerView.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL,false)
         mStickerRecyclerView.adapter = adapter
+        val layoutParams = mStickerRecyclerView.layoutParams
+        layoutParams.height =
+            ((mContext.resources.displayMetrics.widthPixels * 3) / 16.0f + 28.0f.px).roundToInt()
+        mStickerRecyclerView.layoutParams = layoutParams
     }
 
 

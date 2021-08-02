@@ -25,7 +25,7 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
     private var mFrameHeight = 0
     lateinit var mEditImageProcessExt:ImageProcessExt
     var mState = 0
-    var mCurrentTab:EditMenuItem? = null
+    var mCurrentTab:EditMenuItem = EditMenuItem.NONE
     lateinit var mBeautyHelper:PictureBeautyHelper
     lateinit var mStickerHelper: PictureStickerHelper
     lateinit var mFilterHelper: PictureFilterHelper
@@ -46,6 +46,7 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
 
         initHelper()
         initListener()
+        fixProcessingAreaCenterVertex()
     }
 
     private fun initParams() {

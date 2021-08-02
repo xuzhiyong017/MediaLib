@@ -8,7 +8,7 @@ import java.io.Serializable
  * @Email: 18971269648@163.com
  * @description:
  */
-data class ShowRect(val x: Int = 0,val y: Int = 0,val height: Int = 0,val width: Int = 0) : Serializable {
+data class ShowRect(val x: Int = 0,val y: Int = 0,val width: Int = 0,val height: Int = 0) : Serializable {
 
     override fun toString(): String {
         return "ShowRect{x='$x', y='$y', width='$width', height='$height'}"
