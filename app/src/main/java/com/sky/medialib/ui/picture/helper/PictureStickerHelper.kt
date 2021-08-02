@@ -1,7 +1,6 @@
 package com.sky.medialib.ui.picture.helper
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.view.View
@@ -123,7 +122,7 @@ class PictureStickerHelper(val mContext: Activity, val screenWidth:Int, val scre
         }
     }
 
-    private fun resumeTopViewShowController() {
+    open fun resumeTopViewShowController() {
         if (sticker_layout.childCount > 0) {
             val childAt: View = sticker_layout.getChildAt(sticker_layout.childCount - 1)
             if (childAt is StickerView) {
@@ -151,6 +150,25 @@ class PictureStickerHelper(val mContext: Activity, val screenWidth:Int, val scre
 
     fun hideStickerListView(){
         mStickerRecyclerView.visibility = View.GONE
+    }
+
+    fun updateViewControllerStatus(showSticker: Boolean, showController: Boolean) {
+        if (showSticker) {
+            sticker_layout.visibility = View.VISIBLE
+            for (i in 0 until sticker_layout.childCount) {
+                val stickerView = sticker_layout.getChildAt(i) as StickerView
+                if (i == sticker_layout.childCount - 1) {
+                    var c: Boolean = stickerView.isShowDrawController
+                    c = showController && c
+                    stickerView.isShowDrawController = c
+                }
+                stickerView.setTouchable(showController)
+                stickerView.invalidate()
+            }
+            return
+        }else{
+            sticker_layout.visibility = View.INVISIBLE
+        }
     }
 
 }

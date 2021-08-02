@@ -5,7 +5,7 @@ import java.util.*
 
 open class Filter {
     protected var mAdjuster: Adjuster? = null
-    var context: Context? = null
+    open var context: Context? = null
     protected var mExtra: MutableMap<String, String> = HashMap<String, String>()
     open var icon: String? = null
     var name: String? = null

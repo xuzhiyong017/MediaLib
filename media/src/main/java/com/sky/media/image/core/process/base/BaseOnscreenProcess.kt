@@ -141,7 +141,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
         for (adjuster in mUsedFilters) {
             val adjuster2: Adjuster? = adjuster.adjuster
             if (adjuster2 != null) {
-                adjuster2.render?.setRenderSize(
+                adjuster2.mRender?.setRenderSize(
                     mContainerView.getPreviewWidth(),
                     mContainerView.getPreviewHeight()
                 )
@@ -221,7 +221,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
 
     open fun getPrevRender(filter: Filter): TextureOutRender? {
         val adjuster = filter.adjuster ?: return mInput
-        val render: BaseRender? = adjuster.render
+        val render: BaseRender? = adjuster.mRender
         val usedRenders: List<BaseRender> = getUsedRenders()
         val indexOf = usedRenders.indexOf(render)
         return if (indexOf < 1 || indexOf > usedRenders.size - 1) {
@@ -231,7 +231,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
 
     open fun getNextRender(filter: Filter): TextureOutRender? {
         val adjuster = filter.adjuster ?: return mGroupRender
-        val render: BaseRender? = adjuster.render
+        val render: BaseRender? = adjuster.mRender
         val usedRenders: List<BaseRender> = getUsedRenders()
         val indexOf = usedRenders.indexOf(render)
         return if (indexOf < 0 || indexOf >= usedRenders.size - 1) {
@@ -244,7 +244,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
         for (adjuster in mUsedFilters) {
             val adjuster2 = adjuster.adjuster
             if (adjuster2 != null) {
-                val render: BaseRender? = adjuster2.render
+                val render: BaseRender? = adjuster2.mRender
                 if (!(render == null || arrayList.contains(render))) {
                     arrayList.add(render)
                 }
@@ -270,7 +270,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
         for (adjuster in mUsedFilters) {
             val adjuster2 = adjuster.adjuster
             if (adjuster2 != null) {
-                getRenderList(adjuster2.render, arrayList2)
+                getRenderList(adjuster2.mRender, arrayList2)
             }
         }
         arrayList.removeAll(arrayList2)
@@ -349,7 +349,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
             if (filter != null) {
                 val adjuster = filter.adjuster
                 if (adjuster != null) {
-                    render = adjuster.render
+                    render = adjuster.mRender
                     if (!(render == null || arrayList.contains(render))) {
                         render.clearNextRenders()
                         render.reInitialize()

@@ -9,7 +9,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.sky.media.image.core.process.ImageProcessExt;
+import com.sky.medialib.ui.picture.process.ImageProcessExt;
 import com.sky.media.kit.filter.BuffingTool;
 import com.sky.media.kit.filter.WhiteningTool;
 import com.sky.medialib.R;

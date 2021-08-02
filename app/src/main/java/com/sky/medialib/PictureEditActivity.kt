@@ -7,8 +7,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.sky.media.image.core.process.ImageProcessExt
+import com.sky.medialib.ui.picture.process.ImageProcessExt
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
+import com.sky.medialib.ui.kit.manager.ToolFilterManager
 import com.sky.medialib.ui.kit.view.editmenu.EditMenu
 import com.sky.medialib.ui.kit.view.editmenu.EditMenuItem
 import com.sky.medialib.ui.picture.helper.PictureBeautyHelper
@@ -19,11 +20,11 @@ import kotlinx.android.synthetic.main.activity_picture_edit.*
 import px
 import kotlin.math.roundToInt
 
-class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
+class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,PictureFilterHelper.OnActivityListener {
 
     private var mMenuHeight = 0
     private var mFrameHeight = 0
-    lateinit var mEditImageProcessExt:ImageProcessExt
+    lateinit var mEditImageProcessExt: ImageProcessExt
     var mState = 0
     var mCurrentTab:EditMenuItem = EditMenuItem.NONE
     lateinit var mBeautyHelper:PictureBeautyHelper
@@ -54,6 +55,8 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
         mScreenWidth = resources.displayMetrics.widthPixels
         mMenuHeight = (mScreenHeight - 75.0f.px).toInt()
         mFrameHeight = (mMenuHeight - 55.0f.px).toInt()
+
+        ToolFilterManager.initPictureEditFilter(this)
     }
 
     private fun initHelper() {
@@ -69,8 +72,8 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
         }
 
         mBeautyHelper = PictureBeautyHelper(this,"beautyHelper",listener)
-        mFilterHelper = PictureFilterHelper(this,listener)
         mStickerHelper = PictureStickerHelper(this,mScreenWidth,mScreenHeight)
+        mFilterHelper = PictureFilterHelper(this,mScreenWidth,mScreenHeight,mStickerHelper,this)
         mFilterHelper.stickerHelper = mStickerHelper
 
     }
@@ -222,11 +225,29 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
     private fun showTab() {
         when(mCurrentTab){
             EditMenuItem.BEAUTY -> {
+                mStickerHelper.updateViewControllerStatus(true,true)
                 mBeautyHelper.showBeautyAdjustWindow()
                 mIsTouchToShowOriginal = true
             }
             EditMenuItem.STICKER -> {
+                mStickerHelper.updateViewControllerStatus(true,true)
                 mStickerHelper.showStickerListView()
+                mIsTouchToShowOriginal = true
+            }
+            EditMenuItem.FILTER -> {
+                mStickerHelper.updateViewControllerStatus(true,true)
+                mFilterHelper.showNormalFilter()
+                mIsTouchToShowOriginal = true
+            }
+            EditMenuItem.MAGIC -> {
+                mStickerHelper.updateViewControllerStatus(true,true)
+                mFilterHelper.showMagicFilter()
+                mIsTouchToShowOriginal = true
+            }
+            EditMenuItem.TOOL -> {
+                mStickerHelper.updateViewControllerStatus(true,true)
+                mFilterHelper.showToolsFilter()
+                mIsTouchToShowOriginal = true
             }
         }
     }
@@ -234,5 +255,24 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener {
     private fun hideAllTab() {
         mBeautyHelper.hideWindow()
         mStickerHelper.hideStickerListView()
+        mFilterHelper.hideNormalFilter()
+        mFilterHelper.hideMagicFilter()
+        mFilterHelper.hideToolFilter()
+    }
+
+    override fun showAllView() {
+        showAllCommonFunctionView()
+    }
+
+    override fun getProcess(): ImageProcessExt {
+       return mEditImageProcessExt
+    }
+
+    override fun isMagicTab(): Boolean {
+        return mCurrentTab == EditMenuItem.MAGIC
+    }
+
+    override fun isNormalFilterTab(): Boolean {
+        return mCurrentTab == EditMenuItem.FILTER
     }
 }

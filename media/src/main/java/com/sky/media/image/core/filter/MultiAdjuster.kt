@@ -27,18 +27,18 @@ class MultiAdjuster(basicRender: BaseRender?, i: Int) : Adjuster(basicRender) {
     }
 
     override fun resetAdjust() {
-        if (render != null) {
+        if (mRender != null) {
             if (mInitProgress != 0) {
                 adjust(mInitProgress)
             }
             adjust(mInitProgresses)
-            render!!.clearNextRenders()
-            render!!.reInitialize()
+            mRender!!.clearNextRenders()
+            mRender!!.reInitialize()
         }
     }
 
     override fun initAdjust() {
-        if (render != null) {
+        if (mRender != null) {
             if (mInitProgress != 0) {
                 adjust(mInitProgress)
             }
@@ -48,8 +48,8 @@ class MultiAdjuster(basicRender: BaseRender?, i: Int) : Adjuster(basicRender) {
 
     fun adjust(iArr: IntArray) {
         progresses = iArr
-        if (render is IMultiAdjustable) {
-            (render as IMultiAdjustable?)!!.adjust(iArr, starts, ends)
+        if (mRender is IMultiAdjustable) {
+            (mRender as IMultiAdjustable?)!!.adjust(iArr, starts, ends)
         }
     }
 

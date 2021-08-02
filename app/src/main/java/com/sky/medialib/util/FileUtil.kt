@@ -9,6 +9,10 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore.*
 import android.text.TextUtils
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
 import java.lang.Exception
 import java.net.URLDecoder
 
@@ -19,6 +23,14 @@ import java.net.URLDecoder
  * @description:
  */
 object FileUtil {
+
+    fun exists(file: File?): Boolean {
+        return file != null && file.exists()
+    }
+
+    fun exists(str: String?): Boolean {
+        return !TextUtils.isEmpty(str) && exists(File(str))
+    }
 
     private fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
@@ -171,5 +183,40 @@ object FileUtil {
             query?.close()
         }
         return str2
+    }
+
+    fun renameTo(str: String?, str2: String?): Boolean {
+        if (TextUtils.isEmpty(str) || TextUtils.isEmpty(str2)) {
+            return false
+        }
+        val file = File(str)
+        return if (file.exists() && file.isFile && file.length() > 0) {
+            file.renameTo(File(str2))
+        } else false
+    }
+
+    fun unZipFile( cacheDir:String,unZipDir:String){
+
+    }
+
+    fun readFile2Bytes(str: String?): ByteArray {
+        var bufferedInputStream: BufferedInputStream? = null
+        val file = File(str)
+        val bArr = ByteArray(file.length().toInt())
+        try {
+            bufferedInputStream = BufferedInputStream(FileInputStream(file))
+            bufferedInputStream.read(bArr)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (bufferedInputStream != null) {
+                try {
+                    bufferedInputStream.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return bArr
     }
 }

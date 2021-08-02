@@ -10,6 +10,7 @@ import com.permissionx.guolindev.PermissionX
 import com.sky.media.image.core.view.GLSurfaceView
 import com.sky.media.image.core.view.GLTextureView
 import com.sky.medialib.render.Square
+import com.sky.medialib.util.AESUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView android:id="@+id/touch_view" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    <LinearLayout android:orientation="horizontal" android:id="@+id/bottom_bar" android:background="#ff202223" android:layout_width="fill_parent" android:layout_height="55.0dip" android:layout_alignParentBottom="true">
+        <ImageView android:layout_gravity="center_vertical" android:id="@+id/cancel" android:layout_width="55.0dip" android:layout_height="wrap_content" android:src="@drawable/edit_foot_nav_button_cancel_selector" android:scaleType="fitCenter" />
+        <View android:background="#ff303233" android:layout_width="1.0px" android:layout_height="fill_parent" />
+        <TextView android:textSize="15.0sp" android:textColor="#ffffffff" android:gravity="center" android:layout_gravity="center" android:id="@+id/title" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_weight="1.0" />
+        <View android:background="#ff303233" android:layout_width="1.0px" android:layout_height="fill_parent" />
+        <ImageView android:layout_gravity="center_vertical" android:id="@+id/ok" android:layout_width="55.0dip" android:layout_height="wrap_content" android:src="@drawable/edit_foot_nav_button_ok_selector" android:scaleType="centerInside" />
+    </LinearLayout>
+    <View android:id="@+id/separator_line" android:background="#ff303233" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_above="@+id/bottom_bar" />
+    <RelativeLayout android:id="@+id/tool_panel" android:background="#80202223" android:layout_width="fill_parent" android:layout_height="90.0dip" android:layout_above="@+id/separator_line">
+        <TextView android:textSize="13.0sp" android:textColor="#fffe605f" android:gravity="center" android:id="@+id/seek_bar_value" android:layout_width="100.0dip" android:layout_height="wrap_content" android:layout_marginBottom="0.0dip" android:layout_above="@+id/seek_bar" />
+        <com.sky.medialib.ui.kit.view.ToolSeekBar android:id="@+id/seek_bar" android:paddingLeft="0.0dip" android:paddingRight="0.0dip" android:layout_width="236.0dip" android:layout_height="35.0dip" android:layout_marginLeft="36.0dip" android:layout_marginRight="36.0dip" android:max="100" android:progressDrawable="@color/transparent" android:thumb="@color/transparent" android:thumbOffset="28.0dip" android:layout_centerInParent="true" app:no_progress_color="#ffc9cdd2" />
+    </RelativeLayout>
+</RelativeLayout>

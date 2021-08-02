@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filter_item_layout"
+    android:paddingTop="7.0dip"
+    android:paddingBottom="7.0dip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <ImageView android:id="@+id/filter_icon"
+        android:layout_width="58.0dip"
+        android:layout_height="58.0dip"
+        android:src="@drawable/defaultpics_filter_200"
+        android:scaleType="centerCrop" />
+
+    <ImageView android:id="@+id/filter_mask"
+        android:visibility="gone"
+        android:layout_width="58.0dip"
+        android:layout_height="58.0dip"
+        android:src="@drawable/shape_magic_mask" />
+    <TextView
+        android:textSize="11.0sp"
+        android:textColor="@color/selector_magic_name_txt_color"
+        android:gravity="center"
+        android:id="@+id/filter_name"
+        android:paddingTop="2.5dip"
+        android:layout_width="58.0dip"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_below="@+id/filter_icon" />
+    <ImageView
+        android:id="@+id/filter_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2.0dip"
+        android:scaleType="centerCrop"
+        android:layout_alignRight="@+id/filter_icon" />
+</RelativeLayout>

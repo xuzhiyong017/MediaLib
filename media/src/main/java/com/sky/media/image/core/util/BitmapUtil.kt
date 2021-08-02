@@ -25,7 +25,8 @@ class BitmapUtil {
                         BitmapFactory.decodeFile(str)
                     }
                     Scheme.DRAWABLE.belongsTo(str) -> {
-                        BitmapFactory.decodeFile(str)
+                        val resInt = Scheme.DRAWABLE.crop(str).toInt()
+                        BitmapFactory.decodeResource(context.resources,resInt)
                     }
                     else -> {
                         null

@@ -19,8 +19,8 @@ import java.util.*
  */
 open class MultiBmpInputRender(val mBitmapCache:IBitmapCache):BaseRender() {
 
-    protected var mContext: Context? = null
-    protected var mPaths: Array<String>? = null
+    protected open var mContext: Context? = null
+    protected var mPaths: Array<String?>? = null
     protected var mResources: IntArray? = null
     protected var mTextureHandles: IntArray? = null
     protected var mTextureNum = 1
@@ -36,7 +36,7 @@ open class MultiBmpInputRender(val mBitmapCache:IBitmapCache):BaseRender() {
         }
     }
 
-    fun setImages(context: Context?, strArr: Array<String>?) {
+    fun setImages(context: Context?, strArr: Array<String?>?) {
         mContext = context
         if (strArr != null && !Arrays.equals(strArr, mPaths)) {
             mTextureNum = strArr.size + 1
@@ -84,7 +84,7 @@ open class MultiBmpInputRender(val mBitmapCache:IBitmapCache):BaseRender() {
         if (mResources != null) {
             str = BitmapUtil.Scheme.DRAWABLE.wrap("" + mResources!![i])
         } else if (mPaths != null) {
-            str = mPaths!![i]
+            str = mPaths!![i].toString()
         }
         if (mBitmapCache == null) {
             return BitmapUtil.loadBitmap(mContext!!, str)

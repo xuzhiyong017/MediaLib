@@ -2,10 +2,8 @@ package com.sky.medialib.ui.picture.helper
 
 import android.app.Activity
 import android.view.Gravity
-import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
-import com.sky.media.image.core.process.ImageProcessExt
+import com.sky.medialib.ui.picture.process.ImageProcessExt
 import com.sky.medialib.R
 import com.sky.medialib.ui.kit.view.BeautyAdjusterPopupWindow
 

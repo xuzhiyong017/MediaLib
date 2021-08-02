@@ -129,6 +129,13 @@
                     android:textSize="11.0sp" />
             </RelativeLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tools_gallery"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/intelligence_filter_layout"
+                android:fadingEdge="none"
+                android:overScrollMode="never" />
 
         </RelativeLayout>
 
@@ -366,6 +373,39 @@
             </RelativeLayout>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/filter_bar_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tools_gallery_layout"
+            android:layout_marginBottom="13.0dip"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/filter_seek_bar_value"
+                android:layout_width="100.0dip"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/filter_seek_bar"
+                android:layout_marginBottom="0.0dip"
+                android:gravity="center"
+                android:textColor="#fffe605f"
+                android:textSize="13.0sp" />
+
+            <com.sky.medialib.ui.kit.view.ToolSeekBar
+                android:id="@+id/filter_seek_bar"
+                android:layout_width="236.0dip"
+                android:layout_height="35.0dip"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5.0dip"
+                android:max="100"
+                android:paddingLeft="0.0dip"
+                android:paddingRight="0.0dip"
+                android:progressDrawable="@color/transparent"
+                android:thumb="@color/transparent"
+                app:no_progress_color="#ffffffff" />
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/bottom_bar"
             android:layout_width="fill_parent"
@@ -421,5 +461,38 @@
                     android:src="@drawable/edit_foot_nav_button_ok_selector" />
             </LinearLayout>
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/magic_bar_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tools_gallery_layout"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="13.0dip">
+
+            <TextView
+                android:id="@+id/magic_seek_bar_value"
+                android:layout_width="100.0dip"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/magic_seek_bar"
+                android:layout_marginBottom="0.0dip"
+                android:gravity="center"
+                android:textColor="#fffe605f"
+                android:textSize="13.0sp" />
+
+            <com.sky.medialib.ui.kit.view.ToolSeekBar
+                android:id="@+id/magic_seek_bar"
+                android:layout_width="236.0dip"
+                android:layout_height="35.0dip"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5.0dip"
+                android:max="100"
+                android:paddingLeft="0.0dip"
+                android:paddingRight="0.0dip"
+                android:progressDrawable="@color/transparent"
+                android:thumb="@color/transparent"
+                app:no_progress_color="#ffffffff" />
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

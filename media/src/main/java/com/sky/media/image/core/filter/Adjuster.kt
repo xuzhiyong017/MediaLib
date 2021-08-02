@@ -3,14 +3,14 @@ package com.sky.media.image.core.filter
 import android.content.Context
 import com.sky.media.image.core.base.BaseRender
 
-open class Adjuster(var render: BaseRender?) {
+open class Adjuster(var mRender: BaseRender?) {
+
     var context: Context? = null
     var end = 100
     @JvmField
     protected var mInitProgress = 0
     protected var mLastProgress = 0
-    var progress = 0
-        protected set
+    open var progress = 0
     var start = 0
     val progressText: String
         get() {
@@ -28,6 +28,10 @@ open class Adjuster(var render: BaseRender?) {
             progress = i
         }
 
+    open fun setRender(render:BaseRender){
+        mRender = render
+    }
+
     open fun startAdjust() {
         mLastProgress = progress
     }
@@ -37,23 +41,23 @@ open class Adjuster(var render: BaseRender?) {
     }
 
     open fun resetAdjust() {
-        if (render != null) {
+        if (mRender != null) {
             adjust(mInitProgress)
-            render!!.clearNextRenders()
-            render!!.reInitialize()
+            mRender!!.clearNextRenders()
+            mRender!!.reInitialize()
         }
     }
 
     open fun initAdjust() {
-        if (render != null) {
+        if (mRender != null) {
             adjust(mInitProgress)
         }
     }
 
     open fun adjust(i: Int) {
         progress = i
-        if (render is IAdjustable) {
-            (render as IAdjustable?)!!.adjust(i, start, end)
+        if (mRender is IAdjustable) {
+            (mRender as IAdjustable?)!!.adjust(i, start, end)
         }
     }
 }

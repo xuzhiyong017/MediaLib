@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/magic_item_layout"
+    android:paddingTop="7.0dip"
+    android:paddingBottom="7.0dip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <RelativeLayout
+        android:id="@+id/magic_icon_layout"
+        android:layout_width="58.0dip"
+        android:layout_height="58.0dip">
+        <ImageView
+            android:id="@+id/magic_icon"
+            android:background="@drawable/defaultpics_filter_200"
+            android:layout_width="58.0dip"
+            android:layout_height="58.0dip"
+            android:scaleType="centerCrop" />
+
+        <ImageView android:id="@+id/magic_mask"
+            android:visibility="gone"
+            android:layout_width="58.0dip"
+            android:layout_height="58.0dip"
+            android:src="@drawable/shape_magic_mask" />
+
+        <ImageView
+            android:id="@+id/magic_mask_normal_dot"
+            android:visibility="gone"
+            android:layout_width="58.0dip"
+            android:layout_height="58.0dip"
+            android:src="@drawable/edit_filter_thumbnail_icon_hightlight"
+            android:scaleType="centerInside" />
+
+        <TextView android:textSize="12.0sp"
+            android:textColor="#ffffffff"
+            android:gravity="center"
+            android:id="@+id/magic_color_index"
+            android:background="@drawable/mirror_img_icon_change"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_centerInParent="true" />
+        <ImageView
+            android:id="@+id/magic_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4.0dip"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+    <TextView
+        android:textSize="11.0sp"
+        android:textColor="@color/selector_magic_name_txt_color"
+        android:gravity="center"
+        android:id="@+id/magic_name"
+        android:paddingTop="2.5dip"
+        android:layout_width="58.0dip"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_below="@+id/magic_icon_layout" />
+</RelativeLayout>

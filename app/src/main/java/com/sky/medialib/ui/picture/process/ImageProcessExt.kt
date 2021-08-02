@@ -1,4 +1,4 @@
-package com.sky.media.image.core.process
+package com.sky.medialib.ui.picture.process
 
 import com.sky.media.image.core.filter.Adjuster
 import com.sky.media.image.core.filter.Filter
@@ -7,7 +7,7 @@ import com.sky.media.image.core.render.EmptyRender
 import com.sky.media.image.core.view.IContainerView
 import com.sky.media.image.core.view.IRenderView
 import com.sky.media.kit.model.FilterExt
-import com.sky.media.kit.model.MagicFilterExt
+import com.sky.medialib.ui.kit.filter.MagicFilterExt
 import com.sky.media.kit.model.ShiftShaft
 
 /**
@@ -18,7 +18,7 @@ import com.sky.media.kit.model.ShiftShaft
  */
 class ImageProcessExt(iContainerView: IContainerView,iRenderView: IRenderView) : ImageProcess(iContainerView,iRenderView) {
 
-    private var currentFilter: FilterExt? = null
+    private var normalFilter: FilterExt? = null
     private var magicFilter: MagicFilterExt? = null
 
     fun getUserFilters(): List<Filter?>? {
@@ -45,24 +45,24 @@ class ImageProcessExt(iContainerView: IContainerView,iRenderView: IRenderView) :
         refreshAllFilters()
     }
 
-    fun getCurrentFilter(): FilterExt? {
-        return currentFilter
+    fun getNormalFilter(): FilterExt? {
+        return normalFilter
     }
 
     fun isRealFilter(): Boolean {
-        if (currentFilter == null) {
+        if (normalFilter == null) {
             return false
         }
-        val adjuster: Adjuster? = currentFilter!!.adjuster
-        return !(adjuster == null || adjuster.render is EmptyRender)
+        val adjuster: Adjuster? = normalFilter!!.adjuster
+        return !(adjuster == null || adjuster.mRender is EmptyRender)
     }
 
-    fun replaceFilter(filterExt: FilterExt) {
-        if (currentFilter !== filterExt) {
-            if (currentFilter != null) {
-                mUsedFilters.remove(currentFilter)
+    fun replaceNormalFilter(filterExt: FilterExt) {
+        if (normalFilter !== filterExt) {
+            if (normalFilter != null) {
+                mUsedFilters.remove(normalFilter)
             }
-            currentFilter = filterExt
+            normalFilter = filterExt
             addFilter(filterExt)
         }
     }
@@ -76,7 +76,7 @@ class ImageProcessExt(iContainerView: IContainerView,iRenderView: IRenderView) :
             return false
         }
         val adjuster: Adjuster? = magicFilter!!.adjuster
-        return !(adjuster == null || adjuster.render is EmptyRender)
+        return !(adjuster == null || adjuster.mRender is EmptyRender)
     }
 
     fun replaceMagicFilter(magicFilterExt: MagicFilterExt): Boolean {
@@ -92,7 +92,7 @@ class ImageProcessExt(iContainerView: IContainerView,iRenderView: IRenderView) :
     }
 
     fun clearAllFilters() {
-        currentFilter = null
+        normalFilter = null
         magicFilter = null
         mUsedFilters.clear()
     }

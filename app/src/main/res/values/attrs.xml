@@ -14,4 +14,9 @@
         <attr name="showMask" format="boolean"/>
         <attr name="maskColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="ToolSeekBar">
+        <attr name="progress_color" format="color"/>
+        <attr name="no_progress_color" format="color"/>
+    </declare-styleable>
 </resources>
