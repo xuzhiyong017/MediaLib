@@ -17,6 +17,7 @@ class OriginNormalFilter(str:String) : FilterExt() {
         adjuster = Adjuster(EmptyRender())
         mId = 0
         icon = "drawable://" + R.drawable.filter_icon_0000
+        mIconResource = R.drawable.filter_icon_0000
         name = str
     }
 

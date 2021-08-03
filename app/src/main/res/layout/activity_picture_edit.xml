@@ -468,7 +468,8 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/tools_gallery_layout"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="13.0dip">
+            android:layout_marginBottom="13.0dip"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/magic_seek_bar_value"

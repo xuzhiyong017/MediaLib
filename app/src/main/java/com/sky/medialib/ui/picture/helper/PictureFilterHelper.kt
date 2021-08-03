@@ -212,7 +212,7 @@ class PictureFilterHelper(
     }
 
     fun showNormalFilter(){
-        intelligence_filter_layout.visibility = View.VISIBLE
+        intelligence_filter_layout.visibility = View.GONE
         tools_gallery.adapter = mNormalFilter
         tools_gallery_layout.visibility = View.VISIBLE
 

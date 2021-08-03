@@ -3,11 +3,8 @@ package com.sky.medialib.ui.kit.manager
 import android.content.Context
 import com.sky.media.image.core.filter.Adjuster
 import com.sky.media.kit.filter.BuffingTool
-import com.sky.media.kit.filter.normal.Fashion
 import com.sky.media.kit.filter.WhiteningTool
-import com.sky.media.kit.filter.normal.Cartridge
-import com.sky.media.kit.filter.normal.Documentary
-import com.sky.media.kit.filter.normal.Retro
+import com.sky.media.kit.filter.normal.*
 import com.sky.media.kit.filter.tools.*
 import com.sky.media.kit.model.FilterExt
 import com.sky.medialib.ui.kit.filter.OriginNormalFilter
@@ -74,6 +71,8 @@ object ToolFilterManager {
         array.add(Documentary(context))
         array.add(Retro(context))
         array.add(Cartridge(context))
+        array.add(Warm(context))
+        array.add(Summer(context))
         return array
     }
 

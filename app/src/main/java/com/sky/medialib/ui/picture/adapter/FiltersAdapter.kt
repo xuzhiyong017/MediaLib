@@ -7,6 +7,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.sky.media.kit.model.FilterExt
@@ -39,7 +41,10 @@ class FiltersAdapter(val imageProcessExt: ImageProcessExt,val screenWidth:Int,va
                 listener?.invoke(holder,adapterPosition,filterExt)
             }
             mFilterLayout.layoutParams = RecyclerView.LayoutParams(mFilterItemWidth.toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
-            Glide.with(mFilterLayout).load(filterExt.icon).placeholder(R.drawable.defaultpics_filter_200).into(mFilterIconView)
+            Glide.with(mFilterLayout).load(filterExt.getIconResource())
+                .placeholder(R.drawable.defaultpics_filter_200)
+                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                .into(mFilterIconView)
             mFilterNameView.text = filterExt.name
             val filter = imageProcessExt.getNormalFilter()
             var selected = false
