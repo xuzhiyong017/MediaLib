@@ -15,6 +15,7 @@ import com.sky.medialib.ui.kit.adjust.AdjusterExt
 import com.sky.medialib.ui.kit.filter.MagicFilterExt
 import com.sky.medialib.ui.kit.filter.OriginMagicFilterExt
 import com.sky.medialib.ui.kit.manager.MagicManager
+import com.sky.medialib.ui.kit.manager.ToolFilterManager
 import com.sky.medialib.ui.kit.model.MagicFilterModel
 import kotlin.math.round
 
@@ -25,16 +26,16 @@ import kotlin.math.round
  * @description:
  */
 class MagicFilterAdapter(val imageProcessExt: ImageProcessExt, val screenWidth:Int, val mOnItemClickListener:((MagicViewHolder, Int,MagicFilterExt) -> Unit)?)
-    : BaseQuickAdapter<MagicFilterModel,MagicFilterAdapter.MagicViewHolder>(R.layout.view_magic_item,MagicManager.getMagicFilters()){
+    : BaseQuickAdapter<MagicFilterExt,MagicFilterAdapter.MagicViewHolder>(R.layout.view_magic_item,ToolFilterManager.magicFilterList){
 
-    val mMagicItemWidth =  screenWidth * 3 / 16.0f
+    private val mMagicItemWidth =  screenWidth * 3 / 16.0f
 
-    override fun convert(holder: MagicViewHolder, item: MagicFilterModel) {
-        val filter = item.filterExt
+    override fun convert(holder: MagicViewHolder, item: MagicFilterExt) {
+        val filter = item
         holder.run {
             mMagicNewView.setImageResource(R.drawable.edit_filter_icon_recommed)
             mMagicLayout.setOnClickListener {
-                mOnItemClickListener?.invoke(this,adapterPosition,item.filterExt)
+                mOnItemClickListener?.invoke(this,adapterPosition,filter)
             }
             mMagicLayout.layoutParams = RecyclerView.LayoutParams(round(mMagicItemWidth).toInt(),ViewGroup.LayoutParams.WRAP_CONTENT)
             Glide.with(itemView).load(filter.getIconRes()).into(mMagicIconView)

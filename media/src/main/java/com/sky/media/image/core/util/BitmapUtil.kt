@@ -22,7 +22,8 @@ class BitmapUtil {
                         BitmapFactory.decodeStream(context.assets.open(Scheme.ASSETS.crop(str)))
                     }
                     Scheme.FILE.belongsTo(str) -> {
-                        BitmapFactory.decodeFile(str)
+                        val path = Scheme.FILE.crop(str)
+                        BitmapFactory.decodeFile(path)
                     }
                     Scheme.DRAWABLE.belongsTo(str) -> {
                         val resInt = Scheme.DRAWABLE.crop(str).toInt()

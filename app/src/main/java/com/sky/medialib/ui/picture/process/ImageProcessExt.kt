@@ -80,7 +80,7 @@ class ImageProcessExt(iContainerView: IContainerView,iRenderView: IRenderView) :
     }
 
     fun replaceMagicFilter(magicFilterExt: MagicFilterExt): Boolean {
-        if (magicFilter === magicFilterExt) {
+        if (magicFilter == magicFilterExt) {
             return false
         }
         if (magicFilter != null) {

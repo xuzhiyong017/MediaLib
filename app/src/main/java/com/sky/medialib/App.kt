@@ -1,6 +1,7 @@
 package com.sky.medialib
 
 import com.sky.media.kit.BaseMediaApplication
+import com.sky.medialib.util.FileUtil
 
 /**
  * @author: xuzhiyong
@@ -11,5 +12,6 @@ import com.sky.media.kit.BaseMediaApplication
 class App : BaseMediaApplication() {
     override fun onCreate() {
         super.onCreate()
+        FileUtil.copyMagicFilterFileFromAssetsToSDCard(this,"magics.zip")
     }
 }

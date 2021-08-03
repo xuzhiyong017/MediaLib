@@ -1,8 +1,11 @@
 package com.sky.medialib.ui.kit.manager
 
-import com.sky.media.image.core.base.BaseRender
-import com.sky.media.image.core.filter.Adjuster
+import com.google.gson.Gson
+import com.sky.media.kit.BaseMediaApplication
+import com.sky.medialib.ui.kit.filter.MagicFilterExt
 import com.sky.medialib.ui.kit.model.MagicFilterModel
+import com.sky.medialib.ui.kit.model.json.magic.JsonTemplate
+import com.sky.medialib.ui.kit.model.json.magic.TemplateList
 
 /**
  * @author: xuzhiyong
@@ -710,7 +713,25 @@ object MagicManager {
     }
     """.trimIndent()
 
+    private var jsonTemplates = listOf<JsonTemplate>()
 
+
+
+    open fun parseJsonList() {
+        jsonTemplates = Gson().fromJson<TemplateList>(template,TemplateList::class.java).templates
+        if(jsonTemplates != null){
+            val list = mutableListOf<MagicFilterExt>()
+            jsonTemplates.forEach {
+                list.add(covertFilter(it))
+            }
+            ToolFilterManager.addMagicFilters(list)
+        }
+
+    }
+
+    private fun covertFilter(jsonTemplate: JsonTemplate): MagicFilterExt {
+        return MagicFilterExt(BaseMediaApplication.sContext,jsonTemplate)
+    }
 
 
     fun getMagicFilters():MutableList<MagicFilterModel>{

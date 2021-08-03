@@ -9,12 +9,16 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore.*
 import android.text.TextUtils
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
+import com.blankj.utilcode.util.FileIOUtils
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.ZipUtils
 import java.lang.Exception
 import java.net.URLDecoder
+import android.content.res.AssetManager
+import com.blankj.utilcode.util.ThreadUtils
+import com.sky.media.image.core.util.LogUtils
+import java.io.*
+
 
 /**
  * @author: xuzhiyong
@@ -23,6 +27,10 @@ import java.net.URLDecoder
  * @description:
  */
 object FileUtil {
+
+    const val TAG = "FileUtil"
+
+    private const val BYTE_BUF_SIZE = 2048
 
     fun exists(file: File?): Boolean {
         return file != null && file.exists()
@@ -195,8 +203,70 @@ object FileUtil {
         } else false
     }
 
-    fun unZipFile( cacheDir:String,unZipDir:String){
+    fun unZipFile(cacheFile:String, unZipDir:String){
+        ZipUtils.unzipFile(cacheFile,unZipDir)
+    }
 
+    fun copyMagicFilterFileFromAssetsToSDCard(context: Context,fileName:String){
+        ThreadUtils.executeByIo(object : ThreadUtils.SimpleTask<Boolean>() {
+            override fun doInBackground(): Boolean {
+                val filePath = Storage.getFilePathByType(22) + fileName
+                if(File(filePath).exists()){
+                    return false
+                }
+                copy(context,fileName,filePath)
+                ZipUtils.unzipFile(filePath,Storage.getFilePathByType(22))
+                return true
+            }
+
+            override fun onSuccess(result: Boolean?) {
+               ToastUtils.show("成功解压魔镜")
+            }
+
+            override fun onFail(t: Throwable?) {
+                ToastUtils.show("拷贝解压失败${t?.message}")
+            }
+        })
+
+    }
+
+    fun copy(context: Context, assetName: String, targetName: String) {
+        LogUtils.logd(TAG, "creating file $targetName from $assetName")
+        var targetFile: File? = null
+        var inputStream: InputStream? = null
+        var outputStream: FileOutputStream? = null
+        try {
+            val assets = context.assets
+            targetFile = File(targetName)
+            if (!targetFile.parentFile.exists()) {
+                targetFile.parentFile.mkdirs()
+            }
+            if (!targetFile.exists()) {
+                targetFile.createNewFile()
+            }
+            inputStream = assets.open(assetName)
+            // TODO(kanlig): refactor log messages to make them more useful.
+            LogUtils.logd(TAG, "Creating outputstream")
+            outputStream = FileOutputStream(targetFile, false /* append */)
+            copy(inputStream, outputStream)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }  finally {
+            outputStream?.close()
+            inputStream?.close()
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun copy(from: InputStream, to: OutputStream) {
+        val buf = ByteArray(BYTE_BUF_SIZE)
+        while (true) {
+            val r = from.read(buf)
+            if (r == -1) {
+                break
+            }
+            to.write(buf, 0, r)
+        }
     }
 
     fun readFile2Bytes(str: String?): ByteArray {

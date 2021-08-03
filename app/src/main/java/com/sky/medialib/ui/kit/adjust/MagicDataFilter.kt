@@ -22,7 +22,8 @@ import java.io.File
  * @Email: 18971269648@163.com
  * @description:
  */
-class MagicDataFilter(override var mContext: Context?, private val jsonMirrors:List<JsonMirror>) : MultiBmpInputRender(ImageBitmapCache.getInstance()),IAdjustable {
+class MagicDataFilter(override var mContext: Context?, private val jsonMirrors:List<JsonMirror>)
+    : MultiBmpInputRender(ImageBitmapCache.getInstance()),IAdjustable {
 
     private var mAspectRatioHandle = 0
     private var mMaskAspectRatioHandle = 0
@@ -71,8 +72,7 @@ class MagicDataFilter(override var mContext: Context?, private val jsonMirrors:L
                         return
                     }
                     try {
-                        FileUtil.unZipFile(jsonMirrors[pos].cachePath, jsonMirrors[pos].cacheUnzipDirPath
-                        )
+                        FileUtil.unZipFile(jsonMirrors[pos].cachePath, jsonMirrors[pos].cacheUnzipDirPath)
                         parseConfig(file)
                     } catch (e: Throwable) {
                         e.printStackTrace()
@@ -80,8 +80,6 @@ class MagicDataFilter(override var mContext: Context?, private val jsonMirrors:L
                         deleteFile()
                     }
                 }
-            }else {
-                ToastUtils.show("no magic filter file")
             }
         }
     }
@@ -119,17 +117,15 @@ class MagicDataFilter(override var mContext: Context?, private val jsonMirrors:L
         deleteFile()
     }
 
-    protected fun getVertexShader(): String? {
-        return if (TextUtils.isEmpty(avshList[pos]) || !isValidTexture()) {
-            mVertexShader
-        } else avshList[pos]
-    }
+    override var mFragmentShader: String = ""
+        get() = if (TextUtils.isEmpty(afshList[pos]) || !isValidTexture()) {
+            super.mFragmentShader
+        } else afshList[pos]!!
 
-    protected fun getFragmentShader(): String? {
-        return if (TextUtils.isEmpty(afshList[pos]) || !isValidTexture()) {
-            mFragmentShader
-        } else afshList[pos]
-    }
+    override var mVertexShader: String = ""
+        get() = if (TextUtils.isEmpty(avshList[pos]) || !isValidTexture()) {
+            super.mVertexShader
+        } else avshList[pos]!!
 
     override fun initShaderHandles() {
         super.initShaderHandles()

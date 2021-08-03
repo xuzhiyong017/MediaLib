@@ -7,7 +7,10 @@ import com.sky.media.kit.filter.WhiteningTool
 import com.sky.media.kit.filter.normal.*
 import com.sky.media.kit.filter.tools.*
 import com.sky.media.kit.model.FilterExt
+import com.sky.medialib.ui.kit.filter.MagicFilterExt
 import com.sky.medialib.ui.kit.filter.OriginNormalFilter
+import com.sky.medialib.ui.kit.model.json.magic.JsonTemplate
+import java.util.ArrayList
 
 /**
  * @author: xuzhiyong
@@ -22,6 +25,7 @@ object ToolFilterManager {
 
     val normalFilters: MutableList<FilterExt> = mutableListOf()
     val mToolFilters: MutableList<FilterExt> = mutableListOf()
+    val magicFilterList: MutableList<MagicFilterExt> = mutableListOf()
 
     fun initEditPicture(context: Context){
         var adjuster: Adjuster? = null
@@ -32,9 +36,15 @@ object ToolFilterManager {
         if(normalFilters.isEmpty()){
             addNormalFilters(initNormalFilter(context,true))
         }else{
-            for (adjuster in normalFilters) {
-                adjuster.adjuster?.resetAdjust()
+            for (normalFilter in normalFilters) {
+                normalFilter.adjuster?.resetAdjust()
             }
+        }
+
+        MagicManager.parseJsonList()
+
+        for (magicFilter in magicFilterList) {
+            magicFilter.adjuster?.resetAdjust()
         }
 
         buffingTool?.adjuster?.resetAdjust()
@@ -62,6 +72,11 @@ object ToolFilterManager {
     private fun addNormalFilters(initNormalFilter: List<FilterExt>) {
         normalFilters.clear()
         normalFilters.addAll(initNormalFilter)
+    }
+
+    fun addMagicFilters(list: List<MagicFilterExt>) {
+        magicFilterList.clear()
+        magicFilterList.addAll(list)
     }
 
     private fun initNormalFilter(context: Context, b: Boolean): List<FilterExt> {

@@ -38,7 +38,9 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
     implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("com.blankj:utilcodex:1.30.6")
     implementation("com.google.android.material:material:1.2.1")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("com.guolindev.permissionx:permissionx:1.5.0")

@@ -75,8 +75,9 @@ class PictureFilterHelper(
     init {
         mMagicFilterAdapter = MagicFilterAdapter(onImageProcessListener.getProcess(),screenWidth){_,_,magicFilterExt ->
             val adjusterExt = magicFilterExt.adjuster as AdjusterExt
-            if(mEditImageProcessExt.replaceMagicFilter(magicFilterExt)){
-                adjusterExt.currentMirrorPos = adjusterExt.currentMirrorPos + 1
+            if(!mEditImageProcessExt.replaceMagicFilter(magicFilterExt)){
+                adjusterExt.setMirrorPos(adjusterExt.currentMirrorPos + 1)
+                mEditImageProcessExt.refreshAllFilters()
             }
             magicFilterExt.startTool()
             if(magicFilterExt is OriginMagicFilterExt){
