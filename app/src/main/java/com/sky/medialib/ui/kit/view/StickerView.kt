@@ -48,7 +48,7 @@ class StickerView @JvmOverloads constructor(
     private val mDashPathEffect: PathEffect
     private var textColor: Int
     private var mTouchable: Boolean
-    var stickerType: Int
+    var stickerType: Int // 2:输入文本 1:图片贴纸
         private set
     private var isFaceSticker = false
     private val showTextDebug = false

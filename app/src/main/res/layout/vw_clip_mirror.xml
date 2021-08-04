@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="75.0dip"
+    android:background="#ff202223"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingLeft="65.0dip"
+    android:paddingRight="65.0dip">
+
+    <LinearLayout
+        android:id="@+id/clip_mirror_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/camera_cut_horizontal_selector" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="水平"
+            android:textColor="@color/selector_txt_color"
+            android:textSize="@dimen/image_processing_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/clip_mirror_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/camera_cut_vertical_selector" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="垂直"
+            android:textColor="@color/selector_txt_color"
+            android:textSize="@dimen/image_processing_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/clip_mirror_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/camera_cut_cz_selector" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="重置"
+            android:textColor="@color/selector_txt_color"
+            android:textSize="@dimen/image_processing_text_size" />
+    </LinearLayout>
+</LinearLayout>

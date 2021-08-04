@@ -24,6 +24,13 @@
                 android:layout_height="match_parent" />
 
 
+            <com.sky.medialib.ui.kit.view.DrawView
+                android:id="@+id/scribble_draw_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible" />
+
+
             <RelativeLayout
                 android:id="@+id/sticker_layout"
                 android:layout_width="match_parent"
@@ -31,6 +38,13 @@
 
         </com.sky.media.image.core.view.ProcessRelativeContainer>
 
+        <com.sky.medialib.ui.kit.view.crop.CropView
+            android:id="@+id/clip_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:background="#ff262626"
+            android:visibility="invisible" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -273,7 +287,7 @@
                 android:layout_below="@+id/textures"
                 >
 
-                <Button
+                <ImageView
                     android:id="@+id/scribble_ca"
                     style="?android:borderlessButtonStyle"
                     android:layout_width="32.0dip"

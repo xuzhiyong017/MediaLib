@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="125.0dip"
+        android:background="#ff262626" />
+
+    <include
+        android:id="@+id/rotate"
+        layout="@layout/vw_clip_rotate"
+        android:layout_width="fill_parent"
+        android:layout_height="125.0dip" />
+
+    <include
+        android:id="@+id/ratio"
+        layout="@layout/vw_clip_ratio"
+        android:layout_width="fill_parent"
+        android:layout_height="75.0dip"
+        android:layout_alignBottom="@+id/rotate" />
+
+    <include
+        android:id="@+id/mirror"
+        layout="@layout/vw_clip_mirror"
+        android:layout_width="fill_parent"
+        android:layout_height="75.0dip"
+        android:layout_alignBottom="@+id/rotate" />
+
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_alignBottom="@+id/rotate"
+        android:background="#ff303233" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="55.0dip"
+        android:layout_below="@+id/rotate"
+        android:background="#ff202223"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/clip_cancel"
+            android:layout_width="55.0dip"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/edit_foot_nav_button_cancel_selector" />
+
+        <View
+            android:layout_width="1.0px"
+            android:layout_height="fill_parent"
+            android:background="#ff303233" />
+
+        <LinearLayout
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1.0"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="10.0dip"
+            android:paddingRight="10.0dip">
+
+            <TextView
+                android:id="@+id/clip_ratio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:drawableTop="@drawable/camera_edit_cut_bl_selector"
+                android:drawablePadding="4.0dip"
+                android:gravity="center"
+                android:text="@string/image_clip_ratio"
+                android:textColor="@color/selector_txt_color"
+                android:textSize="@dimen/image_processing_text_size" />
+
+            <TextView
+                android:id="@+id/clip_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:drawableTop="@drawable/camera_cut_rotate_selector"
+                android:drawablePadding="4.0dip"
+                android:gravity="center"
+                android:text="@string/image_clip_rotate"
+                android:textColor="@color/selector_txt_color"
+                android:textSize="@dimen/image_processing_text_size" />
+
+            <TextView
+                android:id="@+id/clip_mirror"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:drawableTop="@drawable/camera_cut_fz_selector"
+                android:drawablePadding="4.0dip"
+                android:gravity="center"
+                android:text="@string/image_clip_mirror"
+                android:textColor="@color/selector_txt_color"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1.0px"
+            android:layout_height="fill_parent"
+            android:background="#ff303233" />
+
+        <ImageView
+            android:id="@+id/clip_ok"
+            android:layout_width="55.0dip"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/edit_foot_nav_button_ok_selector" />
+    </LinearLayout>
+</RelativeLayout>

@@ -3,6 +3,7 @@ package com.sky.medialib.ui.picture.helper
 import android.app.Activity
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -14,6 +15,7 @@ import com.sky.medialib.ui.kit.model.StickerModel
 import com.sky.medialib.ui.kit.view.StickerView
 import com.sky.medialib.ui.picture.adapter.StickersAdapter
 import px
+import java.util.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -169,6 +171,32 @@ class PictureStickerHelper(val mContext: Activity, val screenWidth:Int, val scre
         }else{
             sticker_layout.visibility = View.INVISIBLE
         }
+    }
+
+    fun checkDealSticker(z: Boolean, width: Int, height: Int) {
+        var i3 = 0
+        val arrayList: ArrayList<View> = ArrayList<View>()
+        val rectF = RectF(0.0f, 0.0f, width.toFloat(), height.toFloat())
+        for (i4 in 0 until sticker_layout.childCount) {
+            val childAt = sticker_layout.getChildAt(i4)
+            if (childAt is StickerView && !childAt.isInRectFArea(rectF)) {
+                arrayList.add(childAt)
+            } else if (childAt.visibility != View.VISIBLE) {
+                childAt.visibility = View.VISIBLE
+            }
+        }
+        if (z) {
+            while (i3 < arrayList.size) {
+                (arrayList[i3] as View).visibility = View.INVISIBLE
+                i3++
+            }
+        } else {
+            while (i3 < arrayList.size) {
+                sticker_layout.removeView(arrayList[i3] as View)
+                i3++
+            }
+        }
+        arrayList.clear()
     }
 
 }

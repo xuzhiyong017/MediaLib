@@ -2,25 +2,29 @@ package com.sky.medialib
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.sky.media.image.core.out.BitmapOutput
 import com.sky.medialib.ui.picture.process.ImageProcessExt
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
 import com.sky.medialib.ui.kit.manager.ToolFilterManager
+import com.sky.medialib.ui.kit.view.crop.ClipPopupWindow
 import com.sky.medialib.ui.kit.view.editmenu.EditMenu
 import com.sky.medialib.ui.kit.view.editmenu.EditMenuItem
-import com.sky.medialib.ui.picture.helper.PictureBeautyHelper
-import com.sky.medialib.ui.picture.helper.PictureBitmapHolder
-import com.sky.medialib.ui.picture.helper.PictureFilterHelper
-import com.sky.medialib.ui.picture.helper.PictureStickerHelper
+import com.sky.medialib.ui.picture.helper.*
 import kotlinx.android.synthetic.main.activity_picture_edit.*
 import px
 import kotlin.math.roundToInt
 
-class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,PictureFilterHelper.OnActivityListener {
+class PictureEditActivity : AppCompatActivity()
+    ,EditMenu.OnItemClickListener,PictureFilterHelper.OnActivityListener,BitmapOutput.BitmapOutputCallback {
 
     private var mMenuHeight = 0
     private var mFrameHeight = 0
@@ -30,18 +34,23 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,Pic
     lateinit var mBeautyHelper:PictureBeautyHelper
     lateinit var mStickerHelper: PictureStickerHelper
     lateinit var mFilterHelper: PictureFilterHelper
+    lateinit var mClipHelper: PictureClipHelper
+    lateinit var mScribbleHelper: PictureScribbleHelper
     private var mIsTouchToShowOriginal = true
     private var mIsLongClick = false
     private var mScreenHeight = 0
     private var mScreenWidth = 0
     private var mCurrentPhoto = ""
+    private lateinit var mCurBitmap: Bitmap
+    val mHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picture_edit)
         initParams()
         mEditImageProcessExt = ImageProcessExt(frame,processing_view)
-        mEditImageProcessExt.initInputBitmap(BitmapFactory.decodeResource(resources,R.drawable.image1),
+        mCurBitmap = BitmapFactory.decodeResource(resources,R.drawable.image1)
+        mEditImageProcessExt.initInputBitmap(mCurBitmap,
             resources.displayMetrics.widthPixels,resources.displayMetrics.heightPixels,null)
 
 
@@ -76,6 +85,105 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,Pic
         mFilterHelper = PictureFilterHelper(this,mScreenWidth,mScreenHeight,mStickerHelper,this)
         mFilterHelper.stickerHelper = mStickerHelper
 
+        mScribbleHelper = PictureScribbleHelper(this,mEditImageProcessExt,object : PictureScribbleHelper.OnListener{
+            override fun onApply() {
+                showAllCommonFunctionView()
+            }
+
+            override fun onCancel() {
+                showAllCommonFunctionView()
+            }
+        }).apply {
+            setBitmap(mCurBitmap)
+        }
+
+        mClipHelper = PictureClipHelper(this, object : ClipPopupWindow.onClipListener {
+            override fun onComplete() {
+                showAllCommonFunctionView()
+            }
+
+            override fun onCancel() {
+                showAllCommonFunctionView()
+            }
+        }).apply {
+            setOnImageClippedListener {
+                if(mEditImageProcessExt.getUserFilters()?.contains(ToolFilterManager.clipScribbleTool) == true){
+                    mEditImageProcessExt.clearAllFilters()
+                }
+                mScribbleHelper.setBitmap(it)
+                mEditImageProcessExt.renderBitmap(it,mScreenWidth,mScreenHeight)
+                val width = it.width * 1.0f / it.height
+                frame.setAspectRatio(
+                    width,
+                    mScreenWidth,
+                    mScreenHeight
+                )
+                frame.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+                            val width: Int = frame.width
+                            val height: Int = frame.height
+                            if (width.toFloat() == mScreenWidth.toFloat() * 1.0f / mScreenHeight.toFloat()) {
+                                changePreviewFrameLayoutPosition(mScreenHeight, true)
+                            } else {
+                                changePreviewFrameLayoutPosition(mMenuHeight, true)
+                            }
+                            mStickerHelper.checkDealSticker(false, width, height)
+                            frame.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            mScribbleHelper.refreshDrawView()
+                            mEditImageProcessExt.renderBitmap(
+                                it, mScreenWidth,
+                                mScreenHeight
+                            )
+                        }
+                })
+                mHandler.postDelayed({
+                    mEditImageProcessExt.refreshAllFilters()
+                    mFilterHelper.savePic(false)
+                    mClipHelper.hideCropView()
+                },200)
+            }
+        }
+
+    }
+
+    private fun onFrameCreate() {
+        mHandler.postDelayed({
+            mEditImageProcessExt.refreshAllFilters()
+            mClipHelper.hideCropView()
+        },200)
+    }
+
+    private fun changeBitmapSize(width: Int, height: Int) {
+        frame.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    frame.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    scaleBitmap(
+                        mEditImageProcessExt.getSourceBitmap(),
+                        width,
+                        height
+                    )?.run {
+                        mEditImageProcessExt.renderBitmap(this, width, height)
+                        mEditImageProcessExt.refreshAllFilters()
+                    }
+
+                }
+            })
+    }
+
+    private fun scaleBitmap(bitmap: Bitmap?, i: Int, i2: Int): Bitmap? {
+        if (bitmap == null) {
+            return null
+        }
+        val width = bitmap.width
+        val height = bitmap.height
+        var f = i.toFloat() / width.toFloat()
+        val f2 = i2.toFloat() / height.toFloat()
+        if (f > f2) {
+            f = f2
+        }
+        val matrix = Matrix()
+        matrix.postScale(f, f)
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
     }
 
     private fun initListener() {
@@ -133,7 +241,7 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,Pic
     }
 
     private fun showFinishDialog() {
-
+        finish()
     }
 
     private fun showAllCommonFunctionView() {
@@ -249,6 +357,16 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,Pic
                 mFilterHelper.showToolsFilter()
                 mIsTouchToShowOriginal = true
             }
+            EditMenuItem.CLIP -> {
+                mEditImageProcessExt.getOutputBitmap(this)
+                mStickerHelper.updateViewControllerStatus(false,false)
+                mIsTouchToShowOriginal = false
+            }
+            EditMenuItem.DAUBER -> {
+                mStickerHelper.updateViewControllerStatus(true,false)
+                mScribbleHelper.showDauber()
+                mIsTouchToShowOriginal = false
+            }
         }
     }
 
@@ -258,6 +376,8 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,Pic
         mFilterHelper.hideNormalFilter()
         mFilterHelper.hideMagicFilter()
         mFilterHelper.hideToolFilter()
+        mClipHelper.hideAllView()
+        mScribbleHelper.hideAllView()
     }
 
     override fun showAllView() {
@@ -274,5 +394,20 @@ class PictureEditActivity : AppCompatActivity(),EditMenu.OnItemClickListener,Pic
 
     override fun isNormalFilterTab(): Boolean {
         return mCurrentTab == EditMenuItem.FILTER
+    }
+
+    override fun bitmapOutput(bitmap: Bitmap?) {
+        runOnUiThread {
+            bitmap?.run {
+                if(mEditImageProcessExt.getUserFilters()?.contains(ToolFilterManager.clipScribbleTool) == true){
+
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mEditImageProcessExt.clearAllFilters()
     }
 }

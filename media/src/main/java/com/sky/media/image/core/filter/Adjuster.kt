@@ -3,9 +3,9 @@ package com.sky.media.image.core.filter
 import android.content.Context
 import com.sky.media.image.core.base.BaseRender
 
-open class Adjuster(var mRender: BaseRender?) {
+open class Adjuster(open var mRender: BaseRender?) {
 
-    var context: Context? = null
+    open var context: Context? = null
     var end = 100
     @JvmField
     protected var mInitProgress = 0

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="75.0dip"
+    android:background="#ff202223"
+    android:gravity="center"
+    android:stretchColumns="*">
+
+    <TableRow>
+
+        <LinearLayout
+            android:id="@+id/clip_ratio_free"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_cut_zy_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自由"
+                android:textColor="@drawable/selector_photo_text_color"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/clip_ratio_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_cut_11_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1:1"
+                android:textColor="@drawable/selector_photo_text_color"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/clip_ratio_34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_cut_34_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3:4"
+                android:textColor="@drawable/selector_photo_text_color"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/clip_ratio_43"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_cut_43_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4:3"
+                android:textColor="@drawable/selector_photo_text_color"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/clip_ratio_916"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_cut_916_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9:16"
+                android:textColor="@drawable/selector_photo_text_color"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/clip_ratio_169"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_cut_169_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16:9"
+                android:textColor="@drawable/selector_photo_text_color"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/clip_ratio_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_cut_cz_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="重置"
+                android:textColor="#ffffffff"
+                android:textSize="@dimen/image_processing_text_size" />
+        </LinearLayout>
+    </TableRow>
+</TableLayout>

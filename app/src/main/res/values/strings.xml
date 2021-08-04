@@ -13,4 +13,10 @@
     <string name="more_stickers">贴纸库</string>
     <string name="camera_sticker_input_hint">单击输入</string>
     <string name="intelligence_filter">智能滤镜</string>
+    <string name="image_clip_mirror">镜像</string>
+    <string name="image_clip_ratio">比例</string>
+    <string name="image_clip_rotate">旋转</string>
+    <string name="image_save_failed">保存图片失败</string>
+    <string name="image_save_success">图片已保存</string>
+    <string name="draw">马赛克</string>
 </resources>

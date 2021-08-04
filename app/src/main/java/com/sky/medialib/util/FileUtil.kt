@@ -9,15 +9,15 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore.*
 import android.text.TextUtils
-import com.blankj.utilcode.util.FileIOUtils
-import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ZipUtils
 import java.lang.Exception
 import java.net.URLDecoder
-import android.content.res.AssetManager
 import com.blankj.utilcode.util.ThreadUtils
 import com.sky.media.image.core.util.LogUtils
 import java.io.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+import java.util.zip.ZipInputStream
 
 
 /**
@@ -220,7 +220,7 @@ object FileUtil {
             }
 
             override fun onSuccess(result: Boolean?) {
-               ToastUtils.show("成功解压魔镜")
+               LogUtils.logd(TAG,"unzip magicfilter success $result")
             }
 
             override fun onFail(t: Throwable?) {
@@ -288,5 +288,49 @@ object FileUtil {
             }
         }
         return bArr
+    }
+
+    fun unZipByteArray(arr:ByteArray):ByteArray?{
+        var bytes: ByteArray? = null
+        try {
+            val bis = ByteArrayInputStream(arr)
+            val zip = ZipInputStream(bis)
+            while (zip.getNextEntry() != null) {
+                val buf = ByteArray(1024)
+                var num = -1
+                val baos = ByteArrayOutputStream()
+                while (zip.read(buf, 0, buf.size).also { num = it } != -1) {
+                    baos.write(buf, 0, num)
+                }
+                bytes = baos.toByteArray()
+                baos.flush()
+                baos.close()
+            }
+            zip.close()
+            bis.close()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return bytes
+    }
+
+    fun zipBitmapToByteArray(bArr:ByteArray):ByteArray?{
+        var toByteArray: ByteArray?
+        try {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            val zipOutputStream = ZipOutputStream(byteArrayOutputStream)
+            val zipEntry = ZipEntry("zip")
+            zipEntry.size = bArr.size.toLong()
+            zipOutputStream.putNextEntry(zipEntry)
+            zipOutputStream.write(bArr)
+            zipOutputStream.closeEntry()
+            zipOutputStream.close()
+            toByteArray = byteArrayOutputStream.toByteArray()
+            byteArrayOutputStream.close()
+        } catch (e3: Throwable) {
+            toByteArray = null
+           e3.printStackTrace()
+        }
+        return toByteArray
     }
 }

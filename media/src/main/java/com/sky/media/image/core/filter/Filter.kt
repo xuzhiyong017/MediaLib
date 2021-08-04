@@ -8,8 +8,8 @@ open class Filter {
     open var context: Context? = null
     protected var mExtra: MutableMap<String, String> = HashMap<String, String>()
     open var icon: String? = null
-    var name: String? = null
-    var adjuster: Adjuster?
+    open var name: String? = null
+    open var adjuster: Adjuster?
         get() = mAdjuster
         set(adjuster) {
             mAdjuster = adjuster

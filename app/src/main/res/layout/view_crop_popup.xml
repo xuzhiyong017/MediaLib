@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.sky.medialib.ui.kit.view.crop.GestureCropImageView
+        android:id="@+id/crop_image"
+        android:background="#ff262626"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <com.sky.medialib.ui.kit.view.crop.CropRectView
+        android:id="@+id/crop_rect"
+        android:paddingLeft="17.0dip"
+        android:paddingTop="15.0dip"
+        android:paddingRight="17.0dip"
+        android:paddingBottom="15.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+</merge>

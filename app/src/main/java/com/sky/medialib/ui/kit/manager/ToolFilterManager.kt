@@ -5,6 +5,7 @@ import com.sky.media.image.core.filter.Adjuster
 import com.sky.media.kit.filter.BuffingTool
 import com.sky.media.kit.filter.WhiteningTool
 import com.sky.media.kit.filter.normal.*
+import com.sky.media.kit.filter.scribble.ScribbleTool
 import com.sky.media.kit.filter.tools.*
 import com.sky.media.kit.model.FilterExt
 import com.sky.medialib.ui.kit.filter.MagicFilterExt
@@ -22,6 +23,8 @@ object ToolFilterManager {
 
     val whiteningTool = WhiteningTool()
     val buffingTool = BuffingTool()
+    var clipScribbleTool :ScribbleTool? = null
+    var paintScribbleTool :ScribbleTool? = null
 
     val normalFilters: MutableList<FilterExt> = mutableListOf()
     val mToolFilters: MutableList<FilterExt> = mutableListOf()
@@ -54,6 +57,9 @@ object ToolFilterManager {
     }
 
     private fun initToolsFilter(context: Context) {
+        clipScribbleTool = ScribbleTool(context,0)
+        paintScribbleTool = ScribbleTool(context,1)
+
         mToolFilters.clear()
         addToolFiler(Exposure())
         addToolFiler(Contrast())
