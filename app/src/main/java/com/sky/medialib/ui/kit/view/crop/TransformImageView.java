@@ -98,7 +98,7 @@ public class TransformImageView extends AppCompatImageView {
 
     public void changeBitmap(Bitmap bitmap) {
         setImageDrawable(new FastBitmapDrawable(bitmap));
-        setImageMatrix(this.mCurrentImageMatrix);
+        setImageMatrix(mCurrentImageMatrix);
     }
 
     public float getCurrentScale() {
@@ -132,16 +132,16 @@ public class TransformImageView extends AppCompatImageView {
         return ((FastBitmapDrawable) getDrawable()).getSourceBitmap();
     }
 
-    public void postTranslate(float f, float f2) {
-        if (f != 0.0f || f2 != 0.0f) {
-            this.mCurrentImageMatrix.postTranslate(f, f2);
+    public void postTranslate(float dx, float dy) {
+        if (dx != 0.0f || dy != 0.0f) {
+            this.mCurrentImageMatrix.postTranslate(dx, dy);
             setImageMatrix(this.mCurrentImageMatrix);
         }
     }
 
-    public void postScale(float f, float f2, float f3) {
-        if (f != 0.0f) {
-            this.mCurrentImageMatrix.postScale(f, f, f2, f3);
+    public void postScale(float scale, float px, float py) {
+        if (scale != 0.0f) {
+            this.mCurrentImageMatrix.postScale(scale, scale, px, py);
             setImageMatrix(this.mCurrentImageMatrix);
             if (this.mTransformImageListener != null) {
                 this.mTransformImageListener.onScale(getMatrixScale(this.mCurrentImageMatrix));
@@ -149,19 +149,19 @@ public class TransformImageView extends AppCompatImageView {
         }
     }
 
-    public void postMirror(float f, float f2, boolean z) {
+    public void postMirror(float px, float py, boolean z) {
         if (z) {
-            this.mCurrentImageMatrix.postScale(-1.0f, 1.0f, f, f2);
+            this.mCurrentImageMatrix.postScale(-1.0f, 1.0f, px, py);
         } else {
-            this.mCurrentImageMatrix.postScale(1.0f, -1.0f, f, f2);
+            this.mCurrentImageMatrix.postScale(1.0f, -1.0f, px, py);
         }
         this.mIsMirrored = !this.mIsMirrored;
         setImageMatrix(this.mCurrentImageMatrix);
     }
 
-    public void postRotate(float f, float f2, float f3) {
-        if (f != 0.0f) {
-            this.mCurrentImageMatrix.postRotate(f, f2, f3);
+    public void postRotate(float degrees, float px, float py) {
+        if (degrees != 0.0f) {
+            this.mCurrentImageMatrix.postRotate(degrees, px, py);
             setImageMatrix(this.mCurrentImageMatrix);
             if (this.mTransformImageListener != null) {
                 this.mTransformImageListener.onRotate(getMatrixAngle(this.mCurrentImageMatrix));
@@ -170,7 +170,7 @@ public class TransformImageView extends AppCompatImageView {
     }
 
     public boolean isBitmapTransformed() {
-        return !this.mCurrentImageMatrix.equals(this.mDefaultMatrix);
+        return !mCurrentImageMatrix.equals(this.mDefaultMatrix);
     }
 
     protected void init() {
@@ -195,7 +195,7 @@ public class TransformImageView extends AppCompatImageView {
 
     protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        if (z || (this.mBitmapDecoded && !this.mBitmapLaidOut)) {
+        if (z || (mBitmapDecoded && !mBitmapLaidOut)) {
             int paddingLeft = getPaddingLeft();
             int paddingTop = getPaddingTop();
             int height = getHeight() - getPaddingBottom();
@@ -242,5 +242,6 @@ public class TransformImageView extends AppCompatImageView {
     protected void updateCurrentImagePoints() {
         this.mCurrentImageMatrix.mapPoints(this.mCurrentImageCorners, this.mInitialImageCorners);
         this.mCurrentImageMatrix.mapPoints(this.mCurrentImageCenter, this.mInitialImageCenter);
+        printMatrix();
     }
 }

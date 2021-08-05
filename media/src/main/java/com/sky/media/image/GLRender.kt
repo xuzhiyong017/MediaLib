@@ -1,6 +1,7 @@
 package com.sky.media.image
 
 import android.opengl.GLES20
+import com.sky.media.image.core.util.LogUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -177,7 +178,7 @@ abstract class GLRender {
     open fun setRenderSize(renderWidth: Int, renderHeight: Int) {
         this.width = renderWidth
         this.height = renderHeight
-        customSizeSet = true
+        customSizeSet = false
         sizeChanged = true
     }
 

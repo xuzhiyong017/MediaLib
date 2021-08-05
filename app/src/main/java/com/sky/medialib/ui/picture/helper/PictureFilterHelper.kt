@@ -300,7 +300,9 @@ class PictureFilterHelper(
         filter_bar_layout.visibility = View.INVISIBLE
     }
 
-
+    fun getBottomMenuHeight(): Int {
+        return tools_gallery.height
+    }
 
 
 }

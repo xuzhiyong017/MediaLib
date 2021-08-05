@@ -22,6 +22,7 @@ import com.blankj.utilcode.util.AdaptScreenUtils;
 import com.blankj.utilcode.util.ZipUtils;
 import com.sky.medialib.R;
 import com.sky.medialib.util.FileUtil;
+import com.sky.medialib.util.PixelUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -109,7 +110,7 @@ public class DrawView extends View {
     }
 
     private void init(Context context) {
-        this.mStrokeWidthList = new int[]{AdaptScreenUtils.pt2Px(6.0f), AdaptScreenUtils.pt2Px(12.0f), AdaptScreenUtils.pt2Px(18.0f), AdaptScreenUtils.pt2Px(24.0f), AdaptScreenUtils.pt2Px(30.0f)};
+        this.mStrokeWidthList = new int[]{PixelUtil.dip2px(6.0f), PixelUtil.dip2px(12.0f), PixelUtil.dip2px(18.0f), PixelUtil.dip2px(24.0f), PixelUtil.dip2px(30.0f)};
         this.mPaint.setDither(false);
         this.mPaint.setStyle(Style.STROKE);
         this.mPaint.setStrokeCap(Cap.ROUND);

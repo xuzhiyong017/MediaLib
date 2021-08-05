@@ -3,6 +3,7 @@ package com.sky.medialib.ui.kit.manager
 import com.google.gson.Gson
 import com.sky.media.kit.BaseMediaApplication
 import com.sky.medialib.ui.kit.filter.MagicFilterExt
+import com.sky.medialib.ui.kit.filter.OriginMagicFilterExt
 import com.sky.medialib.ui.kit.model.MagicFilterModel
 import com.sky.medialib.ui.kit.model.json.magic.JsonTemplate
 import com.sky.medialib.ui.kit.model.json.magic.TemplateList
@@ -718,9 +719,11 @@ object MagicManager {
 
 
     open fun parseJsonList() {
+
+
         jsonTemplates = Gson().fromJson<TemplateList>(template,TemplateList::class.java).templates
         if(jsonTemplates != null){
-            val list = mutableListOf<MagicFilterExt>()
+            val list = mutableListOf<MagicFilterExt>(OriginMagicFilterExt(BaseMediaApplication.sContext))
             jsonTemplates.forEach {
                 list.add(covertFilter(it))
             }

@@ -6,6 +6,7 @@ import android.graphics.Matrix
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -49,7 +50,7 @@ class PictureEditActivity : AppCompatActivity()
         setContentView(R.layout.activity_picture_edit)
         initParams()
         mEditImageProcessExt = ImageProcessExt(frame,processing_view)
-        mCurBitmap = BitmapFactory.decodeResource(resources,R.drawable.image1)
+        mCurBitmap = PictureBitmapHolder.getInstance().handleBitmap(BitmapFactory.decodeResource(resources,R.drawable.image1),mScreenWidth,mScreenHeight)
         mEditImageProcessExt.initInputBitmap(mCurBitmap,
             resources.displayMetrics.widthPixels,resources.displayMetrics.heightPixels,null)
 
@@ -170,14 +171,14 @@ class PictureEditActivity : AppCompatActivity()
             })
     }
 
-    private fun scaleBitmap(bitmap: Bitmap?, i: Int, i2: Int): Bitmap? {
+    private fun scaleBitmap(bitmap: Bitmap?, screenWidth: Int, screenHeight: Int): Bitmap? {
         if (bitmap == null) {
             return null
         }
         val width = bitmap.width
         val height = bitmap.height
-        var f = i.toFloat() / width.toFloat()
-        val f2 = i2.toFloat() / height.toFloat()
+        var f = screenWidth.toFloat() / width.toFloat()
+        val f2 = screenHeight.toFloat() / height.toFloat()
         if (f > f2) {
             f = f2
         }
@@ -202,7 +203,7 @@ class PictureEditActivity : AppCompatActivity()
                 }
                 MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> run {
                     if (!mIsTouchToShowOriginal || !mIsLongClick) {
-                        if (!mIsLongClick && (mCurrentTab === EditMenuItem.STICKER || mCurrentTab === EditMenuItem.FILTER || mCurrentTab === EditMenuItem.MAGIC || mCurrentTab === EditMenuItem.TOOL || mCurrentTab === EditMenuItem.TEXT || mCurrentTab === EditMenuItem.AT)) {
+                        if (!mIsLongClick && (mCurrentTab === EditMenuItem.STICKER || mCurrentTab === EditMenuItem.FILTER || mCurrentTab === EditMenuItem.MAGIC || mCurrentTab === EditMenuItem.TOOL)) {
                             hideAllTab()
                             showAllCommonFunctionView()
                             return@run
@@ -217,7 +218,7 @@ class PictureEditActivity : AppCompatActivity()
         }
 
         show_area_layout.setOnClickListener {
-            if (this.mCurrentTab == EditMenuItem.STICKER || this.mCurrentTab == EditMenuItem.FILTER || this.mCurrentTab == EditMenuItem.MAGIC || this.mCurrentTab == EditMenuItem.TOOL || this.mCurrentTab == EditMenuItem.TEXT || this.mCurrentTab == EditMenuItem.AT) {
+            if (this.mCurrentTab == EditMenuItem.STICKER || this.mCurrentTab == EditMenuItem.FILTER || this.mCurrentTab == EditMenuItem.MAGIC || this.mCurrentTab == EditMenuItem.TOOL) {
                 hideAllTab();
                 showAllCommonFunctionView();
             }
@@ -247,6 +248,9 @@ class PictureEditActivity : AppCompatActivity()
     private fun showAllCommonFunctionView() {
         edit_menu.visibility = View.VISIBLE
         edit_menu_bg.visibility = View.VISIBLE
+        pic_save.visibility = View.VISIBLE
+        edit_pic_cancel.visibility = View.VISIBLE
+        mStickerHelper.updateViewControllerStatus(true,true)
         mCurrentTab = EditMenuItem.NONE
         fixProcessingAreaCenterVertex()
     }
@@ -263,6 +267,11 @@ class PictureEditActivity : AppCompatActivity()
     private fun fixProcessingAreaCenterVertex() {
         var height = when(mCurrentTab){
             EditMenuItem.BEAUTY ->  mScreenHeight - 55.0f.px
+            EditMenuItem.STICKER -> mScreenHeight - mStickerHelper.getBottomMenuHeight()
+            EditMenuItem.FILTER -> mScreenHeight - mFilterHelper.getBottomMenuHeight()
+            EditMenuItem.MAGIC -> mScreenHeight - mFilterHelper.getBottomMenuHeight()
+            EditMenuItem.TOOL -> mScreenHeight - mFilterHelper.getBottomMenuHeight()
+            EditMenuItem.DAUBER -> mScreenHeight - mScribbleHelper.bottomMenuHeight
             else -> mMenuHeight
         }
 
@@ -328,6 +337,9 @@ class PictureEditActivity : AppCompatActivity()
     private fun selectCommonFunctionView() {
         edit_menu.visibility = View.GONE
         edit_menu_bg.visibility = View.GONE
+        pic_save.visibility = View.GONE
+        edit_pic_cancel.visibility = View.GONE
+
     }
 
     private fun showTab() {
@@ -400,11 +412,27 @@ class PictureEditActivity : AppCompatActivity()
         runOnUiThread {
             bitmap?.run {
                 if(mEditImageProcessExt.getUserFilters()?.contains(ToolFilterManager.clipScribbleTool) == true){
-
+                    mClipHelper.setClipBitmap(bitmap,null)
+                }else{
+                    mClipHelper.setClipBitmap(bitmap,mEditImageProcessExt.getSourceBitmap())
                 }
             }
         }
     }
+
+    override fun onKeyDown(i: Int, keyEvent: KeyEvent?): Boolean {
+        if (i != 4) {
+            return super.onKeyDown(i, keyEvent)
+        }
+        if (edit_menu.visibility != 0) {
+            hideAllTab()
+            showAllCommonFunctionView()
+            return true
+        }
+        showFinishDialog()
+        return true
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

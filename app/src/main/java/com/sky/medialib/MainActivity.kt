@@ -10,6 +10,7 @@ import com.permissionx.guolindev.PermissionX
 import com.sky.media.image.core.view.GLSurfaceView
 import com.sky.media.image.core.view.GLTextureView
 import com.sky.medialib.render.Square
+import com.sky.medialib.ui.picture.activity.ImageMatrixActivity
 import com.sky.medialib.util.AESUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun jumpPictureEdit(view: View) {
+
         PermissionX.init(this)
             .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
             .request { allGranted, grantedList, deniedList ->

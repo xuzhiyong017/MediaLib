@@ -14,6 +14,7 @@ import com.sky.medialib.ui.kit.adjust.AdjusterExt
 class OriginMagicFilterExt(context: Context) : MagicFilterExt(context,null) {
 
     init {
+        name = "原图"
         adjustExt = AdjusterExt(EmptyRender())
         adjuster = adjustExt
         mId = 1000000

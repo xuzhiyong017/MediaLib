@@ -108,6 +108,13 @@ public class GestureCropImageView extends CropImageView {
 
     private void setupGestureListeners() {
         this.mGestureDetector = new GestureDetector(getContext(), new SimpleOnGestureListener(){
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                zoomImageToPosition(getDoubleTapTargetScale(), e.getX(), e.getY(), DOUBLE_TAP_ZOOM_DURATION);
+                return super.onDoubleTap(e);
+            }
+
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 postTranslate(-distanceX, -distanceY);

@@ -166,4 +166,14 @@ public class PictureBitmapHolder {
         }
         return bitmap;
     }
+
+    public Bitmap handleBitmap(Bitmap bitmap, int screenWidth, int screenHeight) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float max = Math.max(screenWidth* 1.0f /  width, screenHeight * 1.0f / height);
+        Matrix matrix = new Matrix();
+        matrix.postScale(max, max);
+        Bitmap createBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+        return Bitmap.createBitmap(createBitmap, (createBitmap.getWidth() - screenWidth) / 2, (createBitmap.getHeight() - screenHeight) / 2, screenWidth, screenHeight);
+    }
 }

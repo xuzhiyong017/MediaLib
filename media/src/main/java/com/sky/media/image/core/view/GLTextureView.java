@@ -31,7 +31,7 @@ public class GLTextureView extends TextureView implements SurfaceTextureListener
 
     private final static String TAG = "GLTextureView";
     private final static boolean LOG_ATTACH_DETACH = false;
-    private final static boolean LOG_THREADS = true;
+    private final static boolean LOG_THREADS = false;
     private final static boolean LOG_PAUSE_RESUME = false;
     private final static boolean LOG_SURFACE = false;
     private final static boolean LOG_RENDERER = false;

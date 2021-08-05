@@ -92,47 +92,36 @@ public class ClipPopupWindow extends PopupWindow implements OnClickListener {
         this.mRatioViews[this.mRatioSelectIndex].setSelected(false);
         this.mMenuViews[this.mMenuSelectIndex].setSelected(false);
         this.mMenuLayoutView[this.mMenuSelectIndex].setVisibility(View.INVISIBLE);
-        Map hashMap = new HashMap();
         if (id == R.id.clip_ratio_free) {
             this.mRatioSelectIndex = 0;
             this.cropView.cropImageByRatio(0.0f, this.mRatioSelectIndex);
-            hashMap.put("edit", "free");
         } else if (id == R.id.clip_ratio_11) {
             this.mRatioSelectIndex = 1;
             this.cropView.cropImageByRatio(1.0f, this.mRatioSelectIndex);
-            hashMap.put("edit", "1");
         } else if (id == R.id.clip_ratio_34) {
             this.mRatioSelectIndex = 2;
             this.cropView.cropImageByRatio(0.75f, this.mRatioSelectIndex);
-            hashMap.put("edit", "0.75");
         } else if (id == R.id.clip_ratio_43) {
             this.mRatioSelectIndex = 3;
             this.cropView.cropImageByRatio(1.3333334f, this.mRatioSelectIndex);
-            hashMap.put("edit", "1.3");
         } else if (id == R.id.clip_ratio_916) {
             this.mRatioSelectIndex = 4;
             this.cropView.cropImageByRatio(0.5625f, this.mRatioSelectIndex);
-            hashMap.put("edit", "0.56");
         } else if (id == R.id.clip_ratio_169) {
             this.mRatioSelectIndex = 5;
             this.cropView.cropImageByRatio(1.7777778f, this.mRatioSelectIndex);
-            hashMap.put("edit", "1.78");
         } else if (id == R.id.clip_ratio_reset) {
             this.cropView.clipReset();
             this.mRatioSelectIndex = this.cropView.getRatioIndex();
-            hashMap.put("edit", "recovery");
         } else if (id == R.id.clip_rotate_l) {
             this.cropView.rotate(-90.0f);
             this.cropView.setImageToWrapCropBounds(false);
-            hashMap.put("edit", "rotate_l");
         } else if (id == R.id.clip_rotate_r) {
             this.cropView.rotate(90.0f);
             this.cropView.setImageToWrapCropBounds(false);
-            hashMap.put("edit", "rotate_r");
         } else if (id == R.id.clip_rotate_reset) {
             this.cropView.clipReset();
             this.mToolSeekBar.setProgress(((int) this.cropView.getRotateDegrees()) + 70);
-            hashMap.put("edit", "recovery");
         } else if (id == R.id.clip_mirror_horizontal) {
             this.cropView.postMirror(true);
         } else if (id == R.id.clip_mirror_vertical) {
@@ -158,8 +147,8 @@ public class ClipPopupWindow extends PopupWindow implements OnClickListener {
             }
             return;
         } else if (id == R.id.clip_ok) {
-            if (this.cropView.mo18014c()) {
-                this.cropView.mo18015d();
+            if (this.cropView.isImageChange()) {
+                this.cropView.clipImageChange();
             } else {
                 this.cropView.setVisibility(8);
             }

@@ -31,7 +31,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private final static boolean LOG_PAUSE_RESUME = false;
     private final static boolean LOG_SURFACE = false;
     private final static boolean LOG_RENDERER = false;
-    private final static boolean LOG_RENDERER_DRAW_FRAME = true;
+    private final static boolean LOG_RENDERER_DRAW_FRAME = false;
     private final static boolean LOG_EGL = false;
     /**
      * The renderer only renders

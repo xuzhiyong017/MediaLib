@@ -2,6 +2,7 @@ package com.sky.medialib.ui.kit.view.crop;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.sky.media.image.core.util.LogUtils;
 import com.sky.medialib.R;
 
 
@@ -43,8 +45,9 @@ public class CropView extends RelativeLayout {
         this.mCropRectView.setOnRectChangeListener(new CropRectView.OnRectChangeListener() {
             @Override
             public void onRectChange(float f, RectF rectF, boolean z, boolean z2) {
-                CropView.this.mGestureCropImageView.setTargetAspectRatio(f);
-                CropView.this.mGestureCropImageView.setCropRect(rectF, z2, z, false);
+                LogUtils.logd("CropView TransformImageView","Radio="+f + " rect="+rectF.toString());
+                mGestureCropImageView.setTargetAspectRatio(f);
+                mGestureCropImageView.setCropRect(rectF, z2, z, false);
             }
         });
         this.mGestureCropImageView = (GestureCropImageView) inflate.findViewById(R.id.crop_image);
@@ -60,12 +63,20 @@ public class CropView extends RelativeLayout {
             this.ratioIndex = 0;
             this.rotateDegree = 0.0f;
             this.mGestureCropImageView.setImageBitmap(bitmap);
-            this.sourceBitmap = bitmap2;
+            if(bitmap2 != null){
+                if(bitmap.getWidth() == bitmap2.getWidth() && bitmap.getHeight() == bitmap2.getHeight()){
+                    sourceBitmap = bitmap2;
+                }else{
+                    sourceBitmap = Bitmap.createScaledBitmap(bitmap2,bitmap.getWidth(),bitmap.getHeight(),false);
+                }
+            }else{
+                sourceBitmap = null;
+            }
         }
     }
 
     public void cropImageByRatio(float ratio, int ratioIndex) {
-        if ((this.mCropRectView.mo17993a() && ratio != 0.0f) || !(this.mCropRectView.mo17993a() || ratio == this.mCropRectView.getRatio())) {
+        if ((this.mCropRectView.hasCropRatio() && ratio != 0.0f) || !(this.mCropRectView.hasCropRatio() || ratio == this.mCropRectView.getRatio())) {
             this.mGestureCropImageView.cancelAllAnimations();
             this.mCropRectView.setRatio(ratio);
         }
@@ -135,12 +146,12 @@ public class CropView extends RelativeLayout {
         this.mClippedListener = onImageClippedListener;
     }
 
-    public boolean mo18014c() {
-        return this.mCropRectView.mo17996d() || this.mGestureCropImageView.isBitmapTransformed();
+    public boolean isImageChange() {
+        return this.mCropRectView.hasMove() || this.mGestureCropImageView.isBitmapTransformed();
     }
 
-    public void mo18015d() {
-        if (this.mCropRectView.mo17996d() || this.mGestureCropImageView.isBitmapTransformed()) {
+    public void clipImageChange() {
+        if (this.mCropRectView.hasMove() || this.mGestureCropImageView.isBitmapTransformed()) {
             if (this.sourceBitmap != null) {
                 this.mGestureCropImageView.changeBitmap(this.sourceBitmap);
             }
@@ -167,5 +178,10 @@ public class CropView extends RelativeLayout {
                 break;
         }
         return super.dispatchTouchEvent(motionEvent);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
     }
 }

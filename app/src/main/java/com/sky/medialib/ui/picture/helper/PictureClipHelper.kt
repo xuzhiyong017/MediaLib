@@ -9,6 +9,8 @@ import com.blankj.utilcode.util.AdaptScreenUtils
 import com.sky.medialib.R
 import com.sky.medialib.ui.kit.view.crop.ClipPopupWindow
 import com.sky.medialib.ui.kit.view.crop.CropView
+import com.sky.medialib.util.PixelUtil
+import px
 
 /**
  * @author: xuzhiyong
@@ -22,7 +24,7 @@ class PictureClipHelper(val activity: Activity, val listener: ClipPopupWindow.on
     var clipPopupWindow:ClipPopupWindow? = null
 
     init {
-        mCropView.setPadding(0,0,0,AdaptScreenUtils.pt2Px(180.0f))
+        mCropView.setPadding(0,0,0, PixelUtil.dip2px(180.0f))
         mCropView.invalidate()
     }
 

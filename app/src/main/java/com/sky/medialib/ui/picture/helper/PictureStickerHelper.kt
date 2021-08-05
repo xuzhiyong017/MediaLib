@@ -199,5 +199,9 @@ class PictureStickerHelper(val mContext: Activity, val screenWidth:Int, val scre
         arrayList.clear()
     }
 
+    fun getBottomMenuHeight(): Int {
+        return mStickerRecyclerView.height
+    }
+
 }
 

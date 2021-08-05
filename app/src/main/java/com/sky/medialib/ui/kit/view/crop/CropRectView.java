@@ -10,19 +10,16 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.blankj.utilcode.util.AdaptScreenUtils;
-
+import com.sky.medialib.util.PixelUtil;
 
 public class CropRectView extends View {
-    /* renamed from: a */
+
     private int mTouchAreaType = 0;
-    /* renamed from: b */
     private int f9390b;
-    /* renamed from: c */
     private Point f9391c = new Point();
-    private float mGuideStrokeWeight = ((float) AdaptScreenUtils.pt2Px(2.0f));
-    private float mGuideLineWidth = ((float) AdaptScreenUtils.pt2Px(1.0f));
-    private int mHandleSize = AdaptScreenUtils.pt2Px(6.0f);
+    private float mGuideStrokeWeight = ((float) PixelUtil.dip2px(2.0f));
+    private float mGuideLineWidth = ((float) PixelUtil.dip2px(1.0f));
+    private int mHandleSize = PixelUtil.dip2px(6.0f);
     private final Paint mCropGridPaint = new Paint();
     private Rect mAspectRatioRect = new Rect();
     private float viewRatio;
@@ -83,12 +80,10 @@ public class CropRectView extends View {
         return this.ratio;
     }
 
-    /* renamed from: a */
-    public boolean mo17993a() {
+    public boolean hasCropRatio() {
         return this.hasCropRatio;
     }
 
-    /* renamed from: a */
     public void drawGridLine(boolean z) {
         this.enableGridLine = z;
         postInvalidate();
@@ -109,7 +104,7 @@ public class CropRectView extends View {
         invalidate();
     }
 
-    public boolean mo17996d() {
+    public boolean hasMove() {
         return (this.mAspectRatioRect.left == this.mStartPoint.x && this.mAspectRatioRect.top == this.mStartPoint.y && this.mAspectRatioRect.right == this.width && this.mAspectRatioRect.bottom == this.height) ? false : true;
     }
 
@@ -133,14 +128,15 @@ public class CropRectView extends View {
     private void setTargetAspectRatio(float f) {
         int width = (getWidth() - getPaddingLeft()) - getPaddingRight();
         int height = (getHeight() - getPaddingTop()) - getPaddingBottom();
-        this.viewRatio = (((float) width) * 1.0f) / ((float) height);
+        this.viewRatio = width * 1.0f / height;
         if (f < this.viewRatio) {
             this.height = height;
             this.width = (int) (((float) height) * f);
-            return;
+        }else{
+            this.height = (int) (((float) width) / f);
+            this.width = width;
         }
-        this.height = (int) (((float) width) / f);
-        this.width = width;
+
     }
 
     private void resetStartPoint() {
@@ -258,11 +254,11 @@ public class CropRectView extends View {
                 }
                 this.mTouchAreaType = 8;
                 return this.hasCropRatio;
-            case 1:
+            case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 reset();
                 return true;
-            case 2:
+            case MotionEvent.ACTION_MOVE:
                 switch (this.mTouchAreaType) {
                     case 1:
                     case 2:

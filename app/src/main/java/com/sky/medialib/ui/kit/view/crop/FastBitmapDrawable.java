@@ -73,9 +73,10 @@ public class FastBitmapDrawable extends Drawable {
         if (bitmap != null) {
             this.width = this.sourceBitmap.getWidth();
             this.height = this.sourceBitmap.getHeight();
-            return;
+        }else{
+            this.width = 0;
+            this.height = 0;
         }
-        this.height = 0;
-        this.width = 0;
+
     }
 }

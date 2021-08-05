@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.sky.medialib"
         minSdk = 21
-        targetSdk = 28
+        targetSdk = 27
         versionCode = 1
         versionName = "1.0"
 
