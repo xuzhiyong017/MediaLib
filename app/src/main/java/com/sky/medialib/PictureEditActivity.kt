@@ -3,6 +3,7 @@ package com.sky.medialib
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.blankj.utilcode.util.UriUtils
 import com.sky.media.image.core.out.BitmapOutput
 import com.sky.medialib.ui.picture.process.ImageProcessExt
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
@@ -23,6 +25,8 @@ import com.sky.medialib.ui.picture.helper.*
 import kotlinx.android.synthetic.main.activity_picture_edit.*
 import px
 import kotlin.math.roundToInt
+
+const val PICK_PICTURE = "pick_picture"
 
 class PictureEditActivity : AppCompatActivity()
     ,EditMenu.OnItemClickListener,PictureFilterHelper.OnActivityListener,BitmapOutput.BitmapOutputCallback {
@@ -50,7 +54,7 @@ class PictureEditActivity : AppCompatActivity()
         setContentView(R.layout.activity_picture_edit)
         initParams()
         mEditImageProcessExt = ImageProcessExt(frame,processing_view)
-        mCurBitmap = PictureBitmapHolder.getInstance().handleBitmap(BitmapFactory.decodeResource(resources,R.drawable.image1),mScreenWidth,mScreenHeight)
+        mCurBitmap = PictureBitmapHolder.getInstance().getOriginalImage(mCurrentPhoto)
         mEditImageProcessExt.initInputBitmap(mCurBitmap,
             resources.displayMetrics.widthPixels,resources.displayMetrics.heightPixels,null)
 
@@ -65,6 +69,13 @@ class PictureEditActivity : AppCompatActivity()
         mScreenWidth = resources.displayMetrics.widthPixels
         mMenuHeight = (mScreenHeight - 75.0f.px).toInt()
         mFrameHeight = (mMenuHeight - 55.0f.px).toInt()
+
+        val uri = intent.getParcelableExtra<Uri>(PICK_PICTURE)
+        mCurrentPhoto = UriUtils.uri2File(uri).absolutePath
+        if(mCurrentPhoto == null){
+            finish()
+            return
+        }
 
         ToolFilterManager.initPictureEditFilter(this)
     }
@@ -418,6 +429,16 @@ class PictureEditActivity : AppCompatActivity()
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        processing_view.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        processing_view.onPause()
     }
 
     override fun onKeyDown(i: Int, keyEvent: KeyEvent?): Boolean {

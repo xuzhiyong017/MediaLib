@@ -45,6 +45,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("com.guolindev.permissionx:permissionx:1.5.0")
     implementation("com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.6")
+    implementation("com.github.gzu-liyujiang.AndroidPicker:ImagePicker:3.1.0")
     implementation(project(mapOf("path" to ":media")))
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
