@@ -1,4 +1,4 @@
-package com.sky.media.image.picture
+package com.sky.media.kit.picture
 
 import android.graphics.Bitmap
 import android.opengl.GLES20

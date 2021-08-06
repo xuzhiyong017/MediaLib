@@ -10,8 +10,8 @@ abstract class MultiInputPixelRender(numOfInputs: Int) : MultiInputRender(numOfI
 
     override fun handleSizeChange() {
         super.handleSizeChange()
-        texelWidth = 1.0f / width.toFloat()
-        texelHeight = 1.0f / height.toFloat()
+        texelWidth = 1.0f / getWidth().toFloat()
+        texelHeight = 1.0f / getHeight().toFloat()
     }
 
     override fun initShaderHandles() {

@@ -25,7 +25,7 @@ public class ProcessSurfaceView extends GLSurfaceView implements IRenderView {
         if (this.mPipeline == null) {
             this.mPipeline = new RenderPipeline();
             setRenderer(this.mPipeline);
-            setRenderMode(0);
+            setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         }
         return this.mPipeline;
     }

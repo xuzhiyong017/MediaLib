@@ -2,7 +2,7 @@ package com.sky.medialib.ui.picture.process
 
 import com.sky.media.image.core.filter.Adjuster
 import com.sky.media.image.core.filter.Filter
-import com.sky.media.image.core.process.base.ImageProcess
+import com.sky.media.kit.picture.ImageProcess
 import com.sky.media.image.core.render.EmptyRender
 import com.sky.media.image.core.view.IContainerView
 import com.sky.media.image.core.view.IRenderView

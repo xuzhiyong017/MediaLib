@@ -32,20 +32,8 @@ abstract class GLRender {
     protected var textureVertices = arrayOfNulls<FloatBuffer>(4)
     protected var mRunOnDraw: Queue<Runnable> = LinkedList<Runnable>()
 
-    open var width = 0
-        set(value) {
-            if(!customSizeSet && field != value){
-                field = value
-                sizeChanged = true
-            }
-        }
-    open var height = 0
-        set(value) {
-            if(!customSizeSet && field != value){
-                field = value
-                sizeChanged = true
-            }
-        }
+    private var width = 0
+    private var height = 0
 
     protected var positionHandle = -1
     protected var texCoordHandle = -1
@@ -175,10 +163,33 @@ abstract class GLRender {
         }
     }
 
+    open fun setWidth(i: Int) {
+        if (!customSizeSet && width != i) {
+            width = i
+            sizeChanged = true
+        }
+    }
+
+    open fun setHeight(i: Int) {
+        if (!customSizeSet && height != i) {
+            height = i
+            sizeChanged = true
+        }
+    }
+
+    open fun getWidth(): Int {
+        return width
+    }
+
+    open fun getHeight(): Int {
+        return height
+    }
+
+
     open fun setRenderSize(renderWidth: Int, renderHeight: Int) {
+        customSizeSet = true
         this.width = renderWidth
         this.height = renderHeight
-        customSizeSet = false
         sizeChanged = true
     }
 

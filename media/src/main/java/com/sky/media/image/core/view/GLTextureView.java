@@ -429,7 +429,9 @@ public class GLTextureView extends TextureView implements SurfaceTextureListener
      * Must not be called before a renderer has been set.
      */
     public void onPause() {
-        mGLThread.onPause();
+        if(mGLThread != null){
+            mGLThread.onPause();
+        }
     }
 
     /**
@@ -442,7 +444,9 @@ public class GLTextureView extends TextureView implements SurfaceTextureListener
      * Must not be called before a renderer has been set.
      */
     public void onResume() {
-        mGLThread.onResume();
+        if(mGLThread != null){
+            mGLThread.onResume();
+        }
     }
 
     /**

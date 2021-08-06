@@ -142,8 +142,6 @@ abstract class ContainerViewHelper : IContainerView {
                     realWidth = ((realHeight.toFloat() * aspectRatio).toDouble() + 0.5).toInt()
                 }
             }
-            realHeight = 0
-            realWidth = 0
         } else if (mAngle / 90 % 2 == 1) {
             if (mMaxWidth != 0 && mMaxHeight != 0) {
                 realWidth = mMaxWidth

@@ -30,4 +30,7 @@
     <string name="camera_paster_openarrow">更多</string>
     <string name="camera_tagpoint_editor_max">"已达添加上限
 最多添加5个标签"</string>
+    <string name="cannot_connect_camera">无法打开相机，请检查应用使用相机权限.</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_ok">确定</string>
 </resources>

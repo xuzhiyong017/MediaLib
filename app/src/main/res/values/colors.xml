@@ -12,4 +12,13 @@
     <color name="transparent">#00000000</color>
     <color name="black_alpha_50">#80000000</color>
     <color name="common_highlight">#ffff636c</color>
+    <color name="dialog_background">#ff1f2127</color>
+    <color name="dialog_button_pressed">#15ffffff</color>
+    <color name="dialog_button_text_color">#ffeeeeee</color>
+    <color name="dialog_divider_color">#ff2f3237</color>
+    <color name="dialog_text_color">#ffeeeeee</color>
+    <color name="dialog_title_color">#ffeeeeee</color>
+    <color name="dialog_title_divider_color">#ff2f3237</color>
+    <color name="list_item_bg_disable">#fffbb0b1</color>
+    <color name="list_item_default_bg">#ff0a0d10</color>
 </resources>

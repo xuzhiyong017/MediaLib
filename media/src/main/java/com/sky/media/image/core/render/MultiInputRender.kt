@@ -41,8 +41,8 @@ abstract class MultiInputRender(private val numOfInputs: Int) : BaseRender() {
             texture[lastIndexOf - 1] = textureId
         }
         if (texturesReceived.size == numOfInputs) {
-            width = textureOutRender.width
-            height = textureOutRender.height
+            setWidth(textureOutRender.getWidth())
+            setHeight(textureOutRender.getHeight())
             onDrawFrame()
             texturesReceived.clear()
         }

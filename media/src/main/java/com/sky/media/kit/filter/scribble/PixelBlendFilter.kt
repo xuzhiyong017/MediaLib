@@ -58,8 +58,8 @@ class PixelBlendFilter : BaseRender() {
             }
             i2++
         }
-        width = gLTextureOutputRenderer.width
-        height = gLTextureOutputRenderer.height
+        setWidth(gLTextureOutputRenderer.getWidth())
+        setHeight(gLTextureOutputRenderer.getHeight())
         onDrawFrame()
     }
 

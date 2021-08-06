@@ -27,9 +27,9 @@ abstract class BufferOutput<T : Buffer> : BaseRender() {
 
     override fun afterDrawFrame() {
         if (mOutputBuffer == null || mIsChangeSize) {
-            mOutputBuffer = initBuffer(width, height)
+            mOutputBuffer = initBuffer(getWidth(), getHeight())
         }
-        GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, mOutputBuffer)
+        GLES20.glReadPixels(0, 0, getWidth(), getHeight(), GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, mOutputBuffer)
         bufferOutput(mOutputBuffer!!)
     }
 }

@@ -1,12 +1,12 @@
-package com.sky.media.image.core.process.base
+package com.sky.media.kit.picture
 
 import android.graphics.Bitmap
 import android.graphics.Rect
 import com.sky.media.image.core.base.OnScreenEndPoint
 import com.sky.media.image.core.pipeline.RenderPipeline
+import com.sky.media.image.core.process.base.BaseOnscreenProcess
 import com.sky.media.image.core.view.IContainerView
 import com.sky.media.image.core.view.IRenderView
-import com.sky.media.image.picture.BitmapInput
 
 /**
  * @author: xuzhiyong

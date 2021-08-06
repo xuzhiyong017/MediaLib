@@ -3,23 +3,16 @@ package com.sky.medialib
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.blankj.utilcode.util.UriUtils
 import com.github.gzuliyujiang.imagepicker.ImagePicker
 import com.github.gzuliyujiang.imagepicker.PickCallback
 import com.permissionx.guolindev.PermissionX
-import com.sky.media.image.core.view.GLSurfaceView
-import com.sky.media.image.core.view.GLTextureView
-import com.sky.medialib.render.Square
-import com.sky.medialib.ui.picture.activity.ImageMatrixActivity
-import com.sky.medialib.util.AESUtil
-import com.sky.medialib.util.ToastUtils
+import com.sky.media.kit.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

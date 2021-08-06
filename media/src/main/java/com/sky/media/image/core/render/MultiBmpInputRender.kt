@@ -74,8 +74,8 @@ open class MultiBmpInputRender(val mBitmapCache:IBitmapCache):BaseRender() {
                 }
             }
         }
-        width = gLTextureOutputRenderer.width
-        height = gLTextureOutputRenderer.height
+        setWidth(gLTextureOutputRenderer.getWidth())
+        setHeight(gLTextureOutputRenderer.getHeight())
         onDrawFrame()
     }
 

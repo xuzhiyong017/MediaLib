@@ -1,7 +1,6 @@
 package com.sky.medialib
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
@@ -12,11 +11,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.UriUtils
 import com.sky.media.image.core.out.BitmapOutput
 import com.sky.medialib.ui.picture.process.ImageProcessExt
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
+import com.sky.media.kit.base.BaseActivity
 import com.sky.medialib.ui.kit.manager.ToolFilterManager
 import com.sky.medialib.ui.kit.view.crop.ClipPopupWindow
 import com.sky.medialib.ui.kit.view.editmenu.EditMenu
@@ -28,7 +27,7 @@ import kotlin.math.roundToInt
 
 const val PICK_PICTURE = "pick_picture"
 
-class PictureEditActivity : AppCompatActivity()
+class PictureEditActivity : BaseActivity()
     ,EditMenu.OnItemClickListener,PictureFilterHelper.OnActivityListener,BitmapOutput.BitmapOutputCallback {
 
     private var mMenuHeight = 0
@@ -433,12 +432,10 @@ class PictureEditActivity : AppCompatActivity()
 
     override fun onResume() {
         super.onResume()
-        processing_view.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        processing_view.onPause()
     }
 
     override fun onKeyDown(i: Int, keyEvent: KeyEvent?): Boolean {

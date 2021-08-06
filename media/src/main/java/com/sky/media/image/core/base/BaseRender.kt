@@ -16,8 +16,8 @@ abstract class BaseRender : TextureOutRender(),TextureInRender {
            markNeedDraw()
        }
         texture_in = textureId
-        width = textureOutRender.width
-        height = textureOutRender.height
+        setWidth(textureOutRender.getWidth())
+        setHeight(textureOutRender.getHeight())
         onDrawFrame()
     }
 

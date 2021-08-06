@@ -1,15 +1,25 @@
 package com.sky.medialib.ui.picture.activity
 
+import android.Manifest
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import com.permissionx.guolindev.PermissionX
+import com.sky.media.image.core.util.LogUtils
+import com.sky.media.kit.base.BaseActivity
 import com.sky.medialib.R
+import com.sky.medialib.ui.camera.CameraActivity
 import com.sky.medialib.ui.kit.view.crop.FastBitmapDrawable
 import kotlinx.android.synthetic.main.activity_image_matrix.*
+import kotlinx.android.synthetic.main.camera_preview_frame.*
 
-class ImageMatrixActivity : AppCompatActivity() {
+class ImageMatrixActivity : BaseActivity() {
+
+    final val TAG = this.javaClass.simpleName
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_matrix)
@@ -32,5 +42,16 @@ class ImageMatrixActivity : AppCompatActivity() {
 
         }
         image.setImageDrawable(FastBitmapDrawable(BitmapFactory.decodeResource(resources,R.drawable.image1)))
+
+        image.setOnClickListener {
+            PermissionX.init(this)
+                .permissions(Manifest.permission.CAMERA)
+                .request { allgrant, _, _ ->
+                    if(allgrant){
+                        startActivity(Intent(this,CameraActivity::class.java))
+                    }
+                }
+
+        }
     }
 }

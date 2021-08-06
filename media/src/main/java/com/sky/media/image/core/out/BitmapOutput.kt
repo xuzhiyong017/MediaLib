@@ -58,8 +58,8 @@ class BitmapOutput :BufferOutput<IntBuffer>(){
     }
 
     override fun bufferOutput(intBuffer: IntBuffer) {
-        val width: Int = width
-        val height: Int = height
+        val width: Int = getWidth()
+        val height: Int = getHeight()
         if (width > 0 && height > 0) {
             val array: IntArray = intBuffer.array()
             for (i in array.indices) {

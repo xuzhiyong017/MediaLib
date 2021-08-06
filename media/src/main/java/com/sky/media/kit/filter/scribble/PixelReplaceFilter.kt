@@ -95,10 +95,10 @@ class PixelReplaceFilter(context: Context?) : BaseRender() {
             }
             i2++
         }
-        mWidthRValue = width * 1.0f / bitmapWidth.toFloat()
-        mHeightRValue = height * 1.0f / bitmapHeight.toFloat()
-        width = gLTextureOutputRenderer.width
-        height = gLTextureOutputRenderer.height
+        mWidthRValue = getWidth() * 1.0f / bitmapWidth.toFloat()
+        mHeightRValue = getHeight() * 1.0f / bitmapHeight.toFloat()
+        setWidth(gLTextureOutputRenderer.getWidth())
+        setHeight(gLTextureOutputRenderer.getHeight())
         onDrawFrame()
     }
 

@@ -136,7 +136,7 @@ class MagicDataFilter(override var mContext: Context?, private val jsonMirrors:L
 
     override fun bindShaderValues() {
         super.bindShaderValues()
-        GLES20.glUniform1f(mAspectRatioHandle, height * 1.0f / width)
+        GLES20.glUniform1f(mAspectRatioHandle, getHeight() * 1.0f / getWidth())
         GLES20.glUniform1f(mMixHandle, mMix)
         GLES20.glUniform1f(mMaskAspectRatioHandle, mMaskAspectRatioValue)
     }
@@ -159,8 +159,8 @@ class MagicDataFilter(override var mContext: Context?, private val jsonMirrors:L
                     .toFloat()
             }
         }
-        width = gLTextureOutputRenderer.width
-        height = gLTextureOutputRenderer.height
+        setWidth(gLTextureOutputRenderer.getWidth())
+        setHeight(gLTextureOutputRenderer.getHeight())
         onDrawFrame()
     }
 

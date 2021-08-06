@@ -10,8 +10,8 @@ abstract class TwoPassMultiPixelRender : TwoPassRender() {
 
     override fun handleSizeChange() {
         super.handleSizeChange()
-        texelWidth = 1.0f / width.toFloat()
-        texelHeight = 1.0f / height.toFloat()
+        texelWidth = 1.0f / getWidth().toFloat()
+        texelHeight = 1.0f / getHeight().toFloat()
     }
 
     override fun initShaderHandles() {
@@ -22,11 +22,11 @@ abstract class TwoPassMultiPixelRender : TwoPassRender() {
 
     override fun bindShaderValues() {
         if (currentPass == 1) {
-            texelWidth = 1.0f / width.toFloat()
+            texelWidth = 1.0f / getWidth().toFloat()
             texelHeight = 0.0f
         } else {
             texelWidth = 0.0f
-            texelHeight = 1.0f / height.toFloat()
+            texelHeight = 1.0f / getHeight().toFloat()
         }
         super.bindShaderValues()
         GLES20.glUniform1f(texelWidthHandle, texelWidth)

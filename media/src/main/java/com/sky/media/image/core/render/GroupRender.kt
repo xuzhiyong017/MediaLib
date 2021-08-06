@@ -29,8 +29,8 @@ class GroupRender : BaseRender() {
     ) {
         runAll(this.mRunOnDraw)
         if (terminalFilters.contains(textureOutRender)) {
-            width = textureOutRender.width
-            height = textureOutRender.height
+            setWidth(textureOutRender.getWidth())
+            setHeight(textureOutRender.getHeight())
             synchronized(mLock) {
                 for (newTextureReady in nextRenders) {
                     newTextureReady.dealNextTexture(this,textureId, needDraw)
