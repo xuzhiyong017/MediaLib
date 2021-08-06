@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <com.sky.medialib.ui.kit.common.view.NavigationTabStrip
+        android:id="@+id/count_down_tab"
+        android:layout_width="200.0dip"
+        android:layout_height="40.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="130.0dip"
+        android:background="@drawable/shape_shot_bar_bg"
+        app:nts_active_color="@color/common_highlight"
+        app:nts_inactive_color="#ffeeeeee"
+        app:nts_size="15.0sp"
+        app:nts_titles="@array/countdown_nums"
+        app:nts_type="none" />
+
+    <TextView
+        android:id="@+id/count_down_start"
+        android:layout_width="75.0dip"
+        android:layout_height="75.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="35.0dip"
+        android:background="@drawable/shoot_button_shoot_normal"
+        android:gravity="center"
+        android:text="@string/camera_count_down_start"
+        android:textColor="@color/white"
+        android:textSize="14.0sp" />
+
+    <ImageView
+        android:id="@+id/count_down_animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+</RelativeLayout>

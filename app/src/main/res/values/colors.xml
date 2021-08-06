@@ -10,4 +10,6 @@
     <color name="background">#ff16181c</color>
     <color name="common_red">#ffff5f5f</color>
     <color name="transparent">#00000000</color>
+    <color name="black_alpha_50">#80000000</color>
+    <color name="common_highlight">#ffff636c</color>
 </resources>

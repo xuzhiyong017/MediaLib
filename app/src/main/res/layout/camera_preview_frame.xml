@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.sky.media.image.core.view.ProcessRelativeContainer
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.sky.media.image.core.view.ProcessSurfaceView
+            android:id="@+id/processing_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:id="@+id/sticker_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.sky.medialib.ui.kit.view.camera.PointsView
+            android:id="@+id/face_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:visibility="visible" />
+
+        <include layout="@layout/camera_focus_indicator" />
+
+        <LinearLayout
+            android:id="@+id/res_load_tip_layout"
+            android:layout_width="101.0dip"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_tip_bg"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/loading_icon"
+                android:layout_width="32.0dip"
+                android:layout_height="32.0dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12.0dip"
+                android:src="@drawable/topbar_refresh" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6.0dip"
+                android:layout_marginBottom="10.0dip"
+                android:gravity="center_horizontal"
+                android:text="素材下载中\n请稍等..."
+                android:textColor="#ffffffff"
+                android:textSize="15.0sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/face_track_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/camera_face_recognition"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/current_filter_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:shadowColor="#7eeeeeee"
+            android:shadowDx="1.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:textColor="#7effffff"
+            android:textSize="30.0sp" />
+
+        <TextView
+            android:id="@+id/current_theme_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:shadowColor="#7eeeeeee"
+            android:shadowDx="1.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:textColor="#7effffff"
+            android:textSize="20.0sp"
+            android:visibility="gone" />
+    </com.sky.media.image.core.view.ProcessRelativeContainer>
+</RelativeLayout>

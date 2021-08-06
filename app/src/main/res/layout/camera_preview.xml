@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/camera_preview_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/zoom_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="72.0dip"
+        android:textColor="#ffffffff"
+        android:textSize="14.0sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/shoot_motion_up"
+            android:layout_width="match_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:background="#ff1a1c21"
+            android:scaleType="fitEnd"
+            android:src="@drawable/shoot_motion_up" />
+
+        <ImageView
+            android:id="@+id/shoot_motion_down"
+            android:layout_width="match_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:background="#ff1a1c21"
+            android:scaleType="fitStart"
+            android:src="@drawable/shoot_motion_down" />
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/camera_preview_top"
+        android:layout_width="match_parent"
+        android:layout_height="48.0dip"
+        android:layout_marginTop="10.0dip" />
+
+    <include
+        layout="@layout/camera_preview_right"
+        android:layout_width="50.0dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="130.0dip"
+        android:layout_marginRight="12.0dip" />
+
+    <ImageView
+        android:id="@+id/foot_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/shoot_tab_foot_icon_hl" />
+
+    <com.sky.medialib.ui.kit.view.camera.CameraTypeGallery
+        android:id="@+id/camera_type_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/foot_icon"
+        android:spacing="35.0dip"
+        android:unselectedAlpha="0.6" />
+
+    <com.sky.medialib.ui.kit.view.ShutterView
+        android:id="@+id/shutter_button"
+        android:layout_width="75.0dip"
+        android:layout_height="75.0dip"
+        android:layout_above="@+id/foot_icon"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="35.0dip"
+        android:src="@drawable/selector_camera_video_shutter" />
+
+    <ImageView
+        android:id="@+id/camera_bottombar_rollback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="55.0dip"
+        android:layout_marginBottom="45.0dip"
+        android:layout_toLeftOf="@+id/shutter_button"
+        android:src="@drawable/selector_camera_rollback"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/camera_bottombar_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="55.0dip"
+        android:layout_marginBottom="45.0dip"
+        android:layout_toRightOf="@+id/shutter_button"
+        android:src="@drawable/selector_camera_next"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/camera_bottombar_sticker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/shutter_button"
+        android:layout_marginBottom="3.0dip"
+        android:layout_toLeftOf="@+id/shutter_button"
+        android:drawableTop="@drawable/camera_prop_selector"
+        android:gravity="center"
+        android:shadowColor="#80000000"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
+        android:text="@string/camera_prop"
+        android:textColor="@color/white"
+        android:textSize="11.0sp" />
+
+    <TextView
+        android:id="@+id/camera_bottombar_beauty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/shutter_button"
+        android:layout_marginBottom="3.0dip"
+        android:layout_toRightOf="@+id/shutter_button"
+        android:drawableTop="@drawable/camera_bottombar_beauty"
+        android:gravity="center"
+        android:shadowColor="#80000000"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
+        android:text="@string/beauty"
+        android:textColor="@color/white"
+        android:textSize="11.0sp" />
+
+    <View
+        android:id="@+id/filter_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/camera_beauty_tool"
+        layout="@layout/view_camera_beauty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
+
+    <com.sky.medialib.ui.kit.view.TimeCountDownView
+        android:id="@+id/camera_time_count"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/camera_list_show_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/camera_dynamic_stick_rv"
+        android:layout_width="match_parent"
+        android:layout_height="210.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black_alpha_50"
+        android:clipToPadding="false"
+        android:paddingTop="11.0dip"
+        android:paddingBottom="11.0dip"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/shoot_tab_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:visibility="gone" />
+
+    <com.sky.medialib.ui.kit.common.view.NavigationTabStrip
+        android:id="@+id/shoot_tab"
+        android:layout_width="300.0dip"
+        android:layout_height="40.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120.0dip"
+        android:background="@drawable/shape_shot_bar_bg"
+        android:visibility="gone"
+        app:nts_active_color="@color/common_highlight"
+        app:nts_inactive_color="#ffeeeeee"
+        app:nts_size="15.0sp"
+        app:nts_titles="@array/shot_types"
+        app:nts_type="none" />
+
+    <com.sky.medialib.ui.kit.view.camera.RecordProgressView
+        android:id="@+id/record_progress"
+        android:layout_width="match_parent"
+        android:layout_height="8.0dip"
+        android:layout_alignParentTop="true" />
+</RelativeLayout>

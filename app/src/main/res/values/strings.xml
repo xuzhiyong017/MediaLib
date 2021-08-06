@@ -19,4 +19,15 @@
     <string name="image_save_failed">保存图片失败</string>
     <string name="image_save_success">图片已保存</string>
     <string name="draw">马赛克</string>
+    <string name="camera_music">音乐</string>
+    <string name="camera_time_down">倒计时</string>
+    <string name="camera_speed">快慢拍</string>
+    <string name="camera_prop">道具</string>
+    <string name="camera_count_down_start">开始</string>
+    <string name="camera_disabled">无法打开相机，请检查应用使用相机安全策略.</string>
+    <string name="camera_error_title">相机错误</string>
+    <string name="camera_paster_closearrow">收起</string>
+    <string name="camera_paster_openarrow">更多</string>
+    <string name="camera_tagpoint_editor_max">"已达添加上限
+最多添加5个标签"</string>
 </resources>

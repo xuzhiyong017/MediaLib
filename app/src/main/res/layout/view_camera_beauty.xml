@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/filter_gallery"
+        android:layout_width="fill_parent"
+        android:layout_height="90.0dip"
+        android:background="#80000000"
+        android:fadingEdge="none"
+        android:overScrollMode="never" />
+
+    <RadioGroup
+        android:id="@+id/beauty_level_group"
+        android:layout_width="fill_parent"
+        android:layout_height="90.0dip"
+        android:background="#90000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Space
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.0" />
+
+        <RadioButton
+            android:id="@+id/level_0"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:background="@drawable/selector_beauty_cancel_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10.0dip" />
+
+        <Space
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" />
+
+        <RadioButton
+            android:id="@+id/level_1"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:background="@drawable/selector_beauty_level_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10.0dip"
+            android:text="1"
+            android:textColor="@color/selector_beauty_level_txt_color"
+            android:textSize="16.0sp" />
+
+        <Space
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" />
+
+        <RadioButton
+            android:id="@+id/level_2"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:background="@drawable/selector_beauty_level_bg"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:padding="10.0dip"
+            android:text="2"
+            android:textColor="@color/selector_beauty_level_txt_color"
+            android:textSize="16.0sp" />
+
+        <Space
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" />
+
+        <RadioButton
+            android:id="@+id/level_3"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:background="@drawable/selector_beauty_level_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10.0dip"
+            android:text="3"
+            android:textColor="@color/selector_beauty_level_txt_color"
+            android:textSize="16.0sp" />
+
+        <Space
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" />
+
+        <RadioButton
+            android:id="@+id/level_4"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:background="@drawable/selector_beauty_level_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10.0dip"
+            android:text="4"
+            android:textColor="@color/selector_beauty_level_txt_color"
+            android:textSize="16.0sp" />
+
+        <Space
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" />
+
+        <RadioButton
+            android:id="@+id/level_5"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:background="@drawable/selector_beauty_level_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10.0dip"
+            android:text="5"
+            android:textColor="@color/selector_beauty_level_txt_color"
+            android:textSize="16.0sp" />
+
+        <Space
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.0" />
+    </RadioGroup>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:background="#90000000" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:background="#80000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/filter_btn"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:drawableTop="@drawable/camera_bottombar_filter"
+            android:gravity="center"
+            android:text="滤镜"
+            android:textColor="@color/selector_camera_beauty_text"
+            android:textSize="11.0sp" />
+
+        <TextView
+            android:id="@+id/white_btn"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:drawableTop="@drawable/camera_bottombar_white"
+            android:gravity="center"
+            android:text="美白"
+            android:textColor="@color/selector_camera_beauty_text"
+            android:textSize="11.0sp" />
+
+        <TextView
+            android:id="@+id/buffing_btn"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:drawableTop="@drawable/camera_bottombar_buffing"
+            android:gravity="center"
+            android:text="磨皮"
+            android:textColor="@color/selector_camera_beauty_text"
+            android:textSize="11.0sp" />
+
+    </LinearLayout>
+</LinearLayout>

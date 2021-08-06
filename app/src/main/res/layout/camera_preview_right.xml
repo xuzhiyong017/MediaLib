@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/camera_rightbar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_publish_bar_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="16.0dip"
+    android:paddingBottom="16.0dip">
+
+    <RelativeLayout
+        android:id="@+id/camera_rightbar_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/tip"
+            android:layout_width="42.0dip"
+            android:layout_height="42.0dip">
+
+            <ImageView
+                android:id="@+id/camera_rightbar_music_cover"
+                android:layout_width="24.0dip"
+                android:layout_height="24.0dip"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/camera_rightbar_music_cover_mask"
+                android:layout_width="42.0dip"
+                android:layout_height="42.0dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/selector_video_music_off" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/camera_rightbar_music_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tip"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:maxWidth="50.0dip"
+            android:shadowColor="#80000000"
+            android:shadowDx="1.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:text="@string/camera_music"
+            android:textColor="@color/white"
+            android:textSize="11.0sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/camera_rightbar_time_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8.0dip"
+        android:drawableTop="@drawable/camera_count_down_selector"
+        android:gravity="center"
+        android:shadowColor="#80000000"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
+        android:text="@string/camera_time_down"
+        android:textColor="@color/white"
+        android:textSize="11.0sp" />
+
+    <TextView
+        android:id="@+id/camera_rightbar_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8.0dip"
+        android:drawableTop="@drawable/camera_speed_selector"
+        android:gravity="center"
+        android:shadowColor="#80000000"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
+        android:text="@string/camera_speed"
+        android:textColor="@color/white"
+        android:textSize="11.0sp" />
+</LinearLayout>

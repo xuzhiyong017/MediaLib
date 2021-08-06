@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="shot_types">
+        <item>极慢</item>
+        <item>慢</item>
+        <item>正常</item>
+        <item>快</item>
+        <item>极快</item>
+    </string-array>
+    <string-array name="countdown_nums">
+        <item>3S</item>
+        <item>5S</item>
+        <item>10S</item>
+    </string-array>
+</resources>

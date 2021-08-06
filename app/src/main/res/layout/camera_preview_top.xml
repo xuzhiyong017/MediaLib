@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/camera_topbar"
+    android:layout_width="fill_parent"
+    android:layout_height="48.0dip"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/camera_topbar_cancel"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:src="@drawable/camera_topbar_close_selector_41" />
+
+    <ImageView
+        android:id="@+id/camera_topbar_flash"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:src="@drawable/camera_topbar_flash_selector_41" />
+
+    <ImageView
+        android:id="@+id/camera_topbar_facing"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:src="@drawable/camera_topbar_facing" />
+
+    <ImageView
+        android:id="@+id/camera_topbar_album"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:src="@drawable/selector_camera_album_default" />
+</LinearLayout>
