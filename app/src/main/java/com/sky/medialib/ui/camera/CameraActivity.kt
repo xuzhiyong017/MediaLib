@@ -18,17 +18,20 @@ import com.sky.media.image.core.view.ContainerViewHelper
 import com.sky.media.kit.base.BaseActivity
 import com.sky.medialib.MainActivity
 import com.sky.medialib.R
+import com.sky.medialib.ui.camera.helper.CameraZoomHelper
 import com.sky.medialib.ui.camera.process.CameraProcessExt
 import com.sky.medialib.ui.dialog.SimpleAlertDialog
 import com.sky.medialib.ui.kit.camera.CameraHolder
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
+import com.sky.medialib.ui.kit.manager.FocusManager
 import com.sky.medialib.util.CameraUtil
 import com.sky.medialib.util.WeakHandler
+import kotlinx.android.synthetic.main.camera_focus_indicator.*
 import kotlinx.android.synthetic.main.camera_preview.*
 import kotlinx.android.synthetic.main.camera_preview_frame.*
 import kotlinx.android.synthetic.main.camera_preview_top.*
 
-class CameraActivity : BaseActivity(),View.OnTouchListener {
+class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusListener {
 
     final val TAG = CameraActivity.javaClass.simpleName
 
@@ -48,6 +51,13 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
     private var mGesture: GestureDetector? = null
     private var mDisplayOrientation = 0
     private var mCurrentRatio = 0f
+    private var mOrientation = -1
+    private lateinit var mFocusManager:FocusManager
+    private var mFocusAreaSupported = false
+    private var mMeteringAreaSupported = false
+
+    private lateinit var mCameraZoomHelper: CameraZoomHelper
+
     val mHandler = WeakHandler(Handler.Callback {
         when(it.what){
             1 -> window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -71,9 +81,10 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.camera_preview)
         initParams()
+        initHelper()
         bindView()
         bindListener()
-        initHelper()
+
 
         processing_view.post {
            LogUtils.logd(TAG,"processing_view ${processing_view.visibility} ${processing_view.width}X${processing_view.height}")
@@ -98,9 +109,10 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
         } else {
             this.mCameraId = SPStaticUtils.getInt("key_camera_id", mFrontCameraId)
         }
+
+        mFocusManager = FocusManager("continuous-picture")
         mCameraProcess = CameraProcessExt(frame,processing_view)
         mCameraOpenThread.start()
-
         face_view.needShowFps(true)
 
         try {
@@ -115,6 +127,14 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
                     this,
                     GestureListener()
                 )
+                var z = true
+                if (CameraHolder.getInstance().cameraInfos[mCameraId].facing !== 1) {
+                    z = false
+                }
+                mFocusManager.init(
+                    focus_indicator_rotate_layout, processing_view, this, z,
+                    mDisplayOrientation
+                )
             }
         } catch (e: Exception) {
         }
@@ -122,21 +142,35 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
     }
 
     private fun startPreview() {
-        var z = false
+        var isFrontCamera = false
         val parameters = mCameraDevice!!.parameters
-        var z2 = parameters.maxNumFocusAreas > 0 && isSupported(
-            "auto",
-            parameters.supportedFocusModes
-        )
+        var z2 =
+            parameters.maxNumFocusAreas > 0 && isSupported("auto", parameters.supportedFocusModes)
+        mFocusAreaSupported = z2
+        z2 = parameters.maxNumMeteringAreas > 0
+        mMeteringAreaSupported = z2
+        val focusManager = mFocusManager
+        if (mCameraId == mFrontCameraId) {
+            isFrontCamera = true
+        }
+        focusManager.setParameters(parameters, isFrontCamera)
+        mFocusManager.resetLayout()
 
         if (mCameraState != 0) {
             stopPreview()
         }
         setDisplayOrientation()
         setCameraParameters()
-
+        if ("continuous-picture" == mParameters!!.focusMode) {
+            try {
+                mCameraDevice!!.cancelAutoFocus()
+            } catch (e: java.lang.Exception) {
+                Log.w("CameraActivity", e.message!!)
+            }
+        }
         mCameraProcess.processCamera(mCameraDevice!!)
         mCameraState = 1
+        mFocusManager.initStatus()
     }
 
     private fun setCameraParameters() {
@@ -156,32 +190,36 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
                 } else if (is720) {
                     this.mPreviewSize = Rect(0, 0, 1280, 720)
                 }
-                Log.e(
-                    "Camera",
-                    "Size:" + mPreviewSize!!.width() + "x" + mPreviewSize!!.height()
-                )
-                mParameters!!.setPreviewSize(
-                    this.mPreviewSize!!.width(),
-                    this.mPreviewSize!!.height()
-                )
-                this.mParameters!!.setPictureSize(
-                    this.mPreviewSize!!.width(),
-                    this.mPreviewSize!!.height()
-                )
+                Log.e("Camera", "Size:" + mPreviewSize!!.width() + "x" + mPreviewSize!!.height())
+                mParameters!!.setPreviewSize(mPreviewSize!!.width(), mPreviewSize!!.height())
+                this.mParameters!!.setPictureSize(mPreviewSize!!.width(), mPreviewSize!!.height())
                 this.mParameters!!.setJpegQuality(100)
-
+                if (mFocusAreaSupported) {
+                    mParameters!!.focusAreas = mFocusManager.focusArea
+                }
+                if (mMeteringAreaSupported) {
+                    mParameters!!.meteringAreas = mFocusManager.meteringArea
+                }
                 this.mCurrentRatio =
                     this.mPreviewSize!!.height() * 1.0f / this.mPreviewSize!!.width()
                 this.frame.setScaleType(ContainerViewHelper.ScaleType.CENTER_CROP)
                 this.frame.setAspectRatio(this.mCurrentRatio, 0, 0)
-
+                var sceneMode = mParameters!!.sceneMode
+                if (sceneMode == null) {
+                    sceneMode = "auto"
+                }
                 if (mCameraId == mBackCameraId) {
                     this.mParameters!!.setFlashMode(this.mFlashMode)
                     camera_topbar_flash.setSelected(true)
                 } else {
                     camera_topbar_flash.setSelected(false)
                 }
-
+                if ("auto" == sceneMode) {
+                    mFocusManager.setForceFocusMode(null)
+                    mParameters!!.focusMode = mFocusManager.supportFocusMode
+                } else {
+                    mFocusManager.setForceFocusMode(mParameters!!.focusMode)
+                }
                 mCameraDevice!!.parameters = this.mParameters
             } catch (e: Throwable) {
                e.printStackTrace()
@@ -206,6 +244,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
             }
         }
         mCameraState = 0
+        mFocusManager.release()
     }
 
 
@@ -220,7 +259,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
     }
 
     private fun initHelper() {
-
+        mCameraZoomHelper = CameraZoomHelper(this)
     }
 
     override fun onResume() {
@@ -236,10 +275,30 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
     }
 
     override fun onPause() {
-
+        stopPreview()
+        closeCamera()
+        resetScreenOn()
         shoot_motion_up.y = 0.0f
         shoot_motion_down.y = shoot_motion_up.height.toFloat()
+        mFocusManager.cancelFocus()
         super.onPause()
+    }
+
+    private fun resetScreenOn() {
+        mHandler.removeMessages(1)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    private fun closeCamera() {
+        if (mCameraDevice != null) {
+            mCameraState = 0
+            CameraHolder.getInstance().stopPreview()
+            mCameraDevice!!.setZoomChangeListener(null)
+            mCameraDevice!!.setFaceDetectionListener(null)
+            mCameraDevice!!.setErrorCallback(null)
+            mCameraDevice = null
+            mFocusManager.clear()
+        }
     }
 
     private fun openCamera() {
@@ -269,7 +328,60 @@ class CameraActivity : BaseActivity(),View.OnTouchListener {
         if (this.mGesture?.onTouchEvent(motionEvent) == true) {
             return true
         }
+        mCameraZoomHelper.onTouch(motionEvent, mCameraDevice, mParameters)
+        return when (motionEvent.action and 255) {
+            0 -> {
+                mFocusManager.onTouch(motionEvent)
+                true
+            }
+            1 -> {
+                if (mCameraZoomHelper.status === 1) {
+                    return true
+                }
+                if((mFocusAreaSupported || mMeteringAreaSupported) && mFocusManager.onTouch(motionEvent)){
+                    return true
+                }
+                return false
+            }
+            else -> true
+        }
         return false
+    }
+
+    override fun autoFocus() {
+        try {
+            mCameraDevice!!.autoFocus{success,_ ->
+                mFocusManager.onAutoFocus(success)
+            }
+        } catch (e: java.lang.Exception) {
+            Log.w("CameraActivity", e.message!!)
+        }
+        mCameraState = 2
+    }
+
+    override fun cancelAutoFocus() {
+        try {
+            mCameraDevice!!.cancelAutoFocus()
+        } catch (e: java.lang.Exception) {
+            Log.w("CameraActivity", e.message!!)
+        }
+        mCameraState = 1
+        setCameraParameters()
+    }
+
+    override fun capture(): Boolean {
+        var z = false
+        if (mCameraState == 3 || mCameraDevice == null) {
+            return false
+        }
+
+        CameraHolder.adjustRotation(mParameters, mCameraId, this.mOrientation)
+        mCameraState = 3
+        return true
+    }
+
+    override fun setFocusParameters() {
+        setCameraParameters()
     }
 
     private var mCameraOpenThread = Thread(Runnable {
