@@ -1,9 +1,11 @@
 package com.sky.medialib.ui.camera
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.hardware.Camera
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,29 +14,38 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
 import com.blankj.utilcode.util.SPStaticUtils
-import com.sky.media.image.core.util.LogUtils
+import com.sky.media.image.core.cache.ImageBitmapCache
 import com.sky.media.image.core.view.ContainerViewHelper
 import com.sky.media.kit.base.BaseActivity
 import com.sky.medialib.MainActivity
+import com.sky.medialib.PICK_PICTURE
+import com.sky.medialib.PictureEditActivity
 import com.sky.medialib.R
+import com.sky.medialib.ui.camera.adapter.CameraTypeAdapter
+import com.sky.medialib.ui.camera.helper.CameraFilterBeautyHelper
 import com.sky.medialib.ui.camera.helper.CameraZoomHelper
 import com.sky.medialib.ui.camera.process.CameraProcessExt
 import com.sky.medialib.ui.dialog.SimpleAlertDialog
 import com.sky.medialib.ui.kit.camera.CameraHolder
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
 import com.sky.medialib.ui.kit.manager.FocusManager
+import com.sky.medialib.ui.kit.manager.ToolFilterManager
+import com.sky.medialib.ui.kit.view.ShutterView
 import com.sky.medialib.ui.kit.view.camera.RecordProgressView
-import com.sky.medialib.util.CameraUtil
-import com.sky.medialib.util.WeakHandler
+import com.sky.medialib.util.*
 import kotlinx.android.synthetic.main.camera_focus_indicator.*
 import kotlinx.android.synthetic.main.camera_preview.*
 import kotlinx.android.synthetic.main.camera_preview_frame.*
+import kotlinx.android.synthetic.main.camera_preview_right.*
 import kotlinx.android.synthetic.main.camera_preview_top.*
+import java.io.File
 import java.util.ArrayList
 
 class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusListener,
     View.OnClickListener,RecordProgressView.OnRecordListener {
+
 
     final val TAG = CameraActivity.javaClass.simpleName
 
@@ -66,9 +77,10 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
     private var mMeteringAreaSupported = false
 
     private lateinit var mCameraZoomHelper: CameraZoomHelper
+    private lateinit var mCameraFilterBeautyHelper: CameraFilterBeautyHelper
 
     private val mTempVideoPaths: ArrayList<String> = ArrayList<String>()
-
+    private var mJumpFilterId: Int = 0
 
     val mHandler = WeakHandler(Handler.Callback {
         when(it.what){
@@ -91,10 +103,18 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ImageBitmapCache.getInstance().clear()
+        ToolFilterManager.initCameraFilter(this)
         setContentView(R.layout.camera_preview)
         initParams()
-        initHelper()
         bindView()
+        initOperate()
+    }
+
+    private fun initOperate() {
+        window.decorView.post{
+            mCameraFilterBeautyHelper.onCreateAndInitFilter(0, 0, false)
+        }
     }
 
     private fun initParams() {
@@ -115,6 +135,8 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         mCameraOpenThread.start()
         face_view.needShowFps(true)
         bindTopView()
+        bindBottomView()
+        initHelper()
 
         try {
             mCameraOpenThread.join()
@@ -138,8 +160,74 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
                 )
             }
         } catch (e: Exception) {
+            e.printStackTrace()
         }
 
+    }
+
+    private fun bindBottomView() {
+        camera_type_tab.adapter = CameraTypeAdapter(this)
+        camera_type_tab.setSelection(mCameraType)
+        camera_type_tab.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                var i2 = View.VISIBLE
+                mCameraType = position
+                shutter_button.setEnableLongPress(mCameraType != 0)
+                if (mCameraType == 0) {
+                    i2 = View.GONE
+                }
+                camera_rightbar.visibility = i2
+                mHandler.removeCallbacks(mUpdatePreviewSize)
+                mHandler.postDelayed(mUpdatePreviewSize, 500)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+        camera_bottombar_beauty.setOnClickListener(this)
+        camera_bottombar_sticker.setOnClickListener(this)
+        camera_bottombar_rollback.setOnClickListener(this)
+        camera_bottombar_next.setOnClickListener(this)
+        shutter_button.setShutterClickListener(object : ShutterView.OnShutterClickListener {
+            override fun onCapture() {
+                takePicture()
+            }
+
+            override fun onStart() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onPause() {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private fun takePicture() {
+        if (mCameraType == 0) {
+//            this.mEffectHelper.mo16841e()
+            takeSnap()
+        }
+//        else if (this.mVideoRecorder != null && this.mVideoRecorder.isRecording()) {
+//            this.mRecordProgressView.pauseRecord()
+//            cancelCountDown()
+//        } else if (this.mRecordProgressView.getState() === State.CONCAT) {
+//            concatVideo()
+//        } else {
+//            this.mShutterView.setSelected(true)
+//            this.mRecordProgressView.startRecording()
+//        }
+    }
+
+    private fun takeSnap() {
+        if (mCameraState != 3) {
+            showShootCloseAnimator(Runnable { mFocusManager.takePhoto() })
+        }
+    }
+
+    private fun showShootCloseAnimator(runnable: Runnable?) {
+        runnable?.run()
     }
 
     private fun bindTopView() {
@@ -185,6 +273,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
             }
         }
         mCameraProcess.processCamera(mCameraDevice!!)
+        mCameraFilterBeautyHelper.initBeautyFilter();
         mCameraState = 1
         mFocusManager.initStatus()
     }
@@ -276,6 +365,15 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
 
     private fun initHelper() {
         mCameraZoomHelper = CameraZoomHelper(this)
+        mCameraFilterBeautyHelper = CameraFilterBeautyHelper(this, object : CameraFilterBeautyHelper.OnFilterBeautyListener {
+            override fun getCameraProcess(): CameraProcessExt {
+                return mCameraProcess
+            }
+
+            override fun onSelectFilterId(i: Int) {
+                mJumpFilterId = i
+            }
+        })
     }
 
     override fun onResume() {
@@ -344,6 +442,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         if (this.mGesture?.onTouchEvent(motionEvent) == true) {
             return true
         }
+        mCameraFilterBeautyHelper.onTouch(motionEvent)
         mCameraZoomHelper.onTouch(motionEvent, mCameraDevice, mParameters)
         return when (motionEvent.action and 255) {
             0 -> {
@@ -392,6 +491,16 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         }
 
         CameraHolder.adjustRotation(mParameters, mCameraId, this.mOrientation)
+        mCameraFilterBeautyHelper.takePhoto(mCameraDevice, mParameters, mFlashMode, mOrientation, mCurrentRatio, z){bitmap,bitmap2,orientation ->
+            val fromFile = Uri.fromFile(File(Storage.storageToTempJpgPath(bitmap, null, orientation)))
+            bitmap.recycle()
+            if (FileUtil.checkUriValid(this, fromFile)) {
+                startActivity(Intent(this,PictureEditActivity::class.java).putExtra(PICK_PICTURE,fromFile))
+            }else{
+                mCameraState = 1
+                ToastUtils.show("图片打开失败")
+            }
+        }
         mCameraState = 3
         return true
     }
@@ -417,7 +526,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
                 }
                 R.id.camera_topbar_flash -> {
                     if (mParameters != null) {
-                        val supportedFlashModes: List<String> = mParameters!!.supportedFlashModes
+                        val supportedFlashModes: List<String>? = mParameters!!.supportedFlashModes
                         var str = "off"
                         if (mFlashMode == "on" || mFlashMode == "torch") {
                             str = "off"
@@ -492,6 +601,13 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         }
         this@CameraActivity.mCameraDisabled = true
     })
+
+    private val mUpdatePreviewSize = Runnable {
+        setCameraParameters()
+        if (mPreviewSize != null) {
+            mCameraProcess.updateInputRenderSize(mPreviewSize!!.height(), mPreviewSize!!.width())
+        }
+    }
 
     internal class GestureListener : SimpleOnGestureListener() {
         override fun onSingleTapUp(motionEvent: MotionEvent): Boolean {

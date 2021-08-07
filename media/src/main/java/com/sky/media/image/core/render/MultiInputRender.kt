@@ -6,6 +6,7 @@ import com.sky.media.image.core.base.TextureOutRender
 import java.util.*
 
 abstract class MultiInputRender(private val numOfInputs: Int) : BaseRender() {
+
     protected var texture: IntArray
     var textureHandler = IntArray(numOfInputs)
     protected var filterLocations: MutableList<TextureOutRender>

@@ -4,7 +4,7 @@ import com.sky.media.image.core.base.BaseRender
 import com.sky.media.image.core.base.TextureOutRender
 import java.util.concurrent.CopyOnWriteArrayList
 
-class GroupRender : BaseRender() {
+open class GroupRender : BaseRender() {
     var filters: MutableList<BaseRender> = CopyOnWriteArrayList<BaseRender>()
     var initialFilters: MutableList<BaseRender> = CopyOnWriteArrayList<BaseRender>()
     var terminalFilters: MutableList<BaseRender> = CopyOnWriteArrayList<BaseRender>()

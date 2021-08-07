@@ -38,7 +38,7 @@ abstract class GLRender {
     protected var positionHandle = -1
     protected var texCoordHandle = -1
     protected open var textureHandle = -1
-    protected var programHandle = -1
+    open var programHandle = -1
 
     private var vertexShaderHandle = 0
     private var fragmentShaderHandle = 0

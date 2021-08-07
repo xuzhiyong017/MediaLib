@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filter_item_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="7.0dip"
+    android:paddingBottom="7.0dip">
+
+    <ImageView
+        android:id="@+id/filter_icon"
+        android:layout_width="58.0dip"
+        android:layout_height="58.0dip"
+        android:background="@drawable/defaultpics_filter_200"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/filter_mask"
+        android:layout_width="58.0dip"
+        android:layout_height="58.0dip"
+        android:src="@drawable/shape_magic_mask"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/filter_name"
+        android:layout_width="58.0dip"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/filter_icon"
+        android:gravity="center"
+        android:paddingTop="2.5dip"
+        android:singleLine="true"
+        android:textColor="@color/selector_camera_filter_name_txt_color"
+        android:textSize="11.0sp" />
+
+    <ImageView
+        android:id="@+id/filter_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/filter_icon"
+        android:layout_marginRight="2.0dip"
+        android:scaleType="centerCrop" />
+</RelativeLayout>

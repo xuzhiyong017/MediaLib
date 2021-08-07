@@ -18,6 +18,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import com.sky.medialib.R;
 
+
 public class ShutterView extends AppCompatImageView {
     private final int STATE_IDLE = 0;
     private final int STATE_IS_RECORDING = 1;
@@ -36,16 +37,16 @@ public class ShutterView extends AppCompatImageView {
     private Paint mPaint;
     private float mRadius;
     private Animation mRecordingAnimation;
-    private mOnShutterClickListener mShutterClickListener;
+    private OnShutterClickListener mShutterClickListener;
     private ValueAnimator mStartAnimator;
     private int mState;
     private ValueAnimator mStopAnimator;
     private PointF mTouchDownPoint = new PointF();
 
-    public interface mOnShutterClickListener {
-        void mo16764a();
+    public interface OnShutterClickListener {
+        void onCapture();
         void onStart();
-        void mo16766c();
+        void onPause();
     }
 
     class StartAnimatorListener implements AnimatorListener {
@@ -170,8 +171,8 @@ public class ShutterView extends AppCompatImageView {
         mState = 0;
     }
 
-    public void setShutterClickListener(mOnShutterClickListener mOnShutterClickListener) {
-        mShutterClickListener = mOnShutterClickListener;
+    public void setShutterClickListener(OnShutterClickListener OnShutterClickListener) {
+        mShutterClickListener = OnShutterClickListener;
     }
 
     public void onDraw(Canvas canvas) {
@@ -211,15 +212,15 @@ public class ShutterView extends AppCompatImageView {
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
-            case 0:
+            case MotionEvent.ACTION_DOWN:
                 if (mEnableLongPress) {
                     postDelayed(mLongPressRunnable, (long) mLongPressTime);
                 }
                 mTouchDownPoint.set(motionEvent.getRawX(), motionEvent.getRawY());
                 setPressed(true);
                 break;
-            case 1:
-            case 3:
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
                 removeCallbacks(mLongPressRunnable);
                 if (mState == 1) {
                     clearAnimation();
@@ -230,10 +231,10 @@ public class ShutterView extends AppCompatImageView {
                 setPressed(false);
                 if (mShutterClickListener != null) {
                     if (mState != 1) {
-                        mShutterClickListener.mo16764a();
+                        mShutterClickListener.onCapture();
                         break;
                     }
-                    mShutterClickListener.mo16766c();
+                    mShutterClickListener.onPause();
                     mState = 0;
                     break;
                 }

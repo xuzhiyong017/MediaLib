@@ -10,8 +10,6 @@ import com.sky.media.kit.filter.tools.*
 import com.sky.media.kit.model.FilterExt
 import com.sky.medialib.ui.kit.filter.MagicFilterExt
 import com.sky.medialib.ui.kit.filter.OriginNormalFilter
-import com.sky.medialib.ui.kit.model.json.magic.JsonTemplate
-import java.util.ArrayList
 
 /**
  * @author: xuzhiyong
@@ -21,8 +19,11 @@ import java.util.ArrayList
  */
 object ToolFilterManager {
 
+    val cacheFilterList: MutableList<FilterExt> = mutableListOf()
     val whiteningTool = WhiteningTool()
     val buffingTool = BuffingTool()
+    var cameraWhiteningTool: WhiteningTool? = null
+    var cameraBuffingTool: BuffingTool? = null
     var clipScribbleTool :ScribbleTool? = null
     var paintScribbleTool :ScribbleTool? = null
 
@@ -37,7 +38,7 @@ object ToolFilterManager {
 
     fun initPictureEditFilter(context: Context){
         if(normalFilters.isEmpty()){
-            addNormalFilters(initNormalFilter(context,true))
+            addNormalFilters(initNormalFilter(context,false))
         }else{
             for (normalFilter in normalFilters) {
                 normalFilter.adjuster?.resetAdjust()
@@ -95,6 +96,49 @@ object ToolFilterManager {
         array.add(Warm(context))
         array.add(Summer(context))
         return array
+    }
+
+    fun initCameraFilter(context: Context) {
+        if(cacheFilterList.isEmpty()){
+            addCacheFilters(initNormalFilter(context, true))
+        }else{
+            for (adjuster in cacheFilterList) {
+                adjuster.adjuster?.resetAdjust()
+            }
+        }
+
+       cameraBuffingTool?.adjuster?.resetAdjust()
+       cameraWhiteningTool?.adjuster?.resetAdjust()
+
+        initCameraBeautyTool()
+    }
+
+    private fun initCameraBeautyTool() {
+        cameraBuffingTool = BuffingTool()
+        cameraWhiteningTool = WhiteningTool()
+    }
+
+    private fun addCacheFilters(list: List<FilterExt>) {
+        cacheFilterList.clear()
+        cacheFilterList.addAll(list)
+    }
+
+    fun getCacheFilterById(i: Int): FilterExt? {
+        val h = switchId(i)
+        for (filterExt in cacheFilterList) {
+            if (h == filterExt.mId) {
+                return filterExt
+            }
+        }
+        return null
+    }
+
+    fun switchId(i: Int): Int {
+        return when (i) {
+            8 -> 212
+            205 -> 211
+            else -> i
+        }
     }
 
 }

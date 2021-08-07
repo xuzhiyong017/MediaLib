@@ -40,6 +40,14 @@ object FileUtil {
         return !TextUtils.isEmpty(str) && exists(File(str))
     }
 
+    fun checkUriValid(context: Context?, uri: Uri?): Boolean {
+        if (uri == null) {
+            return false
+        }
+        val file = File(getPathFromUri(context, uri))
+        return file.exists() && file.canRead() && file.length() > 0
+    }
+
     private fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
     }
