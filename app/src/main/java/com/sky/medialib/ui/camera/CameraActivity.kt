@@ -24,14 +24,17 @@ import com.sky.medialib.ui.dialog.SimpleAlertDialog
 import com.sky.medialib.ui.kit.camera.CameraHolder
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
 import com.sky.medialib.ui.kit.manager.FocusManager
+import com.sky.medialib.ui.kit.view.camera.RecordProgressView
 import com.sky.medialib.util.CameraUtil
 import com.sky.medialib.util.WeakHandler
 import kotlinx.android.synthetic.main.camera_focus_indicator.*
 import kotlinx.android.synthetic.main.camera_preview.*
 import kotlinx.android.synthetic.main.camera_preview_frame.*
 import kotlinx.android.synthetic.main.camera_preview_top.*
+import java.util.ArrayList
 
-class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusListener {
+class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusListener,
+    View.OnClickListener,RecordProgressView.OnRecordListener {
 
     final val TAG = CameraActivity.javaClass.simpleName
 
@@ -39,7 +42,13 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
     var mBackCameraId = 0
     var mFrontCameraId = 0
     var mCameraId = 0
-    private val mFlashMode = "off"
+    private var mFlashMode = "off"
+    private var mFlashIndex = 0
+    private val mFlashIcon = intArrayOf(
+        R.drawable.camera_topbar_noflash_selector_41,
+        R.drawable.camera_topbar_flash_selector_41
+    )
+
 
     protected var mCameraDevice: Camera? = null
     private var mParameters: Camera.Parameters? = null
@@ -57,6 +66,9 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
     private var mMeteringAreaSupported = false
 
     private lateinit var mCameraZoomHelper: CameraZoomHelper
+
+    private val mTempVideoPaths: ArrayList<String> = ArrayList<String>()
+
 
     val mHandler = WeakHandler(Handler.Callback {
         when(it.what){
@@ -83,18 +95,6 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         initParams()
         initHelper()
         bindView()
-        bindListener()
-
-
-        processing_view.post {
-           LogUtils.logd(TAG,"processing_view ${processing_view.visibility} ${processing_view.width}X${processing_view.height}")
-        }
-    }
-
-    private fun bindListener() {
-        camera_topbar_album.setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
-        }
     }
 
     private fun initParams() {
@@ -114,6 +114,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         mCameraProcess = CameraProcessExt(frame,processing_view)
         mCameraOpenThread.start()
         face_view.needShowFps(true)
+        bindTopView()
 
         try {
             mCameraOpenThread.join()
@@ -139,6 +140,21 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         } catch (e: Exception) {
         }
 
+    }
+
+    private fun bindTopView() {
+        record_progress.setRecordListener(this)
+        mFlashMode = "off"
+        if (mFlashMode == "on" || mFlashMode == "torch") {
+            this.mFlashIndex = 1
+        } else if (mFlashMode == "off") {
+            this.mFlashIndex = 0
+        }
+        camera_topbar_flash.setImageResource(mFlashIcon[mFlashIndex])
+        camera_topbar_cancel.setOnClickListener(this)
+        camera_topbar_facing.setOnClickListener(this)
+        camera_topbar_flash.setOnClickListener(this)
+        camera_topbar_album.setOnClickListener(this)
     }
 
     private fun startPreview() {
@@ -382,6 +398,87 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
 
     override fun setFocusParameters() {
         setCameraParameters()
+    }
+
+    override fun onClick(v: View?) {
+        if (v != null) {
+            when(v.id){
+                R.id.camera_topbar_cancel -> {
+                    if(mTempVideoPaths.isNotEmpty()){
+                        showConfirmDialog()
+                    }else{
+                        finish()
+                    }
+                }
+                R.id.camera_topbar_facing -> {
+                    if (CameraHolder.getInstance().numberOfCameras >= 2) {
+                        changeCamera()
+                    }
+                }
+                R.id.camera_topbar_flash -> {
+                    if (mParameters != null) {
+                        val supportedFlashModes: List<String> = mParameters!!.supportedFlashModes
+                        var str = "off"
+                        if (mFlashMode == "on" || mFlashMode == "torch") {
+                            str = "off"
+                            mFlashIndex = 0
+                        } else if (mFlashMode == "off") {
+                            str = "on"
+                            mFlashIndex = 1
+                        }
+                        if (isSupported(str, supportedFlashModes)) {
+                            camera_topbar_flash.setImageResource(mFlashIcon[mFlashIndex])
+                            mFlashMode = str!!
+                            mParameters!!.flashMode = mFlashMode
+                            try {
+                                mCameraDevice!!.parameters = mParameters
+                            } catch (e: Throwable) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+                R.id.camera_topbar_album -> {
+                    startActivity(Intent(this,MainActivity::class.java))
+                }
+            }
+        }
+    }
+
+    private fun changeCamera() {
+        stopPreview()
+        closeCamera()
+        mCameraId = if (mCameraId == mFrontCameraId) mBackCameraId else mFrontCameraId
+        SPStaticUtils.put("key_camera_id", mCameraId)
+        openCamera()
+    }
+
+    private fun showConfirmDialog() {
+        TODO("Not yet implemented")
+    }
+
+    override fun disableVideo() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onIsRecordMin(z: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRecordEnd() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRecordIdle() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRecordPause() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRecordStart() {
+        TODO("Not yet implemented")
     }
 
     private var mCameraOpenThread = Thread(Runnable {
