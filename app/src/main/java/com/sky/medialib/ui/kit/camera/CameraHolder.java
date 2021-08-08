@@ -113,11 +113,11 @@ public class CameraHolder {
         return;
     }
 
-    public int getFaceId() {
+    public int getBackCameraId() {
         return this.backId;
     }
 
-    public int getBackId() {
+    public int getFaceCameraId() {
         return this.faceId;
     }
 }

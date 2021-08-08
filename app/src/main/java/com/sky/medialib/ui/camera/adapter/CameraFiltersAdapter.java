@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.sky.media.kit.model.FilterExt;
 import com.sky.medialib.R;
 import com.sky.medialib.ui.kit.manager.ToolFilterManager;
@@ -66,7 +68,10 @@ public class CameraFiltersAdapter extends RecyclerView.Adapter<CameraFiltersAdap
             }
         });
         filterViewHolder.mFilterLayout.setLayoutParams(new RecyclerView.LayoutParams(Math.round(this.mItemWidth), -2));
-        Glide.with(filterViewHolder.itemView).load(filterExt.getIcon()).placeholder(R.drawable.defaultpics_filter_200).into(filterViewHolder.mFilterIconView);
+        Glide.with(filterViewHolder.itemView).load(filterExt.getIconResource())
+                .placeholder(R.drawable.defaultpics_filter_200)
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(filterViewHolder.mFilterIconView);
         filterViewHolder.mFilterNameView.setText(filterExt.getName());
         if (this.mSelectPosition == i) {
             filterViewHolder.mFilterLayout.setSelected(true);

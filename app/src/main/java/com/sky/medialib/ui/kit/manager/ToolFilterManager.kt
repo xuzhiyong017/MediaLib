@@ -135,7 +135,6 @@ object ToolFilterManager {
 
     fun switchId(i: Int): Int {
         return when (i) {
-            8 -> 212
             205 -> 211
             else -> i
         }

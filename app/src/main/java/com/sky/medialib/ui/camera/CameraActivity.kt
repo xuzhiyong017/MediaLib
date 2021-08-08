@@ -1,7 +1,6 @@
 package com.sky.medialib.ui.camera
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.hardware.Camera
@@ -9,11 +8,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.GestureDetector
+import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
 import android.widget.AdapterView
 import com.blankj.utilcode.util.SPStaticUtils
 import com.sky.media.image.core.cache.ImageBitmapCache
@@ -119,16 +115,19 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
 
     private fun initParams() {
         processing_view.setOnTouchListener(this)
+        filter_mask.setOnClickListener {
+            hideBeautyFilterLayout()
+        }
+
+        camera_list_show_mask.setOnClickListener {
+            hideDynamicStickers()
+        }
     }
 
     private fun bindView() {
-        mBackCameraId = CameraHolder.getInstance().backId
-        mFrontCameraId = CameraHolder.getInstance().faceId
-        if (mFrontCameraId == -1) {
-            this.mCameraId = SPStaticUtils.getInt("key_camera_id", mBackCameraId)
-        } else {
-            this.mCameraId = SPStaticUtils.getInt("key_camera_id", mFrontCameraId)
-        }
+        mBackCameraId = CameraHolder.getInstance().backCameraId
+        mFrontCameraId = CameraHolder.getInstance().faceCameraId
+        mCameraId = SPStaticUtils.getInt("key_camera_id",mFrontCameraId)
 
         mFocusManager = FocusManager("continuous-picture")
         mCameraProcess = CameraProcessExt(frame,processing_view)
@@ -389,6 +388,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
     }
 
     override fun onPause() {
+        onPauseStopRecord()
         stopPreview()
         closeCamera()
         resetScreenOn()
@@ -396,6 +396,37 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         shoot_motion_down.y = shoot_motion_up.height.toFloat()
         mFocusManager.cancelFocus()
         super.onPause()
+    }
+
+    private fun onPauseStopRecord() {
+//        if (this.mVideoRecorder != null && this.mVideoRecorder.isRecording()) {
+//            this.mRecordProgressView.pauseRecord()
+//            mCameraProcess.stopRecord()
+//        }
+        hideDynamicStickers()
+        hideBeautyFilterLayout()
+//        hideCountDownView()
+//        hideShootBar()
+    }
+
+    private fun hideDynamicStickers(): Boolean {
+        if (camera_dynamic_stick_rv.visibility != View.VISIBLE) {
+            return false
+        }
+        showBottomView()
+        camera_list_show_mask.visibility = View.GONE
+        camera_dynamic_stick_rv.visibility = View.GONE
+        return true
+    }
+
+    private fun hideBeautyFilterLayout(): Boolean {
+        if (!mCameraFilterBeautyHelper.isShown) {
+            return false
+        }
+        showBottomView()
+        filter_mask.visibility = View.GONE
+        mCameraFilterBeautyHelper.showBeautyView(false)
+        return true
     }
 
     private fun resetScreenOn() {
@@ -444,12 +475,12 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         }
         mCameraFilterBeautyHelper.onTouch(motionEvent)
         mCameraZoomHelper.onTouch(motionEvent, mCameraDevice, mParameters)
-        return when (motionEvent.action and 255) {
-            0 -> {
+        return when (motionEvent.action and MotionEvent.ACTION_MASK) {
+            MotionEvent.ACTION_DOWN -> {
                 mFocusManager.onTouch(motionEvent)
                 true
             }
-            1 -> {
+            MotionEvent.ACTION_UP -> {
                 if (mCameraZoomHelper.status === 1) {
                     return true
                 }
@@ -550,8 +581,71 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
                 R.id.camera_topbar_album -> {
                     startActivity(Intent(this,MainActivity::class.java))
                 }
+                R.id.camera_bottombar_beauty -> {
+                    showBeautyFilterLayout()
+                }
             }
         }
+    }
+
+    private fun showBeautyFilterLayout() {
+        if (!mCameraFilterBeautyHelper.isShown) {
+            hideBottomView()
+            filter_mask.visibility = View.VISIBLE
+            mCameraFilterBeautyHelper.showBeautyView(true)
+        }
+    }
+
+    private fun hideBottomView() {
+        updateViewRecording(true)
+    }
+
+    private fun updateViewRecording(z: Boolean) {
+        if (z) {
+            camera_bottombar_sticker.visibility = View.GONE
+            camera_bottombar_beauty.visibility = View.GONE
+            shutter_button.visibility = View.GONE
+        } else {
+            camera_bottombar_sticker.visibility = View.VISIBLE
+            camera_bottombar_beauty.visibility = View.VISIBLE
+            shutter_button.visibility = View.VISIBLE
+        }
+        if (mTempVideoPaths.size <= 0 || z) {
+            hideRecordBottomBar()
+            if (z) {
+                hideCameraTypeTab()
+                return
+            } else {
+                showCameraTypeTab()
+                return
+            }
+        }
+        showRecordBottomBar()
+        hideCameraTypeTab()
+    }
+
+    private fun showRecordBottomBar() {
+        camera_bottombar_next.visibility = View.VISIBLE
+        camera_bottombar_rollback.visibility = View.VISIBLE
+    }
+
+    private fun hideRecordBottomBar() {
+        camera_bottombar_next.visibility = View.GONE
+        camera_bottombar_rollback.visibility = View.GONE
+    }
+
+    private fun showCameraTypeTab() {
+        camera_type_tab.visibility = View.VISIBLE
+        foot_icon.visibility = View.VISIBLE
+    }
+
+    private fun hideCameraTypeTab() {
+        camera_type_tab.visibility = View.GONE
+        foot_icon.visibility = View.GONE
+    }
+
+    private fun showBottomView() {
+        updateViewRecording(false)
     }
 
     private fun changeCamera() {
@@ -563,7 +657,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
     }
 
     private fun showConfirmDialog() {
-        TODO("Not yet implemented")
+        finish()
     }
 
     override fun disableVideo() {
@@ -590,6 +684,20 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         TODO("Not yet implemented")
     }
 
+    override fun onKeyDown(i: Int, keyEvent: KeyEvent?): Boolean {
+        if (i == 4) {
+            if (Util.isNotEmptyList(mTempVideoPaths)) {
+                showConfirmDialog()
+                return true
+            }
+            val z = hideDynamicStickers() || hideBeautyFilterLayout()
+            if (z) {
+                return true
+            }
+        }
+        return super.onKeyDown(i, keyEvent)
+    }
+
     private var mCameraOpenThread = Thread(Runnable {
         if (CameraHolder.canUseCamera(this@CameraActivity)) {
             this@CameraActivity.mCameraDevice = CameraHolder.openCamera(mCameraId)
@@ -608,6 +716,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
             mCameraProcess.updateInputRenderSize(mPreviewSize!!.height(), mPreviewSize!!.width())
         }
     }
+
 
     internal class GestureListener : SimpleOnGestureListener() {
         override fun onSingleTapUp(motionEvent: MotionEvent): Boolean {
