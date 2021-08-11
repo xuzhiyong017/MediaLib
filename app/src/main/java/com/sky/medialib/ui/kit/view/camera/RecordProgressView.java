@@ -153,7 +153,7 @@ public class RecordProgressView extends View {
         }
     }
     
-    public void mo17906c() {
+    public void onPause() {
         state = State.PAUSE;
         invalidate();
     }

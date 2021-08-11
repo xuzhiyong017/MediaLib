@@ -21,7 +21,7 @@ class SplashActivity : BaseActivity() {
                     startActivity(Intent(this,CameraActivity::class.java))
                     finish()
                 }else{
-                    ToastUtils.show("请授权后进入")
+                    ToastUtils.showToast("请授权后进入")
                     finish()
                 }
             }

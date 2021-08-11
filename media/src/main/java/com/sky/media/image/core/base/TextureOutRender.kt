@@ -23,7 +23,7 @@ abstract class TextureOutRender : GLRender(){
     val mLock = Any()
 
     @Synchronized
-    open  fun addNextRender(textureInRender: TextureInRender){
+    open  fun addNextRender(textureInRender: TextureInRender?){
         if(!(textureInRender == null || nextRenders.contains(textureInRender))){
             nextRenders.add(textureInRender)
         }
@@ -112,7 +112,7 @@ abstract class TextureOutRender : GLRender(){
         markNeedDraw()
     }
 
-    open fun removeRenderIn(textureInRender: TextureInRender){
+    open fun removeRenderIn(textureInRender: TextureInRender?){
         synchronized(mLock){
             nextRenders.remove(textureInRender)
         }

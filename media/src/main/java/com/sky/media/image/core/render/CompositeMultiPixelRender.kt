@@ -5,6 +5,7 @@ import com.sky.media.image.core.base.TextureOutRender
 import java.util.ArrayList
 
 abstract class CompositeMultiPixelRender(numOfInputs: Int) : MultiInputPixelRender(numOfInputs) {
+
     private val filters: MutableList<TextureOutRender> = ArrayList<TextureOutRender>()
     private val initialFilters: MutableList<BaseRender> = ArrayList<BaseRender>()
     private val inputOutputFilters: MutableList<TextureOutRender> = ArrayList<TextureOutRender>()

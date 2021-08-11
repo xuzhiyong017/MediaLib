@@ -19,7 +19,7 @@ open class BaseMediaApplication : Application(),Application.ActivityLifecycleCal
         lateinit var sContext:Context
         private val mActivityStack: ArrayList<BaseActivity> = ArrayList<BaseActivity>()
 
-        fun getTopActivity():BaseActivity?{
+        fun getTopActivity(): BaseActivity?{
             mActivityStack.reversed().forEach {
                 if(!it.isFinishing && ! it.isDestroyed){
                     return it

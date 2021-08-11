@@ -11,6 +11,7 @@ import com.sky.media.image.core.filter.Adjuster
 import com.sky.media.image.core.filter.Filter
 import com.sky.media.image.core.out.BitmapOutput
 import com.sky.media.image.core.out.BitmapOutput.*
+import com.sky.media.image.core.out.VideoFrameOutput
 import com.sky.media.image.core.pipeline.RenderPipeline
 import com.sky.media.image.core.render.EmptyRender
 import com.sky.media.image.core.render.GroupRender
@@ -39,7 +40,8 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
     protected var mMainHandler = Handler(Looper.getMainLooper())
     protected var mOnscreenEndpoint: OnScreenEndPoint? = null
     protected var mPipeline: RenderPipeline? = null
-    private val mRecording = false
+    protected var mRecording = false
+    protected var mVideoFrameOutput: VideoFrameOutput? = null
 
     init {
         mPipeline = iRenderView.initPipeline()

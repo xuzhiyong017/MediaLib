@@ -417,7 +417,7 @@ public class CameraFilterBeautyHelper {
         if (filterId != -1 && filterId < 1000000) {
             FilterExt g = ToolFilterManager.INSTANCE.getCacheFilterById(filterId);
             if (g == null) {
-                ToastUtils.INSTANCE.show("该滤镜无效");
+                ToastUtils.INSTANCE.showToast("该滤镜无效");
             } else {
                 initAndStart(g, filterProgress, z);
             }
@@ -438,7 +438,7 @@ public class CameraFilterBeautyHelper {
             this.weakHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtils.INSTANCE.show("该滤镜已经下架");
+                    ToastUtils.INSTANCE.showToast("该滤镜已经下架");
                 }
             });
         }

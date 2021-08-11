@@ -33,4 +33,6 @@
     <string name="cannot_connect_camera">无法打开相机，请检查应用使用相机权限.</string>
     <string name="dialog_cancel">取消</string>
     <string name="dialog_ok">确定</string>
+    <string name="combining">正在合成…</string>
+    <string name="record_video_failed">视频录制失败</string>
 </resources>

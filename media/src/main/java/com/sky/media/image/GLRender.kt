@@ -63,7 +63,7 @@ abstract class GLRender {
        """.trimIndent()
 
 
-    protected var alpha = 0.0f
+    protected open var alpha = 0.0f
     protected var red = 0.0f
     protected var green = 0.0f
     protected var blue = 0.0f

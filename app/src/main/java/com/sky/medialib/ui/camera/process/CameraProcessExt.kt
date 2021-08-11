@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import com.sky.media.image.core.filter.Adjuster
 import com.sky.media.image.core.filter.Filter
 import com.sky.media.image.core.out.BitmapOutput.*
+import com.sky.media.image.core.out.VideoFrameOutput
 import com.sky.media.image.core.render.EmptyRender
 import com.sky.media.image.core.view.IContainerView
 import com.sky.media.image.core.view.IRenderView
@@ -93,4 +94,6 @@ class CameraProcessExt(iContainerView: IContainerView, iRenderView: IRenderView)
         }
         mEffectFilter = null
     }
+
+
 }

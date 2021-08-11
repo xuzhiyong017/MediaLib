@@ -19,16 +19,24 @@ import com.sky.medialib.ui.kit.filter.OriginNormalFilter
  */
 object ToolFilterManager {
 
-    val cacheFilterList: MutableList<FilterExt> = mutableListOf()
+
+    //picture
     val whiteningTool = WhiteningTool()
     val buffingTool = BuffingTool()
+    //camera
     var cameraWhiteningTool: WhiteningTool? = null
     var cameraBuffingTool: BuffingTool? = null
+    //editvideo
+    var videoWhiteningTool: WhiteningTool? = null
+    var videoBuffingTool: BuffingTool? = null
     var clipScribbleTool :ScribbleTool? = null
     var paintScribbleTool :ScribbleTool? = null
 
-    val normalFilters: MutableList<FilterExt> = mutableListOf()
+
     val mToolFilters: MutableList<FilterExt> = mutableListOf()
+    val normalFilters: MutableList<FilterExt> = mutableListOf()
+    val cacheFilterList: MutableList<FilterExt> = mutableListOf()
+    val editVideoFilterList: MutableList<FilterExt> = mutableListOf()
     val magicFilterList: MutableList<MagicFilterExt> = mutableListOf()
 
     fun initEditPicture(context: Context){
@@ -81,6 +89,11 @@ object ToolFilterManager {
         normalFilters.addAll(initNormalFilter)
     }
 
+    private fun addEditVideoFilters(initNormalFilter: List<FilterExt>) {
+        editVideoFilterList.clear()
+        editVideoFilterList.addAll(initNormalFilter)
+    }
+
     fun addMagicFilters(list: List<MagicFilterExt>) {
         magicFilterList.clear()
         magicFilterList.addAll(list)
@@ -96,6 +109,26 @@ object ToolFilterManager {
         array.add(Warm(context))
         array.add(Summer(context))
         return array
+    }
+
+    fun initEditVideoFilter(context: Context){
+        if(editVideoFilterList.isEmpty()){
+            addEditVideoFilters(initNormalFilter(context,true))
+        }else{
+            for (adjuster in editVideoFilterList) {
+                adjuster.adjuster?.resetAdjust()
+            }
+        }
+
+        videoBuffingTool?.adjuster?.resetAdjust()
+        videoWhiteningTool?.adjuster?.resetAdjust()
+
+        initEditVideoBeautyTool()
+    }
+
+    private fun initEditVideoBeautyTool() {
+        videoBuffingTool = BuffingTool()
+        videoWhiteningTool = WhiteningTool()
     }
 
     fun initCameraFilter(context: Context) {
@@ -132,6 +165,17 @@ object ToolFilterManager {
         }
         return null
     }
+
+    fun getEditVideoFilterById(i: Int): FilterExt? {
+        val h = switchId(i)
+        for (filterExt in cacheFilterList) {
+            if (h == filterExt.mId) {
+                return filterExt
+            }
+        }
+        return null
+    }
+
 
     fun switchId(i: Int): Int {
         return when (i) {

@@ -1,6 +1,7 @@
 package com.sky.medialib
 
 import com.sky.media.kit.BaseMediaApplication
+import com.sky.medialib.ui.kit.manager.DownControllerManager
 import com.sky.medialib.util.FileUtil
 
 /**
@@ -13,5 +14,6 @@ class App : BaseMediaApplication() {
     override fun onCreate() {
         super.onCreate()
         FileUtil.copyMagicFilterFileFromAssetsToSDCard(this,"magics.zip")
+        DownControllerManager.getInstance().initDownList()
     }
 }

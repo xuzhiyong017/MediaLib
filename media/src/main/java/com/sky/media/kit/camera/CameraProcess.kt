@@ -3,6 +3,7 @@ package com.sky.media.kit.camera
 import android.graphics.Rect
 import android.hardware.Camera
 import com.sky.media.image.core.base.OnScreenEndPoint
+import com.sky.media.image.core.out.VideoFrameOutput
 import com.sky.media.image.core.pipeline.RenderPipeline
 import com.sky.media.image.core.process.base.BaseOnscreenProcess
 import com.sky.media.image.core.view.IContainerView
@@ -54,5 +55,45 @@ open class CameraProcess(iContainerView: IContainerView, iRenderView: IRenderVie
         mPipeline?.startRendering()
         iRenderView.requestRender()
     }
+
+    open fun startRecord() {
+        mRecording = true
+        if (mVideoFrameOutput != null) {
+            if (mGroupRender == null) {
+                refreshAllFilters()
+            }
+            mGroupRender!!.addNextRender(mVideoFrameOutput)
+            iRenderView.requestRender()
+        }
+    }
+
+    open fun stopRecord() {
+        mRecording = false
+        if (mVideoFrameOutput != null) {
+            if (mGroupRender == null) {
+                refreshAllFilters()
+            }
+            mGroupRender!!.removeRenderIn(mVideoFrameOutput)
+            iRenderView.requestRender()
+        }
+    }
+
+
+    fun setVideoFrameOutput(videoFrameOutputCallback: VideoFrameOutput.VideoFrameOutputCallback?, i: Int, i2: Int) {
+        requireNotNull(mInput) { "input must not be null!" }
+        if (mVideoFrameOutput == null) {
+            mVideoFrameOutput = VideoFrameOutput()
+        }
+        mVideoFrameOutput!!.setRenderSize(i, i2)
+        mVideoFrameOutput!!.setVideoFrameOutputCallback(videoFrameOutputCallback)
+        if (mRecording) {
+            if (mGroupRender == null) {
+                refreshAllFilters()
+            }
+            mGroupRender!!.addNextRender(this.mVideoFrameOutput)
+            iRenderView.requestRender()
+        }
+    }
+
 
 }

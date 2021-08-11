@@ -7,39 +7,60 @@ import android.hardware.Camera
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.widget.AdapterView
 import com.blankj.utilcode.util.SPStaticUtils
 import com.sky.media.image.core.cache.ImageBitmapCache
+import com.sky.media.image.core.out.VideoFrameOutput
+import com.sky.media.image.core.util.LogUtils
 import com.sky.media.image.core.view.ContainerViewHelper
-import com.sky.media.kit.base.BaseActivity
+import com.sky.media.kit.record.IVideoRecorder
+import com.sky.media.kit.record.RecordListener
+import com.sky.media.kit.record.VideoRecorderCreator
 import com.sky.medialib.MainActivity
 import com.sky.medialib.PICK_PICTURE
 import com.sky.medialib.PictureEditActivity
 import com.sky.medialib.R
 import com.sky.medialib.ui.camera.adapter.CameraTypeAdapter
+import com.sky.medialib.ui.camera.helper.CameraAudioHelper
 import com.sky.medialib.ui.camera.helper.CameraFilterBeautyHelper
 import com.sky.medialib.ui.camera.helper.CameraZoomHelper
 import com.sky.medialib.ui.camera.process.CameraProcessExt
 import com.sky.medialib.ui.dialog.SimpleAlertDialog
 import com.sky.medialib.ui.kit.camera.CameraHolder
+import com.sky.medialib.ui.kit.common.animate.AnimationListener
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
+import com.sky.medialib.ui.kit.common.base.AppActivity
+import com.sky.medialib.ui.kit.common.network.RxUtil
+import com.sky.medialib.ui.kit.effect.Effect
 import com.sky.medialib.ui.kit.manager.FocusManager
 import com.sky.medialib.ui.kit.manager.ToolFilterManager
+import com.sky.medialib.ui.kit.media.MediaKitExt
 import com.sky.medialib.ui.kit.view.ShutterView
 import com.sky.medialib.ui.kit.view.camera.RecordProgressView
 import com.sky.medialib.util.*
+import com.weibo.soundtouch.SoundTouch
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.FlowableOnSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.camera_focus_indicator.*
 import kotlinx.android.synthetic.main.camera_preview.*
 import kotlinx.android.synthetic.main.camera_preview_frame.*
 import kotlinx.android.synthetic.main.camera_preview_right.*
 import kotlinx.android.synthetic.main.camera_preview_top.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.ArrayList
+import java.util.HashMap
 
-class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusListener,
+class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusListener,
     View.OnClickListener,RecordProgressView.OnRecordListener {
 
 
@@ -74,9 +95,20 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
 
     private lateinit var mCameraZoomHelper: CameraZoomHelper
     private lateinit var mCameraFilterBeautyHelper: CameraFilterBeautyHelper
+    private lateinit var mMusicHelper: CameraAudioHelper
 
     private val mTempVideoPaths: ArrayList<String> = ArrayList<String>()
+    private val mLastVideoPath: ArrayList<String?> = ArrayList<String?>()
+    private val mShootTypeMap: HashMap<String, Int> = HashMap<String, Int>()
+
     private var mJumpFilterId: Int = 0
+    private var mFinalVideoPath: String? = null
+    private var mAudioPath: String? = null
+    private var mVideoRecorder: IVideoRecorder? = null
+    private val mVoice: Effect.Voice? = null
+    private var mClickNext = false
+
+    private var mAnimator: ViewAnimator? = null
 
     val mHandler = WeakHandler(Handler.Callback {
         when(it.what){
@@ -114,6 +146,9 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
     }
 
     private fun initParams() {
+        mShootTypeMap.clear()
+        mTempVideoPaths.clear()
+
         processing_view.setOnTouchListener(this)
         filter_mask.setOnClickListener {
             hideBeautyFilterLayout()
@@ -194,11 +229,17 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
             }
 
             override fun onStart() {
-                TODO("Not yet implemented")
+                if(mCameraType == 1){
+                    record_progress.setLongPressed(true)
+                    record_progress.startRecording()
+                }
             }
 
             override fun onPause() {
-                TODO("Not yet implemented")
+                if(mCameraType == 1){
+                    record_progress.setLongPressed(false)
+                    record_progress.pauseRecord()
+                }
             }
         })
     }
@@ -364,6 +405,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
 
     private fun initHelper() {
         mCameraZoomHelper = CameraZoomHelper(this)
+        mMusicHelper = CameraAudioHelper()
         mCameraFilterBeautyHelper = CameraFilterBeautyHelper(this, object : CameraFilterBeautyHelper.OnFilterBeautyListener {
             override fun getCameraProcess(): CameraProcessExt {
                 return mCameraProcess
@@ -398,15 +440,66 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
         super.onPause()
     }
 
+    override fun onStop() {
+        super.onStop()
+        mMusicHelper.release()
+    }
+
     private fun onPauseStopRecord() {
-//        if (this.mVideoRecorder != null && this.mVideoRecorder.isRecording()) {
-//            this.mRecordProgressView.pauseRecord()
-//            mCameraProcess.stopRecord()
-//        }
+        if (mVideoRecorder != null && mVideoRecorder?.isRecording == true) {
+            record_progress.pauseRecord()
+            mCameraProcess.stopRecord()
+        }
         hideDynamicStickers()
         hideBeautyFilterLayout()
-//        hideCountDownView()
-//        hideShootBar()
+        hideCountDownView()
+        hideShootBar()
+    }
+
+    private fun toggleShootBar() {
+        if (shoot_tab.visibility == View.VISIBLE) {
+            hideShootBar()
+        } else {
+            showShootBar()
+        }
+    }
+
+    private fun showShootBar() {
+        if (mAnimator != null) {
+            mAnimator!!.cancel()
+            mAnimator = null
+        }
+        mAnimator =
+            ViewAnimator.animate(shoot_tab).translationX(300.0f, 0.0f).alpha(0.0f, 1.0f)
+                .setDuration(400).setOnStartListener(object : AnimationListener.OnStartListener {
+                    override fun onStart() {
+                        shoot_tab.visibility = View.VISIBLE
+                    }
+                }).interplolatorDecelerate().start()
+        shoot_tab_mask.visibility = View.VISIBLE
+        hideBottomView()
+    }
+    private fun hideShootBar() {
+        if (this.mAnimator != null) {
+            this.mAnimator!!.cancel()
+            this.mAnimator = null
+        }
+        this.mAnimator =
+            ViewAnimator.animate(shoot_tab).translationX(0.0f, 300.0f).alpha(1.0f, 0.0f)
+                .setDuration(400).interplolatorDecelerate()
+                .setOnEndListener(object : AnimationListener.OnEndListener {
+                    override fun onEnd() {
+                        shoot_tab.visibility = View.GONE
+                    }
+                }).start()
+        shoot_tab_mask.visibility = View.GONE
+        showBottomView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mShootTypeMap.clear()
+        mTempVideoPaths.clear()
     }
 
     private fun hideDynamicStickers(): Boolean {
@@ -529,7 +622,7 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
                 startActivity(Intent(this,PictureEditActivity::class.java).putExtra(PICK_PICTURE,fromFile))
             }else{
                 mCameraState = 1
-                ToastUtils.show("图片打开失败")
+                ToastUtils.showToast("图片打开失败")
             }
         }
         mCameraState = 3
@@ -583,6 +676,9 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
                 }
                 R.id.camera_bottombar_beauty -> {
                     showBeautyFilterLayout()
+                }
+                R.id.camera_rightbar_speed -> {
+                    toggleShootBar()
                 }
             }
         }
@@ -661,27 +757,261 @@ class CameraActivity : BaseActivity(),View.OnTouchListener,FocusManager.OnFocusL
     }
 
     override fun disableVideo() {
-        TODO("Not yet implemented")
+        ToastUtils.showToast("分段视频录制过短!")
+        record_progress.removeLastSegment()
+        camera_bottombar_next.setImageResource(if (record_progress.canSave()) R.drawable.selector_camera_next else R.drawable.shoot_button_next_disabled)
+        val size = mTempVideoPaths.size
+        if (size > 0) {
+            mTempVideoPaths.removeAt(size - 1)
+        }
     }
 
     override fun onIsRecordMin(z: Boolean) {
-        TODO("Not yet implemented")
+        if (z) {
+            if (mVideoRecorder != null && mVideoRecorder!!.isRecording) {
+                this.camera_bottombar_next.visibility = View.VISIBLE
+            }
+            camera_bottombar_next.setImageResource(R.drawable.selector_camera_next)
+            return
+        }
+        camera_bottombar_next.setImageResource(R.drawable.shoot_button_next_disabled)
     }
 
     override fun onRecordEnd() {
-        TODO("Not yet implemented")
+        onRecordPause()
     }
 
     override fun onRecordIdle() {
-        TODO("Not yet implemented")
+        mTempVideoPaths.clear()
+        mShootTypeMap.clear()
+        showBottomView()
     }
 
     override fun onRecordPause() {
-        TODO("Not yet implemented")
+        if (mVideoRecorder != null && mVideoRecorder!!.isRecording) {
+            mVideoRecorder!!.recordStop()
+            mVideoRecorder = null
+        }
+        mCameraProcess.stopRecord()
+        if (TextUtils.equals(mFlashMode, "on") || TextUtils.equals(mFlashMode, "torch")) {
+            mParameters!!.flashMode = "on"
+            try {
+                mCameraDevice!!.parameters = mParameters
+            } catch (e:Exception) {
+                LogUtils.loge("CameraActivity", ""+ e.message)
+            }
+        }
     }
 
     override fun onRecordStart() {
-        TODO("Not yet implemented")
+        if (record_progress.isMaxDurtion(0.0f) || mPreviewSize == null) {
+            jumpVideoEditPage(mFinalVideoPath)
+            return
+        }
+
+        if (mFlashMode == "on") {
+            mParameters!!.flashMode = "torch"
+            try {
+                mCameraDevice!!.parameters = mParameters
+            } catch (e: Exception) {
+                e.message?.let { LogUtils.loge("CameraActivity", it) }
+            }
+        }
+
+        val createVideoPath: String = createVideoPath()
+        val height = mPreviewSize!!.height()
+        val width = mPreviewSize!!.width()
+        mVideoRecorder = if (mVoice == null || mVoice.pitch === 0.0f && mVoice.tempo === 0.0f) {
+            VideoRecorderCreator.buildRecorder(this, height, width, createVideoPath, null)
+        } else {
+            val a = SoundTouch.getInstance()
+            a.setPitch(mVoice.pitch)
+            a.setTempo(mVoice.tempo)
+            VideoRecorderCreator.buildRecorder(this, height, width, createVideoPath, a)
+        }
+        mVideoRecorder?.enableAudio(TextUtils.isEmpty(mAudioPath))
+        mVideoRecorder?.setRecordListener(object : RecordListener{
+            override fun onRecordStart() {
+                mMusicHelper.startPlayer()
+            }
+
+            override fun onRecordSuccess(success: Boolean) {
+                if(success){
+
+                }else{
+                    ToastUtils.showToast("视频录制失败")
+                }
+
+                cancelCountDown()
+                showAllView()
+                if (record_progress.getState() === RecordProgressView.State.CONCAT || mClickNext) {
+                    concatVideo()
+                    mClickNext = false
+                }
+            }
+
+            override fun onRecordStop() {
+                mMusicHelper.pause()
+            }
+        })
+        if (mVideoRecorder!!.prepared()) {
+            mCameraProcess.setVideoFrameOutput(object : VideoFrameOutput.VideoFrameOutputCallback {
+                override fun videoFrameOutput(bArr: ByteArray?) {
+                    mVideoRecorder?.onEncodeData(bArr)
+                }
+            }, height, width)
+            mCameraProcess.startRecord()
+            hideAllView()
+            shutter_button.visibility = View.VISIBLE
+            return
+        }else{
+            ToastUtils.showToast("录制器打开失败")
+            shutter_button.isSelected = false
+            record_progress.onPause()
+        }
+
+    }
+
+    private fun concatVideo() {
+        val size = mTempVideoPaths.size
+        if (size > 0) {
+            if (size <= 1 || !notNeedConcat()) {
+                if (size == 1) {
+                    val str = mTempVideoPaths[0]
+                    val intValue = mShootTypeMap[str]
+                    if ((intValue == 3 || intValue == 0) && TextUtils.isEmpty(mAudioPath)) {
+                        mFinalVideoPath = str
+                        this.mLastVideoPath.clear()
+                        this.mLastVideoPath.add(mFinalVideoPath)
+                        jumpVideoEditPage(mFinalVideoPath)
+                        return
+                    }
+                }
+
+                Flowable.create(FlowableOnSubscribe<String> { flowableEmitter ->
+                    var finalVideoPath: String = ""
+                    var str: String?
+                    val z: Boolean
+                    if (size > 1) {
+                        finalVideoPath = MediaKitExt.concatVideo(
+                            mTempVideoPaths,
+                            mShootTypeMap,
+                            this@CameraActivity
+                        )
+                    } else {
+                        try {
+                            Thread.sleep(800)
+                        } catch (e: InterruptedException) {
+                        }
+                        str = mTempVideoPaths[0]
+                        finalVideoPath = MediaKitExt.covertSpeedToVideo(
+                            str,
+                            (mShootTypeMap.get(str) as Int).toInt(),
+                            this@CameraActivity
+                        )
+                    }
+                    var str2 = ""
+                    if (!FileUtil.exists(finalVideoPath)) {
+                        str = str2
+                        z = false
+                    } else if (FileUtil.exists(mAudioPath)) {
+                        str2 = createVideoPath()
+                        val str3 = str2
+                        z = MediaKitExt.covertMusicToAACAndMergeVideo(
+                            finalVideoPath,
+                            str2,
+                            mAudioPath,
+                            this@CameraActivity
+                        )
+                        finalVideoPath = str3
+                    } else {
+                        z = true
+                    }
+                    if (!z) {
+                        finalVideoPath = ""
+                    }
+                    flowableEmitter.onNext(finalVideoPath)
+                    flowableEmitter.onComplete()
+                }, BackpressureStrategy.DROP).compose(RxUtil.rxSchedulers())
+                    .doOnSubscribe { showProgressDialog(R.string.combining) }.observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ str ->
+                        dismissProgressDialog()
+                        if (FileUtil.exists(str)) {
+                            mFinalVideoPath = str
+                            jumpVideoEditPage(mFinalVideoPath)
+                            mLastVideoPath.clear()
+                            mLastVideoPath.addAll(mTempVideoPaths)
+                        }else{
+                            ToastUtils.showToast(R.string.record_video_failed)
+                        }
+                    }) {
+                        dismissProgressDialog()
+                        ToastUtils.showToast(R.string.record_video_failed)
+                    }
+                return
+            }
+            jumpVideoEditPage(mFinalVideoPath)
+        }
+    }
+
+
+    private fun notNeedConcat(): Boolean {
+        if (this.mLastVideoPath.size < 1 || this.mLastVideoPath.size != mTempVideoPaths.size || TextUtils.isEmpty(
+                mFinalVideoPath
+            ) || !File(mFinalVideoPath).exists()
+        ) {
+            return false
+        }
+        for (i in this.mLastVideoPath.indices) {
+            if (this.mLastVideoPath.get(i) as String != mTempVideoPaths[i]) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun showCountDownView() {
+        hideAllView()
+        camera_time_count.visibility = View.VISIBLE
+    }
+
+    private fun hideCountDownView() {
+        showAllView()
+        camera_time_count.visibility = View.GONE
+    }
+
+    private fun cancelCountDown() {
+        shutter_button.isSelected = false
+        camera_time_count.doJob()
+    }
+
+    private fun showAllView() {
+        if (camera_time_count.visibility != View.VISIBLE) {
+            camera_topbar.visibility = View.VISIBLE
+            val view: View = camera_rightbar
+            view.visibility = View.VISIBLE
+            if (mCameraType == 0) {
+                view.visibility = View.GONE
+            }
+
+            if (shoot_tab.visibility != View.VISIBLE && !mCameraFilterBeautyHelper.isShown && camera_dynamic_stick_rv.visibility != View.VISIBLE) {
+                showBottomView()
+            }
+        }
+    }
+
+    private fun hideAllView() {
+        camera_topbar.visibility = View.GONE
+        camera_rightbar.visibility = View.GONE
+        hideBottomView()
+    }
+
+    private fun createVideoPath(): String {
+        return Storage.getFilePathByType(3) + Util.getCurTime().toString() + ".mp4"
+    }
+
+    private fun jumpVideoEditPage(mFinalVideoPath: String?) {
+
     }
 
     override fun onKeyDown(i: Int, keyEvent: KeyEvent?): Boolean {

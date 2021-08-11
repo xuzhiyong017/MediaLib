@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Environment
+import android.os.StatFs
 import android.provider.DocumentsContract
 import android.provider.MediaStore.*
 import android.text.TextUtils
@@ -15,6 +16,7 @@ import java.net.URLDecoder
 import com.blankj.utilcode.util.ThreadUtils
 import com.sky.media.image.core.util.LogUtils
 import java.io.*
+import java.nio.channels.FileChannel
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipInputStream
@@ -40,6 +42,26 @@ object FileUtil {
         return !TextUtils.isEmpty(str) && exists(File(str))
     }
 
+    fun hasExternalStorage(): Boolean {
+        return Environment.getExternalStorageState() == "mounted"
+    }
+
+    fun isStorageWriteable(): Boolean {
+        return Environment.getExternalStorageDirectory().canWrite()
+    }
+
+
+    fun checkExternalSpace(j: Long): Boolean {
+        return if (!hasExternalStorage()) {
+            false
+        } else try {
+            val statFs = StatFs(Environment.getExternalStorageDirectory().path)
+            statFs.availableBlocks.toLong() * statFs.blockSize.toLong() > j
+        } catch (e: Exception) {
+            true
+        }
+    }
+
     fun checkUriValid(context: Context?, uri: Uri?): Boolean {
         if (uri == null) {
             return false
@@ -60,6 +82,29 @@ object FileUtil {
         return "com.android.providers.downloads.documents" == uri.authority
     }
 
+    fun deleteFiles(str: String?) {
+        if (!TextUtils.isEmpty(str)) {
+            val file = File(str)
+            if (!file.exists()) {
+                return
+            }
+            if (file.isDirectory) {
+                val listFiles = file.listFiles()
+                if (listFiles != null && listFiles.isNotEmpty()) {
+                    for (file2 in listFiles) {
+                        if (file2.isDirectory) {
+                            deleteFiles(file.path)
+                        } else {
+                            file2.delete()
+                        }
+                    }
+                }
+                file.delete()
+                return
+            }
+            file.delete()
+        }
+    }
 
     fun getPathFromUri(context: Context?, uri: Uri?): String? {
         var uri2: Uri? = null
@@ -232,7 +277,7 @@ object FileUtil {
             }
 
             override fun onFail(t: Throwable?) {
-                ToastUtils.show("拷贝解压失败${t?.message}")
+                ToastUtils.showToast("拷贝解压失败${t?.message}")
             }
         })
 
@@ -263,6 +308,37 @@ object FileUtil {
             outputStream?.close()
             inputStream?.close()
         }
+    }
+
+    fun copy(str: String?, str2: String?): Boolean {
+        var fileChannel: FileChannel? = null
+        var channel: FileChannel? = null
+        val file = File(str)
+        val file2 = File(str2)
+        try {
+            fileChannel = FileInputStream(file).channel
+            channel = FileOutputStream(file2).channel
+            channel.transferFrom(fileChannel, 0, fileChannel.size())
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (fileChannel != null) {
+                try {
+                    fileChannel.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            if (channel != null) {
+                try {
+                    channel.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return false
     }
 
     @Throws(IOException::class)

@@ -3,6 +3,7 @@ package com.sky.media.ffmpeg.executor;
 import android.content.Context;
 import android.util.Log;
 
+
 import com.sky.media.ffmpeg.FFmpegConst;
 
 import java.io.File;
@@ -13,12 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FFmpegExecutor {
-
     private static FFmpegExecutor sExecutor;
     private String mFFmpegCmdPath;
     private boolean debug = true;
-    private final ConsoleReader.ConsoleReaderCallback mCallback = new ExecuteCallback();
-
+    private ConsoleReader.ConsoleReaderCallback mCallback = new ExecuteCallback();
 
     class ExecuteCallback implements ConsoleReader.ConsoleReaderCallback {
         ExecuteCallback() {
@@ -148,7 +147,7 @@ public class FFmpegExecutor {
         return executeCmd(a);
     }
 
-    public int mergeVideo(String str, String str2, String str3) {
+    public int mixAudioToVideo(String str, String str2, String str3) {
         List a = getFFCommand();
         a.add("-y");
         a.add("-i");
@@ -175,12 +174,12 @@ public class FFmpegExecutor {
         return executeCmd(a);
     }
 
-    public int mergeAudioAndVideo(String str, String str2, String str3) {
+    public int mergeAudioAndVideo(String input1, String input2, String output) {
         List a = getFFCommand();
         a.add("-i");
-        a.add(str);
+        a.add(input1);
         a.add("-i");
-        a.add(str2);
+        a.add(input2);
         a.add("-vcodec");
         a.add("copy");
         a.add("-acodec");
@@ -188,11 +187,11 @@ public class FFmpegExecutor {
         a.add("-absf");
         a.add("aac_adtstoasc");
         a.add("-y");
-        a.add(str3);
+        a.add(output);
         return executeCmd(a);
     }
 
-    private int covertToMpegts(String str, String str2) {
+    private int covertVideoToTs(String str, String str2) {
         List a = getFFCommand();
         a.add("-i");
         a.add(str);
@@ -207,7 +206,7 @@ public class FFmpegExecutor {
         return executeCmd(a);
     }
 
-    private int coverAudioToADTS(String str, String... strArr) {
+    private int concatSegment(String str, String... strArr) {
         StringBuilder stringBuilder = new StringBuilder("concat:");
         stringBuilder.append(strArr[0]);
         for (int i = 1; i < strArr.length; i++) {
@@ -224,6 +223,31 @@ public class FFmpegExecutor {
         a.add("-y");
         a.add(str);
         return executeCmd(a);
+    }
+
+    public int concatVideoSegment(String str, String... strArr) {
+        int i;
+        int i2 = 0;
+        String str2 = str.split("\\.")[0] + "_";
+        ArrayList arrayList = new ArrayList();
+        for (int i3 = 0; i3 < strArr.length; i3++) {
+            String str3 = str2 + i3 + ".ts";
+            covertVideoToTs(strArr[i3], str3);
+            arrayList.add(str3);
+        }
+        String[] strArr2 = new String[arrayList.size()];
+        for (i = 0; i < arrayList.size(); i++) {
+            strArr2[i] = (String) arrayList.get(i);
+        }
+        i = concatSegment(str, strArr2);
+        while (i2 < arrayList.size()) {
+            File file = new File((String) arrayList.get(i2));
+            if (file.exists()) {
+                file.delete();
+            }
+            i2++;
+        }
+        return i;
     }
 
     public int doPureVideo(String str, String str2) {

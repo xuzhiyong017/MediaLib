@@ -20,10 +20,16 @@ object ToastUtils {
 
     val handler = Handler(Looper.getMainLooper())
 
-    fun show(msg:String?){
+    fun showToast(msg:String?){
         handler.post {
             val text = if(msg.isNullOrEmpty()) "msg tips" else msg
             Toast.makeText(BaseMediaApplication.sContext,text,Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun showToast(stringId: Int) {
+        handler.post {
+            Toast.makeText(BaseMediaApplication.sContext,BaseMediaApplication.sContext.resources.getString(stringId),Toast.LENGTH_SHORT).show()
         }
     }
 }
