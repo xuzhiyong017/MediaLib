@@ -4,8 +4,10 @@ import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
+import android.util.Log
 import com.sky.media.image.core.base.TextureOutRender
 import com.sky.media.image.core.extra.FpsTest
+import com.sky.media.image.core.util.LogUtils
 import com.sky.media.image.core.view.IRenderView
 
 /**
@@ -60,6 +62,7 @@ class CameraInput(val iRenderView : IRenderView,val mCamera: Camera) : TextureOu
         GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR.toFloat())
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE)
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
         texture_in = iArr[0]
         mSurfaceTexture = SurfaceTexture(texture_in)
         mSurfaceTexture!!.setOnFrameAvailableListener(this)
@@ -88,6 +91,7 @@ class CameraInput(val iRenderView : IRenderView,val mCamera: Camera) : TextureOu
 
     override fun drawFrame() {
         try {
+            checkEGLError("updateTexImage before")
             mSurfaceTexture?.updateTexImage()
         }catch (e:Exception){
             e.printStackTrace()
@@ -107,7 +111,7 @@ class CameraInput(val iRenderView : IRenderView,val mCamera: Camera) : TextureOu
         mSurfaceTexture?.release()
         mSurfaceTexture = null
 
-        if (texture_in !== 0) {
+        if (texture_in != 0) {
             GLES20.glDeleteTextures(1, intArrayOf(texture_in), 0)
             texture_in = 0
         }

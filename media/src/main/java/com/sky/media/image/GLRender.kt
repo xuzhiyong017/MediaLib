@@ -1,11 +1,13 @@
 package com.sky.media.image
 
+import android.opengl.EGL14
 import android.opengl.GLES20
 import com.sky.media.image.core.util.LogUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import java.util.*
+import javax.microedition.khronos.egl.EGL
 
 /**
  * @author: xuzhiyong
@@ -305,6 +307,7 @@ abstract class GLRender {
                 GLES20.glViewport(0,0,width,height)
             }
             GLES20.glUseProgram(programHandle)
+            checkEGLError("glUseProgram")
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
             GLES20.glClearColor(
                 getBackgroundRed(),
@@ -312,7 +315,9 @@ abstract class GLRender {
                 getBackgroundBlue(),
                 getBackgroundAlpha()
             )
+            checkEGLError("glClearColor")
             bindShaderValues()
+            checkEGLError("bindShaderValues")
             GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
 
             //禁止顶点数组的句柄
@@ -320,6 +325,7 @@ abstract class GLRender {
             GLES20.glDisableVertexAttribArray(texCoordHandle)
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0)
             GLES20.glUseProgram(0)
+            checkEGLError("glDisableVertexAttribArray")
         }
     }
 
@@ -337,6 +343,7 @@ abstract class GLRender {
             GLES20.glDeleteShader(fragmentShaderHandle)
             fragmentShaderHandle = 0
         }
+        checkEGLError("destroy")
     }
 
     open fun getBackgroundRed(): Float {
@@ -369,5 +376,13 @@ abstract class GLRender {
 
     open fun setBackgroundAlpha(f: Float) {
         this.alpha = f
+    }
+
+    open fun checkEGLError(str: String) {
+        val eglGetError = EGL14.eglGetError()
+        if (eglGetError != EGL14.EGL_SUCCESS) {
+            throw java.lang.RuntimeException("$str: EGL error: 0x" + Integer.toHexString(eglGetError)
+            )
+        }
     }
 }

@@ -28,7 +28,7 @@ class OnScreenEndPoint(val renderPipeline: RenderPipeline):GLRender(),TextureInR
         texture_in = textureId
         setWidth(textureOutRender.getWidth())
         setHeight(textureOutRender.getHeight())
-        LogUtils.logd(TAG,"OnScreenEndPoint widthxheight=${getWidth()} x ${getHeight()}")
+//        LogUtils.logd(TAG,"OnScreenEndPoint widthxheight=${getWidth()} x ${getHeight()}")
         onDrawFrame()
     }
 }
