@@ -21,4 +21,5 @@
     <color name="dialog_title_divider_color">#ff2f3237</color>
     <color name="list_item_bg_disable">#fffbb0b1</color>
     <color name="list_item_default_bg">#ff0a0d10</color>
+    <color name="primary">#ff1a1c21</color>
 </resources>

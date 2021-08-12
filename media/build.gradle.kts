@@ -12,7 +12,9 @@ android {
         targetSdk = 30
         versionCode = 1
         versionName = "1.0"
-
+        ndk {
+            abiFilters.add("armeabi-v7a")
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -34,11 +36,13 @@ android {
         jvmTarget = "1.8"
     }
 
-    sourceSets {
-        getByName("main"){
-            jniLibs.srcDirs("src/main/jniLibs")
-        }
-    }
+    sourceSets["main"].jniLibs.srcDirs("src/main/jniLibs")
+
+//    sourceSets {
+//        getByName("main"){
+//            jniLibs.srcDirs("src/main/jniLibs")
+//        }
+//    }
 }
 
 dependencies {

@@ -2,6 +2,9 @@ package com.sky.medialib.ui.kit.common.base
 
 import com.sky.media.kit.base.BaseActivity
 import com.sky.medialib.ui.dialog.LoadingDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 
 /**
  * @author: xuzhiyong
@@ -44,5 +47,9 @@ open class AppActivity : BaseActivity(){
             this.mProgressDialog?.dismiss()
         }
         this.mProgressDialog = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

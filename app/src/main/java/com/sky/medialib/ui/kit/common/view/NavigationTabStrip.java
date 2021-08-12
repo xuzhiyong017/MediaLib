@@ -195,7 +195,7 @@ public class NavigationTabStrip extends View implements ViewPager.OnPageChangeLi
                     typedArray.getFloat( R.styleable.NavigationTabStrip_nts_factor, DEFAULT_STRIP_FACTOR)
             );
             setStripType(
-                    typedArray.getInt( R.styleable.NavigationTabStrip_nts_type, StripType.LINE_INDEX)
+                    typedArray.getInt( R.styleable.NavigationTabStrip_nts_type, StripType.LINE_NONE)
             );
             setStripGravity(
                     typedArray.getInt( R.styleable.NavigationTabStrip_nts_gravity, StripGravity.BOTTOM_INDEX)
@@ -332,7 +332,7 @@ public class NavigationTabStrip extends View implements ViewPager.OnPageChangeLi
                 break;
             case StripType.LINE_INDEX:
             default:
-                setStripType(StripType.LINE);
+                setStripType(StripType.NONE);
                 break;
         }
     }
@@ -670,8 +670,10 @@ public class NavigationTabStrip extends View implements ViewPager.OnPageChangeLi
         );
 
         // Draw strip
-        if (mCornersRadius == 0) canvas.drawRect(mStripBounds, mStripPaint);
-        else canvas.drawRoundRect(mStripBounds, mCornersRadius, mCornersRadius, mStripPaint);
+        if(mStripType != StripType.NONE){
+            if (mCornersRadius == 0) canvas.drawRect(mStripBounds, mStripPaint);
+            else canvas.drawRoundRect(mStripBounds, mCornersRadius, mCornersRadius, mStripPaint);
+        }
 
         // Draw tab titles
         for (int i = 0; i < mTitles.length; i++) {
@@ -880,10 +882,11 @@ public class NavigationTabStrip extends View implements ViewPager.OnPageChangeLi
 
     // NTS strip type
     public enum StripType {
-        LINE, POINT;
+        NONE,LINE, POINT;
 
-        private final static int LINE_INDEX = 0;
-        private final static int POINT_INDEX = 1;
+        private final static int LINE_NONE = 0;
+        private final static int LINE_INDEX = 1;
+        private final static int POINT_INDEX = 2;
     }
 
     // NTS strip gravity

@@ -26,57 +26,57 @@ class MediaAudioEncoder extends MediaEncoder implements AudioCapturer.onRecordDa
     }
 
     protected void prepare() throws Exception {
-        this.mAudioCapturer.init();
-        this.mAudioCapturer.setOnRecordDataCallback((onRecordDataCallback) this);
-        this.mTrackIndex = -1;
-        this.mIsEOS = false;
-        this.mMuxerStarted = false;
-        int sampleRate = this.mAudioCapturer.getSimpleRate();
-        int channelCount = this.mAudioCapturer.getChannelCount();
-        int f = this.mAudioCapturer.getEncoderBit();
+        mAudioCapturer.init();
+        mAudioCapturer.setOnRecordDataCallback((onRecordDataCallback) this);
+        mTrackIndex = -1;
+        mIsEOS = false;
+        mMuxerStarted = false;
+        int sampleRate = mAudioCapturer.getSimpleRate();
+        int channelCount = mAudioCapturer.getChannelCount();
+        int f = mAudioCapturer.getEncoderBit();
         MediaFormat format = MediaHelper.getAudioFormat(sampleRate, channelCount);
-        this.mMediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC);
-        this.mMediaCodec.configure(format, null, null,  MediaCodec.CONFIGURE_FLAG_ENCODE);
-        this.mMediaCodec.start();
-        if (!TextUtils.isEmpty(this.mAudioPath)) {
-            this.mAudioEncoder = new AudioEncoder(this.mAudioPath);
-            this.mAudioEncoder.startAudioEncoder(sampleRate, channelCount);
+        mMediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC);
+        mMediaCodec.configure(format, null, null,  MediaCodec.CONFIGURE_FLAG_ENCODE);
+        mMediaCodec.start();
+        if (!TextUtils.isEmpty(mAudioPath)) {
+            mAudioEncoder = new AudioEncoder(mAudioPath);
+            mAudioEncoder.startAudioEncoder(sampleRate, channelCount);
         }
-        if (this.mSoundTouch != null) {
-            this.mSoundTouch.initParams(channelCount, sampleRate, f / 8);
+        if (mSoundTouch != null) {
+            mSoundTouch.initParams(channelCount, sampleRate, f / 8);
         }
     }
 
     protected void startRecording() {
         super.startRecording();
-        this.mAudioCapturer.startCapture();
+        mAudioCapturer.startCapture();
     }
 
     protected void stopRecording() {
-        this.mAudioCapturer.stop();
+        mAudioCapturer.stop();
         super.stopRecording();
     }
 
     protected void release() {
         super.release();
-        if (this.mSoundTouch != null) {
-            this.mSoundTouch.release();
+        if (mSoundTouch != null) {
+            mSoundTouch.release();
         }
-        if (this.mAudioEncoder != null) {
-            this.mAudioEncoder.release();
+        if (mAudioEncoder != null) {
+            mAudioEncoder.release();
         }
     }
 
     public void recordData(byte[] bArr) {
         long pts;
-        if (this.mSoundTouch != null) {
+        if (mSoundTouch != null) {
             int i;
             byte[] bArr2 = new byte[4096];
-            this.mSoundTouch.putSamples(bArr);
+            mSoundTouch.putSamples(bArr);
             ArrayList arrayList = new ArrayList();
             int b;
             do {
-                b = this.mSoundTouch.receiveSamples(bArr2);
+                b = mSoundTouch.receiveSamples(bArr2);
                 for (i = 0; i < b; i++) {
                     arrayList.add(Byte.valueOf(bArr2[i]));
                 }
@@ -87,16 +87,16 @@ class MediaAudioEncoder extends MediaEncoder implements AudioCapturer.onRecordDa
                 bArr3[i] = ((Byte) arrayList.get(i)).byteValue();
             }
             pts = getPTSUs();
-            if (this.mAudioEncoder != null) {
-                this.mAudioEncoder.encodeData(bArr3, pts);
+            if (mAudioEncoder != null) {
+                mAudioEncoder.encodeData(bArr3, pts);
             }
             encode(bArr, bArr.length, pts);
             frameAvailableSoon();
             return;
         }
         pts = getPTSUs();
-        if (this.mAudioEncoder != null) {
-            this.mAudioEncoder.encodeData(bArr, pts);
+        if (mAudioEncoder != null) {
+            mAudioEncoder.encodeData(bArr, pts);
         }
         encode(bArr, bArr.length, pts);
         frameAvailableSoon();

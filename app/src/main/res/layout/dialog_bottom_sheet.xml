@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:gravity="bottom|center"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/dialog_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@color/background"
+            android:dividerHeight="1.0px"
+            android:fadingEdge="none"
+            android:fadingEdgeLength="0.0dip"
+            android:listSelector="@android:color/transparent"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="none" />
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="5.0dip" />
+
+        <TextView
+            android:id="@+id/dialog_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="48.0dip"
+            android:background="@drawable/selector_list_item"
+            android:gravity="center"
+            android:paddingLeft="10.0dip"
+            android:paddingRight="10.0dip"
+            android:singleLine="true"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="15.0sp" />
+    </LinearLayout>
+</RelativeLayout>

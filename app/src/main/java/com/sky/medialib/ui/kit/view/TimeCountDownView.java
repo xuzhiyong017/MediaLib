@@ -30,6 +30,7 @@ public class TimeCountDownView extends FrameLayout {
     private CountDownListener mListener;
     private Animation mAnimation;
     private int chooseTime;
+    private int time = 3;
     private WeakHandler mHandler = new WeakHandler(new CountDownCallback());
 
     public interface CountDownListener {
@@ -85,12 +86,27 @@ public class TimeCountDownView extends FrameLayout {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (mImageView.getVisibility() != VISIBLE) {
+                    mCount = 0;
+                    mHandler.removeMessages(1);
+                    setVisibility(GONE);
+                    mNavigationTabStrip.setVisibility(VISIBLE);
+                    mTextStart.setVisibility(VISIBLE);
+                    mImageView.setVisibility(GONE);
+                    if (mListener != null) {
+                        mListener.start();
+                    }
+                }
             }
         });
         this.mTextStart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCount =time;
+                chooseTime =time;
+                mNavigationTabStrip.setVisibility(GONE);
+                mTextStart.setVisibility(GONE);
+                mImageView.setVisibility(VISIBLE);
                 startCountDown();
             }
         });
@@ -100,13 +116,13 @@ public class TimeCountDownView extends FrameLayout {
             public void onPageSelected(int position) {
                 switch (position){
                     case 0:
-                        chooseTime = 3;
+                        time = 3;
                         break;
                     case 1:
-                        chooseTime = 5;
+                        time = 5;
                         break;
                     case 2:
-                        chooseTime = 10;
+                        time = 10;
                         break;
                 }
             }

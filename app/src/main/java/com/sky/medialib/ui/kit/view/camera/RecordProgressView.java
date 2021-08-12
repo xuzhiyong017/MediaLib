@@ -190,7 +190,6 @@ public class RecordProgressView extends View {
         return this.state;
     }
 
-    /* renamed from: f */
     public boolean canSave() {
         float time = 0.0f;
         if(mSegmentList != null && mSegmentList.size() > 0){

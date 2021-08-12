@@ -35,4 +35,7 @@
     <string name="dialog_ok">确定</string>
     <string name="combining">正在合成…</string>
     <string name="record_video_failed">视频录制失败</string>
+    <string name="cancel">取消</string>
+    <string name="change_music">更换音乐</string>
+    <string name="cancel_music">不用音乐</string>
 </resources>

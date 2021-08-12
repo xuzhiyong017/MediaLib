@@ -38,7 +38,7 @@ class ImageMatrixActivity : BaseActivity() {
             }
 
         }
-        image.setImageDrawable(FastBitmapDrawable(BitmapFactory.decodeResource(resources,R.drawable.image1)))
+//        image.setImageDrawable(FastBitmapDrawable(BitmapFactory.decodeResource(resources,R.drawable.image1)))
 
         image.setOnClickListener {
             PermissionX.init(this)

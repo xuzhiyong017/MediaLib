@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.sky.media.image.core.util.LogUtils;
 import com.sky.media.kit.mediakit.MediaKitCompat;
 import com.sky.media.kit.record.IVideoRecorder;
 import com.sky.media.kit.record.RecordListener;
@@ -153,7 +154,7 @@ public class VideoRecorderCompat implements IVideoRecorder {
             startRecord();
             return true;
         } catch (Throwable e) {
-            Log.w("VideoRecorderCompat", Log.getStackTraceString(e));
+            LogUtils.loge("VideoRecorderCompat", Log.getStackTraceString(e));
             stopRecord();
             return false;
         }

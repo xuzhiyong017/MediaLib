@@ -97,7 +97,7 @@ class CameraInput(val iRenderView : IRenderView,val mCamera: Camera) : TextureOu
             e.printStackTrace()
         }
         super.drawFrame()
-        FpsTest.getInstance().countFps()
+
     }
 
     private fun setRenderSize() {

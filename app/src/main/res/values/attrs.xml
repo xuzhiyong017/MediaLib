@@ -27,8 +27,8 @@
         <attr name="nts_weight" format="dimension"/>
         <attr name="nts_factor" format="float"/>
         <attr name="nts_type">
-            <enum name="line" value="1" />
             <enum name="none" value="0" />
+            <enum name="line" value="1" />
             <enum name="point" value="2" />
         </attr>
         <attr name="nts_gravity">

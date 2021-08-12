@@ -2,9 +2,12 @@ package com.sky.media.kit.record.audio;
 
 import static android.media.AudioFormat.ENCODING_PCM_8BIT;
 
+import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.util.Log;
 
+import com.sky.media.image.core.util.LogUtils;
 import com.sky.media.kit.util.MediaHelper;
 
 
@@ -42,6 +45,7 @@ public class AudioCapturer {
 
     public void init() {
         this.mAudioRecord = createAudioRecord();
+        LogUtils.logd("AudioCapturer","AudioCapturer "+mAudioRecord.getState());
     }
 
     public boolean startCapture() {
@@ -120,20 +124,23 @@ public class AudioCapturer {
         this.mOnRecordDataCallback = onRecordDataCallback;
     }
 
+    private static final int[] AUDIO_FORMAT = new int[]{AudioFormat.CHANNEL_IN_MONO, AudioFormat.CHANNEL_IN_STEREO};
+    private static final int[] AUDIO_ENCODEING_FORMAT = new int[]{AudioFormat.ENCODING_PCM_16BIT, AudioFormat.ENCODING_PCM_8BIT};
+    private static final int[] AUDIO_SAMPLERATE = new int[]{44100, 22050, 11025, 8000};
+
     private AudioRecord createAudioRecord() {
-        int[] iArr = new int[]{2, 3};
-        int[] iArr2 = new int[]{12, 16};
-        for (int i : new int[]{44100, 22050, 11025, 8000}) {
-            for (int i2 : iArr) {
-                for (int i3 : iArr2) {
+
+        for (int sampleRate : AUDIO_SAMPLERATE) {
+            for (int source : AUDIO_ENCODEING_FORMAT) {
+                for (int formatType : AUDIO_FORMAT) {
                     try {
-                        Log.d("AudioCapturer", "Attempting rate:" + i + "Hz, bits:" + getPCMBitByFormat(i2) + ", channel:" + getChannelCountByConfig(i3));
-                        int minBufferSize = AudioRecord.getMinBufferSize(i, i3, i2);
+                        Log.d("AudioCapturer", "Attempting rate:" + sampleRate + "Hz, bits:" + getPCMBitByFormat(source) + ", channel:" + getChannelCountByConfig(formatType));
+                        int minBufferSize = AudioRecord.getMinBufferSize(sampleRate, formatType, source);
                         if (minBufferSize != -2) {
-                            AudioRecord audioRecord = new AudioRecord(1, i, i3, i2, minBufferSize * 4);
-                            if (audioRecord.getState() == 1) {
-                                this.mSimpleRate = i;
-                                this.bufferSizeInBytes = minBufferSize * 4;
+                            AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, formatType, source, minBufferSize);
+                            if (audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
+                                this.mSimpleRate = sampleRate;
+                                this.bufferSizeInBytes = minBufferSize;
                                 return audioRecord;
                             }
                         } else {
