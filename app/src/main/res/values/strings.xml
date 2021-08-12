@@ -38,4 +38,6 @@
     <string name="cancel">取消</string>
     <string name="change_music">更换音乐</string>
     <string name="cancel_music">不用音乐</string>
+    <string name="exit_shoot">退出拍摄</string>
+    <string name="re_shoot">重新拍摄</string>
 </resources>

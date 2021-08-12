@@ -120,6 +120,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     private var mClickNext = false
 
     private var mAnimator: ViewAnimator? = null
+    private var mBottomSheet: BottomSheetDialog? = null
 
     val mHandler = WeakHandler(Handler.Callback {
         when(it.what){
@@ -308,7 +309,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
 //            this.mEffectHelper.mo16841e()
             takeSnap()
         }
-        else if (this.mVideoRecorder != null && mVideoRecorder!!.isRecording) {
+        else if (mVideoRecorder != null && mVideoRecorder!!.isRecording) {
            record_progress.pauseRecord()
             cancelCountDown()
         } else if (record_progress.state == RecordProgressView.State.CONCAT) {
@@ -333,9 +334,9 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
         record_progress.setRecordListener(this)
         mFlashMode = "off"
         if (mFlashMode == "on" || mFlashMode == "torch") {
-            this.mFlashIndex = 1
+            mFlashIndex = 1
         } else if (mFlashMode == "off") {
-            this.mFlashIndex = 0
+            mFlashIndex = 0
         }
         camera_topbar_flash.setImageResource(mFlashIcon[mFlashIndex])
         camera_topbar_cancel.setOnClickListener(this)
@@ -380,40 +381,40 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     private fun setCameraParameters() {
         if (mCameraDevice != null) {
             try {
-                this.mParameters = mCameraDevice!!.parameters
+                mParameters = mCameraDevice!!.parameters
                 val previewSize: Camera.Size = mParameters!!.getPreviewSize()
-                this.mPreviewSize = Rect(0, 0, previewSize.width, previewSize.height)
-                val is720: Boolean = CameraUtil.isSupport720(this.mParameters)
-                val is1080: Boolean = CameraUtil.isSupport1080(this.mParameters)
-                if (this.mCameraType == 1) {
+                mPreviewSize = Rect(0, 0, previewSize.width, previewSize.height)
+                val is720: Boolean = CameraUtil.isSupport720(mParameters)
+                val is1080: Boolean = CameraUtil.isSupport1080(mParameters)
+                if (mCameraType == 1) {
                     if (is720) {
-                        this.mPreviewSize = Rect(0, 0, 1280, 720)
+                        mPreviewSize = Rect(0, 0, 1280, 720)
                     }
                 } else if (is1080) {
-                    this.mPreviewSize = Rect(0, 0, 1920, 1080)
+                    mPreviewSize = Rect(0, 0, 1920, 1080)
                 } else if (is720) {
-                    this.mPreviewSize = Rect(0, 0, 1280, 720)
+                    mPreviewSize = Rect(0, 0, 1280, 720)
                 }
                 Log.e("Camera", "Size:" + mPreviewSize!!.width() + "x" + mPreviewSize!!.height())
                 mParameters!!.setPreviewSize(mPreviewSize!!.width(), mPreviewSize!!.height())
-                this.mParameters!!.setPictureSize(mPreviewSize!!.width(), mPreviewSize!!.height())
-                this.mParameters!!.setJpegQuality(100)
+                mParameters!!.setPictureSize(mPreviewSize!!.width(), mPreviewSize!!.height())
+                mParameters!!.setJpegQuality(100)
                 if (mFocusAreaSupported) {
                     mParameters!!.focusAreas = mFocusManager.focusArea
                 }
                 if (mMeteringAreaSupported) {
                     mParameters!!.meteringAreas = mFocusManager.meteringArea
                 }
-                this.mCurrentRatio =
-                    this.mPreviewSize!!.height() * 1.0f / this.mPreviewSize!!.width()
-                this.frame.setScaleType(ContainerViewHelper.ScaleType.CENTER_CROP)
-                this.frame.setAspectRatio(this.mCurrentRatio, 0, 0)
+                mCurrentRatio =
+                    mPreviewSize!!.height() * 1.0f / mPreviewSize!!.width()
+                frame.setScaleType(ContainerViewHelper.ScaleType.CENTER_CROP)
+                frame.setAspectRatio(mCurrentRatio, 0, 0)
                 var sceneMode = mParameters!!.sceneMode
                 if (sceneMode == null) {
                     sceneMode = "auto"
                 }
                 if (mCameraId == mBackCameraId) {
-                    this.mParameters!!.setFlashMode(this.mFlashMode)
+                    mParameters!!.setFlashMode(mFlashMode)
                     camera_topbar_flash.setSelected(true)
                 } else {
                     camera_topbar_flash.setSelected(false)
@@ -424,7 +425,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
                 } else {
                     mFocusManager.setForceFocusMode(mParameters!!.focusMode)
                 }
-                mCameraDevice!!.parameters = this.mParameters
+                mCameraDevice!!.parameters = mParameters
             } catch (e: Throwable) {
                e.printStackTrace()
             }
@@ -432,11 +433,11 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     }
 
     private fun setDisplayOrientation() {
-        this.mDisplayOrientation = CameraUtil.getDisplayOrientation(
+        mDisplayOrientation = CameraUtil.getDisplayOrientation(
             CameraUtil.getRotation(this as Activity),
             mCameraId
         )
-        mCameraDevice!!.setDisplayOrientation(this.mDisplayOrientation)
+        mCameraDevice!!.setDisplayOrientation(mDisplayOrientation)
     }
 
     private fun stopPreview() {
@@ -539,11 +540,11 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
         hideBottomView()
     }
     private fun hideShootBar() {
-        if (this.mAnimator != null) {
-            this.mAnimator!!.cancel()
-            this.mAnimator = null
+        if (mAnimator != null) {
+            mAnimator!!.cancel()
+            mAnimator = null
         }
-        this.mAnimator =
+        mAnimator =
             ViewAnimator.animate(shoot_tab).translationX(0.0f, 300.0f).alpha(1.0f, 0.0f)
                 .setDuration(400).interplolatorDecelerate()
                 .setOnEndListener(object : AnimationListener.OnEndListener {
@@ -613,16 +614,16 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     }
 
     private fun keepScreenOnAwhile() {
-        this.mHandler.removeMessages(1)
+        mHandler.removeMessages(1)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        this.mHandler.sendEmptyMessageDelayed(1, 120000)
+        mHandler.sendEmptyMessageDelayed(1, 120000)
     }
 
     override fun onTouch(v: View, motionEvent: MotionEvent): Boolean {
-        if (mCameraDevice == null || this.mCameraState == 3) {
+        if (mCameraDevice == null || mCameraState == 3) {
             return false
         }
-        if (this.mGesture?.onTouchEvent(motionEvent) == true) {
+        if (mGesture?.onTouchEvent(motionEvent) == true) {
             return true
         }
         mCameraFilterBeautyHelper.onTouch(motionEvent)
@@ -673,7 +674,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
             return false
         }
 
-        CameraHolder.adjustRotation(mParameters, mCameraId, this.mOrientation)
+        CameraHolder.adjustRotation(mParameters, mCameraId, mOrientation)
         mCameraFilterBeautyHelper.takePhoto(mCameraDevice, mParameters, mFlashMode, mOrientation, mCurrentRatio, z){bitmap,bitmap2,orientation ->
             val fromFile = Uri.fromFile(File(Storage.storageToTempJpgPath(bitmap, null, orientation)))
             bitmap.recycle()
@@ -887,7 +888,27 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     }
 
     private fun showConfirmDialog() {
-        finish()
+        if (mBottomSheet == null || !mBottomSheet!!.isShowing) {
+            val arrayList: MutableList<BottomSheetDialog.ItemBean> = ArrayList<BottomSheetDialog.ItemBean>()
+            arrayList.add(BottomSheetDialog.ItemBean(getString(R.string.exit_shoot)))
+            arrayList.add(BottomSheetDialog.ItemBean(getString(R.string.re_shoot)))
+            mBottomSheet = BottomSheetDialog(this)
+            mBottomSheet!!.replaceList(arrayList).setOnItemClickListener { _, _, position, _ ->
+               when(position){
+                   0 -> finish()
+                   1 -> {
+                       mTempVideoPaths.clear()
+                       mShootTypeMap.clear()
+                       shutter_button.setRecordingIdle()
+                       mFinalVideoPath = null
+                       record_progress.reset()
+                       showBottomView()
+                       changeMusicBtnState()
+                   }
+               }
+            }
+            mBottomSheet!!.show()
+        }
     }
 
     override fun disableVideo() {
@@ -903,7 +924,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     override fun onIsRecordMin(z: Boolean) {
         if (z) {
             if (mVideoRecorder != null && mVideoRecorder!!.isRecording) {
-                this.camera_bottombar_next.visibility = View.VISIBLE
+                camera_bottombar_next.visibility = View.VISIBLE
             }
             camera_bottombar_next.setImageResource(R.drawable.selector_camera_next)
         }else{
@@ -1035,8 +1056,8 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
                     val intValue = mShootTypeMap[str]
                     if ((intValue == 3 || intValue == 0) && TextUtils.isEmpty(mAudioPath)) {
                         mFinalVideoPath = str
-                        this.mLastVideoPath.clear()
-                        this.mLastVideoPath.add(mFinalVideoPath)
+                        mLastVideoPath.clear()
+                        mLastVideoPath.add(mFinalVideoPath)
                         jumpVideoEditPage(mFinalVideoPath)
                         return
                     }
@@ -1062,7 +1083,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
                             str = mTempVideoPaths[0]
                             finalVideoPath = MediaKitExt.covertSpeedToVideo(
                                 str,
-                                (mShootTypeMap.get(str) as Int).toInt(),
+                                mShootTypeMap[str]!!,
                                 this@CameraActivity
                             )
                         }
@@ -1107,14 +1128,14 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
 
 
     private fun notNeedConcat(): Boolean {
-        if (this.mLastVideoPath.size < 1 || this.mLastVideoPath.size != mTempVideoPaths.size || TextUtils.isEmpty(
+        if (mLastVideoPath.size < 1 || mLastVideoPath.size != mTempVideoPaths.size || TextUtils.isEmpty(
                 mFinalVideoPath
             ) || !File(mFinalVideoPath).exists()
         ) {
             return false
         }
-        for (i in this.mLastVideoPath.indices) {
-            if (this.mLastVideoPath.get(i) as String != mTempVideoPaths[i]) {
+        for (i in mLastVideoPath.indices) {
+            if (mLastVideoPath[i] != mTempVideoPaths[i]) {
                 return false
             }
         }
