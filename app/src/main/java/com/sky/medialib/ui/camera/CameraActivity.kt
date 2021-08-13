@@ -15,6 +15,9 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.widget.AdapterView
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SPStaticUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.sky.media.image.core.cache.ImageBitmapCache
 import com.sky.media.image.core.out.VideoFrameOutput
 import com.sky.media.image.core.util.LogUtils
@@ -49,6 +52,7 @@ import com.sky.medialib.ui.kit.view.ShutterView
 import com.sky.medialib.ui.kit.view.TimeCountDownView
 import com.sky.medialib.ui.kit.view.camera.RecordProgressView
 import com.sky.medialib.ui.music.MusicChooseActivity
+import com.sky.medialib.ui.music.event.CutMusicInfoEvent
 import com.sky.medialib.util.*
 import com.weibo.soundtouch.SoundTouch
 import io.reactivex.BackpressureStrategy
@@ -65,6 +69,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.io.File
 import java.util.ArrayList
@@ -158,6 +164,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     }
 
     private fun initParams() {
+        EventBusHelper.register(this)
         mShootTypeMap.clear()
         mTempVideoPaths.clear()
 
@@ -558,6 +565,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
 
     override fun onDestroy() {
         super.onDestroy()
+        EventBusHelper.unregister(this)
         mShootTypeMap.clear()
         mTempVideoPaths.clear()
     }
@@ -1198,6 +1206,17 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
             }
         }
         return super.onKeyDown(i, keyEvent)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(cutMusicInfoEvent: CutMusicInfoEvent) {
+        if (cutMusicInfoEvent.mIsFromCamera) {
+            mAudioPath = cutMusicInfoEvent.mCutMusicPath
+            mMusicHelper.setMusicPath(mAudioPath)
+            mMusicHelper.music = cutMusicInfoEvent.mMusic
+            Glide.with(this).load(cutMusicInfoEvent.mMusic.photo).apply(RequestOptions.bitmapTransform(CircleCrop())).into(camera_rightbar_music_cover)
+            changeMusicBtnState()
+        }
     }
 
     private var mCameraOpenThread = Thread(Runnable {

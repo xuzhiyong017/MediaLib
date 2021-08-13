@@ -43,6 +43,24 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="Toolbar.Title" parent="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title" />
+
+    <style name="Toolbar">
+        <item name="android:background">@color/primary</item>
+        <item name="android:padding">0.0dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:minHeight">@dimen/toolbar_height</item>
+    </style>
+
+
+    <style name="Toolbar.ImageButton" parent="@style/Toolbar">
+        <item name="android:background">@drawable/selector_toolbar_button</item>
+        <item name="android:layout_width">@dimen/toolbar_height</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
     <style name="Dialog.Animation" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/dialog_show</item>
         <item name="android:windowExitAnimation">@anim/dialog_dismiss</item>

@@ -22,4 +22,7 @@
     <color name="list_item_bg_disable">#fffbb0b1</color>
     <color name="list_item_default_bg">#ff0a0d10</color>
     <color name="primary">#ff1a1c21</color>
+    <color name="toolbar_button_pressed_color">#20ffffff</color>
+    <color name="toolbar_menu_text_color">#ffffffff</color>
+    <color name="toolbar_title_text_color">#ffffffff</color>
 </resources>

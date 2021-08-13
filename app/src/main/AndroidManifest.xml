@@ -9,6 +9,7 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -25,12 +26,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
         <activity
+            android:name=".ui.music.MusicPlayActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.Fullscreen"
+            />
+        <activity
             android:name=".ui.editvideo.VideoEditActivity"
             android:exported="true"
-            android:theme="@style/AppTheme.Fullscreen"/>
+            android:theme="@style/AppTheme.Fullscreen" />
         <activity
             android:name=".ui.music.MusicChooseActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/AppTheme.Fullscreen"/>
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"

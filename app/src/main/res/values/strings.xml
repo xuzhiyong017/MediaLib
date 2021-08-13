@@ -40,4 +40,15 @@
     <string name="cancel_music">不用音乐</string>
     <string name="exit_shoot">退出拍摄</string>
     <string name="re_shoot">重新拍摄</string>
+    <string name="loading_text">正在加载</string>
+    <string name="bottom_end_text">到底儿都被你看光啦~</string>
+    <string name="network_error">网络不给力，请稍后再试</string>
+    <string name="load_failed_retry">"加载失败
+点击页面重新加载"</string>
+    <string name="empty_text">这里空空如也</string>
+    <string name="music_cut_failed">音乐剪裁失败</string>
+    <string name="music_download_failed">下载失败</string>
+    <string name="music_downloading">下载中</string>
+    <string name="music_load_error">加载失败</string>
+    <string name="start_point">当前从%s开始</string>
 </resources>

@@ -7,6 +7,7 @@ import com.sky.medialib.util.Storage;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Music implements IDownloadable, Serializable {
     private static final long serialVersionUID = 0;
@@ -14,6 +15,7 @@ public class Music implements IDownloadable, Serializable {
     public int duration;
     public String id;
     public String name;
+    public String singer;
     public String photo;
     public String tag;
     @SerializedName("a_url")
@@ -31,7 +33,7 @@ public class Music implements IDownloadable, Serializable {
             return false;
         }
         Music music = (Music) obj;
-        if (this.id == null ? music.id != null : !this.id.equals(music.id)) {
+        if (!Objects.equals(this.id, music.id)) {
             return false;
         }
         if (this.name != null) {

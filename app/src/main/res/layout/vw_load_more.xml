@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/load_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:focusable="false">
+
+    <LinearLayout
+        android:id="@+id/load_more_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="45.0dip"
+        android:gravity="center"
+        android:paddingTop="5.0dip"
+        android:paddingBottom="5.0dip">
+
+        <ImageView
+            android:id="@+id/load_more_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/load_more_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10.0dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/loading_text"
+            android:textColor="#ffffffff"
+            android:textSize="15.0sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/load_end_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="45.0dip"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/load_end_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_margin="3.0dip"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_bottom_end" />
+
+        <TextView
+            android:id="@+id/load_end_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="2.0dip"
+            android:layout_marginTop="2.0dip"
+            android:text="@string/bottom_end_text"
+            android:textColor="#ff5b5c5d"
+            android:textSize="14.0sp" />
+    </LinearLayout>
+</RelativeLayout>

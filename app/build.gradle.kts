@@ -39,7 +39,10 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.3.2")
+    implementation("androidx.activity:activity-ktx:1.2.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
     implementation("androidx.appcompat:appcompat:1.2.0")
@@ -56,6 +59,8 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxjava:2.2.15")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("com.airbnb.android:lottie:3.3.0")
+    implementation("com.makeramen:roundedimageview:2.3.0")
+    implementation("org.greenrobot:eventbus:3.2.0")
 
     implementation(project(mapOf("path" to ":media")))
     testImplementation("junit:junit:4.+")
