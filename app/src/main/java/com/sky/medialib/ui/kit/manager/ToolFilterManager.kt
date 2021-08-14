@@ -168,7 +168,7 @@ object ToolFilterManager {
 
     fun getEditVideoFilterById(i: Int): FilterExt? {
         val h = switchId(i)
-        for (filterExt in cacheFilterList) {
+        for (filterExt in editVideoFilterList) {
             if (h == filterExt.mId) {
                 return filterExt
             }

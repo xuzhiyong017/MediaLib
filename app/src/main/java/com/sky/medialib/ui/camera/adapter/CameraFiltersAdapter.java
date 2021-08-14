@@ -20,7 +20,7 @@ import java.util.List;
 
 
 public class CameraFiltersAdapter extends RecyclerView.Adapter<CameraFiltersAdapter.FilterViewHolder> {
-    private List<FilterExt> mFilters = ToolFilterManager.INSTANCE.getCacheFilterList();
+    private List<FilterExt> mFilters;
     private float mItemWidth;
     private IRecycleViewItemClickListener mListener;
     private int mSelectPosition;
@@ -42,8 +42,9 @@ public class CameraFiltersAdapter extends RecyclerView.Adapter<CameraFiltersAdap
         }
     }
 
-    public CameraFiltersAdapter(IRecycleViewItemClickListener iRecycleViewItemClickListener, float f) {
+    public CameraFiltersAdapter(IRecycleViewItemClickListener iRecycleViewItemClickListener, List<FilterExt> filters,float f) {
         this.mListener = iRecycleViewItemClickListener;
+        this.mFilters = filters;
         this.mItemWidth = f;
     }
 

@@ -22,7 +22,6 @@ import com.sky.media.image.core.base.BaseRender;
 import com.sky.media.image.core.filter.Adjuster;
 import com.sky.media.image.core.filter.Filter;
 import com.sky.media.image.core.render.SwitchRender;
-import com.sky.media.kit.base.BaseActivity;
 import com.sky.media.kit.model.FilterExt;
 import com.sky.medialib.R;
 import com.sky.medialib.ui.camera.adapter.CameraFiltersAdapter;
@@ -74,7 +73,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
     View mToolRootView;
     @BindView(R.id.white_btn)
     TextView mWhiteTab;
-    private float f8966n;
+    private float downX;
     private boolean isFlinging;
 
 
@@ -85,59 +84,61 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
 
         public boolean onDown(MotionEvent motionEvent) {
             VideoBeautySegment.this.flingDirection = -1;
-            VideoBeautySegment.this.f8966n = motionEvent.getX();
+            VideoBeautySegment.this.downX = motionEvent.getX();
             VideoBeautySegment.this.isFlinging = false;
             return super.onDown(motionEvent);
         }
 
         public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float f, float f2) {
-            if (VideoBeautySegment.this.flingDirection == -1) {
-                BaseRender b;
-                BaseRender b2;
-                List A = ToolFilterManager.INSTANCE.getCacheFilterList();
-                int c;
-                if (motionEvent2.getX() - VideoBeautySegment.this.f8966n < 0.0f) {
-                    VideoBeautySegment.this.flingDirection = 0;
-                    c = VideoBeautySegment.this.filterIndex + 1;
-                    if (c > A.size() - 1) {
-                        c = 0;
+            if(switchRender != null){
+                if (flingDirection == -1) {
+                    BaseRender b;
+                    BaseRender b2;
+                    List cacheFilterList = ToolFilterManager.INSTANCE.getEditVideoFilterList();
+                    int index;
+                    if (motionEvent2.getX() - downX < 0.0f) {
+                        flingDirection = 0;
+                        index = filterIndex + 1;
+                        if (index > cacheFilterList.size() - 1) {
+                            index = 0;
+                        }
+                        b = getRenderByFilterId(filterIndex);
+                        b2 = getRenderByFilterId(index);
+                        offsetX = (float) ScreenUtils.getScreenWidth();
+                    } else {
+                        flingDirection = 1;
+                        index = filterIndex - 1;
+                        if (index < 0) {
+                            index = cacheFilterList.size() - 1;
+                        }
+                        b = getRenderByFilterId(index);
+                        b2 = getRenderByFilterId(filterIndex);
+                        offsetX = 0.0f;
                     }
-                    b = VideoBeautySegment.this.getRenderByFilterId(VideoBeautySegment.this.filterIndex);
-                    b2 = VideoBeautySegment.this.getRenderByFilterId(c);
-                    VideoBeautySegment.this.offsetX = (float) ScreenUtils.getScreenWidth();
-                } else {
-                    VideoBeautySegment.this.flingDirection = 1;
-                    c = VideoBeautySegment.this.filterIndex - 1;
-                    if (c < 0) {
-                        c = A.size() - 1;
-                    }
-                    b = VideoBeautySegment.this.getRenderByFilterId(c);
-                    b2 = VideoBeautySegment.this.getRenderByFilterId(VideoBeautySegment.this.filterIndex);
-                    VideoBeautySegment.this.offsetX = 0.0f;
-                }
 
-                final BaseRender filter1 = b;
-                final BaseRender filter2 = b2;
-                ((VideoEditData) VideoBeautySegment.this.mData).processExt.getIRenderView().queueEvent(new Runnable() {
-                    @Override
-                    public void run() {
-                        destroyRender(switchRender.setRenders(filter1, filter2));
-                    }
-                });
+                    final BaseRender filter1 = b;
+                    final BaseRender filter2 = b2;
+                    mData.processExt.getIRenderView().queueEvent(new Runnable() {
+                        @Override
+                        public void run() {
+                            destroyRender(switchRender.setRenders(filter1, filter2));
+                        }
+                    });
+                }
+                offsetX = offsetX - f;
+                switchRender.adjust((int) offsetX, 0, ScreenUtils.getScreenWidth());
+                mData.processExt.requestRender();
             }
-            VideoBeautySegment.this.offsetX = VideoBeautySegment.this.offsetX - f;
-            VideoBeautySegment.this.switchRender.adjust((int) VideoBeautySegment.this.offsetX, 0, ScreenUtils.getScreenWidth());
-            ((VideoEditData) VideoBeautySegment.this.mData).processExt.requestRender();
             return super.onScroll(motionEvent, motionEvent2, f, f2);
         }
 
         public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float f, float f2) {
             if (Math.abs(f2) < Math.abs(f)) {
-                VideoBeautySegment.this.isFlinging = true;
+                isFlinging = true;
                 if (f > 2000.0f) {
-                    VideoBeautySegment.this.flingDirection = 1;
+                    flingDirection = 1;
                 } else if (f < -2000.0f) {
-                    VideoBeautySegment.this.flingDirection = 0;
+                    flingDirection = 0;
                 }
             }
             return super.onFling(motionEvent, motionEvent2, f, f2);
@@ -151,7 +152,6 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
     }
 
     private void init() {
-        ToolFilterManager.INSTANCE.initCameraFilter(this.activity);
         this.mBeautyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,10 +183,10 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
         this.filtersAdapter = new CameraFiltersAdapter(new IRecycleViewItemClickListener() {
             @Override
             public void onItemClick(RecyclerView.ViewHolder viewHolder, int i, Object obj) {
-                FilterExt filterExt = ToolFilterManager.INSTANCE.getCacheFilterList().get(i);
+                FilterExt filterExt = ToolFilterManager.INSTANCE.getEditVideoFilterList().get(i);
                 selectFilterById(filterExt.getMId(),100,true);
             }
-        }, (((float) this.activity.getResources().getDisplayMetrics().widthPixels) * 3.0f) / 16.0f);
+        },ToolFilterManager.INSTANCE.getEditVideoFilterList() ,(((float) this.activity.getResources().getDisplayMetrics().widthPixels) * 3.0f) / 16.0f);
         this.mRecyclerView.setAdapter(this.filtersAdapter);
         this.mBeautifyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -354,35 +354,43 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
         adjustWhite();
         adjustSkin();
         checkedStatus();
-        selectFilterById(mData.getFilterId(), 100, false);
+        updateSwitchRender(filterIndex);
+        mFilterTab.post(new Runnable() {
+            @Override
+            public void run() {
+                selectFilterById(0,0,false);
+            }
+        });
     }
 
     private void updateSwitchRender(int i) {
-        List A = ToolFilterManager.INSTANCE.getCacheFilterList();
+        List filterList = ToolFilterManager.INSTANCE.getEditVideoFilterList();
         BaseRender b = getRenderByFilterId(i);
-        BaseRender b2 = getRenderByFilterId(i + 1 > A.size() + -1 ? 0 : i + 1);
-        if (this.switchRender == null) {
-            FilterExt filterExt = new FilterExt();
-            this.switchRender = new SwitchRender();
-            this.switchRender.setRenders(b, b2);
-            Adjuster adjuster = new Adjuster(this.switchRender);
-            adjuster.setStart(0);
-            adjuster.setEnd(ScreenUtils.getScreenWidth());
-            adjuster.setInitProgress(ScreenUtils.getScreenWidth());
-            filterExt.setAdjuster(adjuster);
-            ((VideoEditData) this.mData).processExt.switchFilter(filterExt);
-        } else {
-            final ArrayList renders = this.switchRender.setRenders(b, b2);
-            if (renders != null) {
-                ((VideoEditData) this.mData).processExt.getIRenderView().queueEvent(new Runnable() {
-                    @Override
-                    public void run() {
-                        destroyRender(renders);
-                    }
-                });
+        BaseRender b2 = getRenderByFilterId(i + 1 > filterList.size() + -1 ? 0 : i + 1);
+        if (b != b2) {
+            if (this.switchRender == null) {
+                FilterExt filterExt = new FilterExt();
+                this.switchRender = new SwitchRender();
+                this.switchRender.setRenders(b, b2);
+                Adjuster adjuster = new Adjuster(this.switchRender);
+                adjuster.setStart(0);
+                adjuster.setEnd(ScreenUtils.getScreenWidth());
+                adjuster.setInitProgress(ScreenUtils.getScreenWidth());
+                filterExt.setAdjuster(adjuster);
+                mData.processExt.switchFilter(filterExt);
+            } else {
+                ArrayList renders = this.switchRender.setRenders(b, b2);
+                if (renders != null) {
+                    mData.processExt.getIRenderView().queueEvent(new Runnable() {
+                        @Override
+                        public void run() {
+                            destroyRender(renders);
+                        }
+                    });
+                }
             }
+            this.filtersAdapter.setSelectPosition(i);
         }
-        this.filtersAdapter.setSelectPosition(i);
     }
 
     void destroyRender(ArrayList arrayList) {
@@ -408,7 +416,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
     }
 
     private void adjustWhite() {
-        Filter k = ToolFilterManager.INSTANCE.getWhiteningTool();
+        Filter k = ToolFilterManager.INSTANCE.getVideoWhiteningTool();
         if (((VideoEditData) this.mData).getWhitenLevel() != 0) {
             k.getAdjuster().adjust(((VideoEditData) this.mData).getWhitenLevel());
             ((VideoEditData) this.mData).processExt.addFilter(k);
@@ -418,7 +426,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
     }
 
     private void adjustSkin() {
-        Filter h = ToolFilterManager.INSTANCE.getBuffingTool();
+        Filter h = ToolFilterManager.INSTANCE.getVideoBuffingTool();
         if (((VideoEditData) this.mData).getSkinLevel() != 0) {
             h.getAdjuster().adjust(((VideoEditData) this.mData).getSkinLevel());
             ((VideoEditData) this.mData).processExt.addFilter(h);
@@ -430,7 +438,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
 
     private void selectFilterById(int i, int i2, boolean z) {
         if (i != -1 && i < 1000000) {
-            FilterExt d = ToolFilterManager.INSTANCE.getCacheFilterById(i);
+            FilterExt d = ToolFilterManager.INSTANCE.getEditVideoFilterById(i);
             if (d == null) {
                 ToastUtils.INSTANCE.showToast("该滤镜无效");
             } else {
@@ -440,7 +448,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
     }
 
     private void startFilter(FilterExt filterExt, int i, boolean z) {
-        this.filterIndex = ToolFilterManager.INSTANCE.getCacheFilterList().indexOf(filterExt);
+        this.filterIndex = ToolFilterManager.INSTANCE.getEditVideoFilterList().indexOf(filterExt);
         ((VideoEditData) this.mData).setFilterId(filterExt.getMId());
         if (i >= 0) {
             filterExt.getAdjuster().adjust(i);
@@ -469,12 +477,12 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
             this.alphaAnimation.setAnimationListener(new AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-                    VideoBeautySegment.this.mCurrentFilterName.setVisibility(View.VISIBLE);
+                    mCurrentFilterName.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    VideoBeautySegment.this.mCurrentFilterName.setVisibility(View.GONE);
+                    mCurrentFilterName.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -497,7 +505,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
             this.mRecyclerView.setVisibility(View.VISIBLE);
             this.mBeautifyGroup.setVisibility(View.GONE);
             if (((VideoEditData) this.mData).processExt.getSwitchFilter() != null) {
-                this.mRecyclerView.scrollToPosition(ToolFilterManager.INSTANCE.getCacheFilterList().indexOf(((VideoEditData) this.mData).processExt.getSwitchFilter()));
+                this.mRecyclerView.scrollToPosition(ToolFilterManager.INSTANCE.getEditVideoFilterList().indexOf(((VideoEditData) this.mData).processExt.getSwitchFilter()));
             } else {
                 this.mRecyclerView.scrollToPosition(0);
             }
@@ -519,7 +527,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
                 int intValue = ((Integer) valueAnimator.getAnimatedValue()).intValue();
                 switchRender.adjust(intValue, 0, ScreenUtils.getScreenWidth());
                 if (intValue == ScreenUtils.getScreenWidth() && flingDirection == 1) {
-                    List<FilterExt> filterList = ToolFilterManager.INSTANCE.getCacheFilterList();
+                    List<FilterExt> filterList = ToolFilterManager.INSTANCE.getEditVideoFilterList();
                     filterIndex--;
                     if (filterIndex < 0) {
                         filterIndex = filterList.size() - 1;
@@ -542,7 +550,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
                 int intValue = ((Integer) valueAnimator.getAnimatedValue()).intValue();
                 switchRender.adjust(intValue, 0, ScreenUtils.getScreenWidth());
                 if (intValue == 0 && flingDirection == 0) {
-                    List<FilterExt> B = ToolFilterManager.INSTANCE.getCacheFilterList();
+                    List<FilterExt> B = ToolFilterManager.INSTANCE.getEditVideoFilterList();
                     filterIndex++;
                     if (filterIndex >= B.size()) {
                         filterIndex = 0;
@@ -577,6 +585,6 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
     }
 
     private BaseRender getRenderByFilterId(int i) {
-        return ((FilterExt) ToolFilterManager.INSTANCE.getCacheFilterList().get(i)).getAdjuster().getMRender();
+        return ((FilterExt) ToolFilterManager.INSTANCE.getEditVideoFilterList().get(i)).getAdjuster().getMRender();
     }
 }

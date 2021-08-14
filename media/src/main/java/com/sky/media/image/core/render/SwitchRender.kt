@@ -40,7 +40,7 @@ class SwitchRender : GroupRender(), IAdjustable {
     private var mProgressHandler = 0
     private var mRightRender: BaseRender? = null
     fun setRenders(basicRender: BaseRender?, basicRender2: BaseRender?): ArrayList<BaseRender?>? {
-        if (mLeftRender === basicRender && mRightRender === basicRender2 || basicRender == null || basicRender2 == null) {
+        if (mLeftRender == basicRender && mRightRender == basicRender2 || basicRender == null || basicRender2 == null) {
             return null
         }
         mBlendRender.clearRegisteredFilterLocations()
@@ -48,14 +48,14 @@ class SwitchRender : GroupRender(), IAdjustable {
         if (mLeftRender != null) {
             initialFilters.remove(mLeftRender)
             mLeftRender!!.removeRenderIn(mBlendRender)
-            if (!(mLeftRender === basicRender || mLeftRender === basicRender2)) {
+            if (!(mLeftRender == basicRender || mLeftRender == basicRender2)) {
                 arrayList.add(mLeftRender)
             }
         }
         if (mRightRender != null) {
             initialFilters.remove(mRightRender)
             mRightRender!!.removeRenderIn(mBlendRender)
-            if (!(mRightRender === basicRender || mRightRender === basicRender2)) {
+            if (!(mRightRender == basicRender || mRightRender == basicRender2)) {
                 arrayList.add(mRightRender)
             }
         }

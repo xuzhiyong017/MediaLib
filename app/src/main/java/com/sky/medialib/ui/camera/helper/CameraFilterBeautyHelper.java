@@ -90,23 +90,23 @@ public class CameraFilterBeautyHelper {
                     BaseRender b;
                     BaseRender b2;
                     List cacheFilterList = ToolFilterManager.INSTANCE.getCacheFilterList();
-                    int e;
+                    int index;
                     if (motionEvent2.getX() - downX < 0.0f) {
                         flingDirection = 0;
-                        e = filterIndex + 1;
-                        if (e > cacheFilterList.size() - 1) {
-                            e = 0;
+                        index = filterIndex + 1;
+                        if (index > cacheFilterList.size() - 1) {
+                            index = 0;
                         }
                         b = getRenderByIndex(filterIndex);
-                        b2 = getRenderByIndex(e);
+                        b2 = getRenderByIndex(index);
                         offsetX = (float) ScreenUtils.getScreenWidth();
                     } else {
                         flingDirection = 1;
-                        e = filterIndex - 1;
-                        if (e < 0) {
-                            e = cacheFilterList.size() - 1;
+                        index = filterIndex - 1;
+                        if (index < 0) {
+                            index = cacheFilterList.size() - 1;
                         }
-                        b = getRenderByIndex(e);
+                        b = getRenderByIndex(index);
                         b2 = getRenderByIndex(filterIndex);
                         offsetX = 0.0f;
                     }
@@ -206,7 +206,7 @@ public class CameraFilterBeautyHelper {
                 FilterExt filterExt = ToolFilterManager.INSTANCE.getCacheFilterList().get(i);
                 onCreateAndInitFilter(filterExt.getMId(),100,true);
             }
-        }, (((float) this.activity.getResources().getDisplayMetrics().widthPixels) * 3.0f) / 16.0f);
+        }, ToolFilterManager.INSTANCE.getCacheFilterList(),(((float) this.activity.getResources().getDisplayMetrics().widthPixels) * 3.0f) / 16.0f);
         this.filter_gallery.setAdapter(this.filtersAdapter);
         this.filter_btn = (TextView) this.activity.findViewById(R.id.filter_btn);
         this.white_btn = (TextView) this.activity.findViewById(R.id.white_btn);

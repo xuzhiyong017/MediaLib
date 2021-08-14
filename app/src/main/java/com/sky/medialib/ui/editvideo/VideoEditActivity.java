@@ -38,6 +38,7 @@ import com.sky.medialib.ui.editvideo.segment.entity.VideoDraft;
 import com.sky.medialib.ui.editvideo.segment.entity.VideoEditData;
 import com.sky.medialib.ui.editvideo.segment.listener.IDataChangedListener;
 import com.sky.medialib.ui.kit.common.base.AppActivity;
+import com.sky.medialib.ui.kit.manager.ToolFilterManager;
 import com.sky.medialib.ui.kit.media.VideoProcessCenter;
 import com.sky.medialib.ui.kit.model.Music;
 import com.sky.medialib.ui.kit.model.PublishVideo;
@@ -77,8 +78,9 @@ public class VideoEditActivity extends AppActivity implements IDataChangedListen
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_video_edit);
-        ButterKnife.bind((Activity) this);
         ImageBitmapCache.INSTANCE.clear();
+        ToolFilterManager.INSTANCE.initEditVideoFilter(this);
+        ButterKnife.bind((Activity) this);
         EventBusHelper.register(this);
         if (dealIntent()) {
             initView();
