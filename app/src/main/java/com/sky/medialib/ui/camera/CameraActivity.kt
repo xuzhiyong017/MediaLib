@@ -38,6 +38,7 @@ import com.sky.medialib.ui.dialog.BottomSheetDialog
 import com.sky.medialib.ui.dialog.SimpleAlertDialog
 import com.sky.medialib.ui.editvideo.VIDEO_PATH
 import com.sky.medialib.ui.editvideo.VideoEditActivity
+import com.sky.medialib.ui.gallery.GalleryActivity
 import com.sky.medialib.ui.kit.camera.CameraHolder
 import com.sky.medialib.ui.kit.common.animate.AnimationListener
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
@@ -740,7 +741,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
                     }
                 }
                 R.id.camera_topbar_album -> {
-                    startActivity(Intent(this,MainActivity::class.java))
+                    startActivity(Intent(this, GalleryActivity::class.java))
                 }
                 R.id.camera_bottombar_beauty -> {
                     showBeautyFilterLayout()

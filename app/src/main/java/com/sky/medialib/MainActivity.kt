@@ -6,10 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.blankj.utilcode.util.UriUtils
 import com.github.gzuliyujiang.imagepicker.ImagePicker
 import com.github.gzuliyujiang.imagepicker.PickCallback
 import com.permissionx.guolindev.PermissionX
 import com.sky.media.kit.base.BaseActivity
+import com.sky.medialib.ui.crop.VideoCropActivity
+import com.sky.medialib.ui.crop.VideoCropActivity.KEY_VIDEO
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -44,16 +47,10 @@ class MainActivity : BaseActivity() {
     }
 
     fun jumpEdit(imageUri: Uri?){
-        imageUri?.let {
-            PermissionX.init(MainActivity@this)
-                .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
-                .request { allGranted, _, _ ->
-                    if (allGranted) {
-                        startActivity(Intent(this,PictureEditActivity::class.java).putExtra(PICK_PICTURE,it))
-                    } else {
-                        Toast.makeText(this, "you denied the File permission for read and write ", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        if( UriUtils.uri2File(imageUri).absolutePath.endsWith(".mp4")){
+            startActivity(Intent(this,VideoCropActivity::class.java).putExtra(KEY_VIDEO, UriUtils.uri2File(imageUri).absolutePath))
+        }else{
+            startActivity(Intent(this,PictureEditActivity::class.java).putExtra(PICK_PICTURE,imageUri))
         }
 
     }

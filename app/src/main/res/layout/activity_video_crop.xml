@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ff000000"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
+
+        <com.sky.medialib.ui.kit.common.view.TextureVideoView
+            android:id="@+id/crop_video_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/crop_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="48.0dip"
+            android:layout_marginTop="13.0dip"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/selector_titlebar_back" />
+
+        <ImageView
+            android:id="@+id/crop_done"
+            android:layout_width="wrap_content"
+            android:layout_height="48.0dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="13.0dip"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/selector_crop_done" />
+
+        <TextView
+            android:id="@+id/crop_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20.0dip"
+            android:background="@drawable/shape_crop_time_bg"
+            android:paddingLeft="8.0dip"
+            android:paddingTop="1.0dip"
+            android:paddingRight="8.0dip"
+            android:paddingBottom="1.0dip"
+            android:textColor="@color/white"
+            android:textSize="14.0sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/crop_frame_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="60.0dip">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/crop_frame_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.sky.medialib.ui.kit.view.VideoCropBar
+            android:id="@+id/crop_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+</LinearLayout>

@@ -61,6 +61,8 @@ dependencies {
     implementation("com.airbnb.android:lottie:3.3.0")
     implementation("com.makeramen:roundedimageview:2.3.0")
     implementation("org.greenrobot:eventbus:3.2.0")
+    implementation("com.jakewharton:butterknife:10.2.3")
+    annotationProcessor("com.jakewharton:butterknife-compiler:10.2.3")
 
     implementation(project(mapOf("path" to ":media")))
     testImplementation("junit:junit:4.+")

@@ -51,4 +51,9 @@
     <string name="music_downloading">下载中</string>
     <string name="music_load_error">加载失败</string>
     <string name="start_point">当前从%s开始</string>
+    <string name="format_select_time">已选取%d秒</string>
+    <string name="crop_failed">裁剪失败</string>
+    <string name="video_error">视频出错了，请重新选择</string>
+    <string name="loading">加载中…</string>
+    <string name="gallery_title">相机胶卷</string>
 </resources>

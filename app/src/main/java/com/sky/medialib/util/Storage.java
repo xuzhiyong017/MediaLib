@@ -154,7 +154,7 @@ public class Storage {
     }
 
 
-    private static void saveBitmapToFile(Bitmap bitmap, String str, Location location, int i, boolean z) {
+    public static void saveBitmapToFile(Bitmap bitmap, String str, Location location, int i, boolean z) {
         BufferedOutputStream bufferedOutputStream = null;
         int i2;
         try {

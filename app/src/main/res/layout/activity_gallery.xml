@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/top_bar" />
+
+    <ImageView
+        android:id="@+id/folder_bg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/top_bar"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/folder_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/top_bar"
+        android:background="#e6202223"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#ff303030"
+        android:dividerHeight="1.0dip"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="0.0dip"
+        android:footerDividersEnabled="true"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        style="@style/Toolbar">
+
+        <TextView
+            android:id="@+id/back"
+            style="@style/Toolbar.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="取消" />
+
+        <TextView
+            android:id="@+id/gallery_title"
+            style="@style/Toolbar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableRight="@drawable/selector_camera_gallery_arrow"
+            android:drawablePadding="3.0dip"
+            android:maxWidth="160.0dip"
+            android:maxLength="16"
+            android:textColor="@color/white"
+            android:text="@string/gallery_title" />
+    </RelativeLayout>
+</RelativeLayout>

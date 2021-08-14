@@ -7,6 +7,7 @@ import android.view.SurfaceHolder
 import android.widget.RelativeLayout
 import com.sky.medialib.R
 import com.sky.medialib.ui.kit.common.base.AppActivity
+import com.sky.medialib.ui.kit.model.PublishVideo
 import kotlinx.android.synthetic.main.activity_video_edit.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import kotlin.math.ceil
@@ -17,11 +18,11 @@ class VideoEditActivity : AppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_edit)
-
+        val publishVideo: PublishVideo? = intent.getSerializableExtra("key_video") as PublishVideo?
         surface_view.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 IjkMediaPlayer().apply {
-                    setDataSource(intent.getStringExtra(VIDEO_PATH),null)
+                    setDataSource(publishVideo?.videoPath,null)
                     setOnVideoSizeChangedListener{ _,_,_,_,_ ->
                         var  width = videoWidth
                         var  height = videoHeight
