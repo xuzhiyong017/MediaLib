@@ -201,4 +201,24 @@ class VideoInput(val iRenderView: IRenderView) : TextureOutRender(),SurfaceTextu
         }
         releaseMediaPlayer()
     }
+
+    init {
+        mFragmentShader = """#extension GL_OES_EGL_image_external : require
+                            precision mediump float;
+                            uniform samplerExternalOES inputImageTexture;
+                            varying vec2 textureCoordinate;
+                            void main() {
+                                gl_FragColor = texture2D(inputImageTexture, textureCoordinate);
+                            }"""
+
+        mVertexShader = """uniform mat4 u_Matrix;
+                            attribute vec4 position;
+                            attribute vec2 inputTextureCoordinate;
+                            varying vec2 textureCoordinate;
+                            void main() {
+                                vec4 texPos = u_Matrix * vec4(inputTextureCoordinate, 1, 1);
+                                textureCoordinate = texPos.xy;
+                                gl_Position = position;
+                            }"""
+    }
 }
