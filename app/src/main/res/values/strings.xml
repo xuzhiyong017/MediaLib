@@ -56,4 +56,17 @@
     <string name="video_error">视频出错了，请重新选择</string>
     <string name="loading">加载中…</string>
     <string name="gallery_title">相机胶卷</string>
+    <string name="save_into_draft">保存草稿</string>
+    <string name="publish_video">发布</string>
+    <string name="add_topic">添加话题</string>
+    <string name="at_friends">\@好友</string>
+    <string name="share_message_input">说点啥吧...</string>
+    <string name="share_saving_msg">已保存到相册</string>
+    <string name="had_saved_draft">已保存至草稿箱，请在个人页查看</string>
+    <string name="video_combine_failed">视频合成失败</string>
+    <string name="video_not_exist">视频不存在</string>
+    <string name="back_edit_video_to_camera">"继续拍摄之前的效果会被清空,
+是否继续?"</string>
+    <string name="back_edit_video_to_draft">是否保存当前编辑?</string>
+    <string name="continue_back_camera">继续</string>
 </resources>

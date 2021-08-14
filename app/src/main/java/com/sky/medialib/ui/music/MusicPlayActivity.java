@@ -1,11 +1,9 @@
 package com.sky.medialib.ui.music;
 
 import static android.view.View.GONE;
-
 import static com.sky.medialib.ui.music.MusicChooseActivityKt.KEY_IS_FROM_CAMERA;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.Application;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;

@@ -17,7 +17,7 @@ import com.sky.media.kit.util.NumberUtil
 import com.sky.media.kit.video.VideoSequenceHelper.BaseSequence
 import java.util.*
 
-class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView) :
+open class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView) :
     BaseOnscreenProcess<VideoInput>(iContainerView, iRenderView) {
     private val mVideoSequenceHelper: VideoSequenceHelper =
         VideoSequenceHelper(iContainerView.getPreviewWidth(), iContainerView.getPreviewHeight())
@@ -30,7 +30,7 @@ class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView) :
             private set
         var isNeedPlay = true
             private set
-        var onPreparedListener: IMediaPlayer.OnPreparedListener? = null
+        var preparedListener: IMediaPlayer.OnPreparedListener? = null
         var onCompletionListener: IMediaPlayer.OnCompletionListener? = null
         var mediaPlayer: IMediaPlayer = SimpleMediaPlayer()
         var volume = 1.0f
@@ -58,7 +58,7 @@ class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView) :
         }
 
         fun setOnPreparedListener(onPreparedListener: IMediaPlayer.OnPreparedListener?): MediaPlayerBuilder {
-            this.onPreparedListener = onPreparedListener
+            this.preparedListener = onPreparedListener
             return this
         }
 
@@ -186,7 +186,7 @@ class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView) :
         val looping = mediaPlayerBuilder.isLooping
         val volume = mediaPlayerBuilder.volume
         val needPlay = mediaPlayerBuilder.isNeedPlay
-        val onPreparedListener = mediaPlayerBuilder.onPreparedListener
+        val onPreparedListener = mediaPlayerBuilder.preparedListener
         checkIsMainThread()
         val mediaMetadataRetriever = MediaMetadataRetriever()
         var haschangeSize = true

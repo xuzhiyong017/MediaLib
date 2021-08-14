@@ -1,21 +1,17 @@
 package com.sky.medialib
 
-import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import com.blankj.utilcode.util.UriUtils
 import com.github.gzuliyujiang.imagepicker.ImagePicker
 import com.github.gzuliyujiang.imagepicker.PickCallback
-import com.permissionx.guolindev.PermissionX
-import com.sky.media.kit.base.BaseActivity
 import com.sky.medialib.ui.crop.VideoCropActivity
 import com.sky.medialib.ui.crop.VideoCropActivity.KEY_VIDEO
-import kotlinx.android.synthetic.main.activity_main.*
+import com.sky.medialib.ui.kit.common.base.AppActivity
 
-class MainActivity : BaseActivity() {
+class MainActivity : AppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

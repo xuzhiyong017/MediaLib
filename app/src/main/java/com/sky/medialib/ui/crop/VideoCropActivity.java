@@ -49,7 +49,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class VideoCropActivity extends AppActivity {
     private static final int AVG_NUM = 6;
@@ -75,9 +74,9 @@ public class VideoCropActivity extends AppActivity {
         @Override
         public void run() {
             long currentPosition = VideoCropActivity.this.mVideoView.getCurrentPosition();
-            int access$000 = VideoCropActivity.this.getScrollXDistance();
-            if (currentPosition >= ((long) Math.round(VideoCropActivity.this.mCropBar.mo17871b(access$000)))) {
-                VideoCropActivity.this.mVideoView.seekTo(Math.round(VideoCropActivity.this.mCropBar.getStartTime(access$000)));
+            int scrollXDistance = VideoCropActivity.this.getScrollXDistance();
+            if (currentPosition >= ((long) Math.round(VideoCropActivity.this.mCropBar.mo17871b(scrollXDistance)))) {
+                VideoCropActivity.this.mVideoView.seekTo(Math.round(VideoCropActivity.this.mCropBar.getStartTime(scrollXDistance)));
             }
             if (VideoCropActivity.this.mVideoView.isPlaying()) {
                 VideoCropActivity.this.mVideoView.postDelayed(this, 1000);
@@ -488,7 +487,7 @@ public class VideoCropActivity extends AppActivity {
         Intent intent = new Intent(this, VideoEditActivity.class);
         PublishVideo publishVideo = new PublishVideo();
         publishVideo.setVideoPath(str);
-        intent.putExtra("key_video", publishVideo);
+        intent.putExtra(VideoCropActivity.KEY_VIDEO, publishVideo);
         intent.putExtra("key_topic_name", mTopicName);
         startActivity(intent);
         finish();

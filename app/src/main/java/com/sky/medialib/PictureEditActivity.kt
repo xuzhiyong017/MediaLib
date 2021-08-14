@@ -15,7 +15,7 @@ import com.blankj.utilcode.util.UriUtils
 import com.sky.media.image.core.out.BitmapOutput
 import com.sky.medialib.ui.picture.process.ImageProcessExt
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
-import com.sky.media.kit.base.BaseActivity
+import com.sky.medialib.ui.kit.common.base.AppActivity
 import com.sky.medialib.ui.kit.manager.ToolFilterManager
 import com.sky.medialib.ui.kit.view.crop.ClipPopupWindow
 import com.sky.medialib.ui.kit.view.editmenu.EditMenu
@@ -27,7 +27,7 @@ import kotlin.math.roundToInt
 
 const val PICK_PICTURE = "pick_picture"
 
-class PictureEditActivity : BaseActivity()
+class PictureEditActivity : AppActivity()
     ,EditMenu.OnItemClickListener,PictureFilterHelper.OnActivityListener,BitmapOutput.BitmapOutputCallback {
 
     private var mMenuHeight = 0

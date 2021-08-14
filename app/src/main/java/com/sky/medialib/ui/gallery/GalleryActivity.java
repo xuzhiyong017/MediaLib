@@ -25,9 +25,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import com.bumptech.glide.Glide;
 import com.sky.media.image.core.util.BitmapUtil;
 import com.sky.medialib.PictureEditActivity;
@@ -46,6 +43,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class GalleryActivity extends AppActivity {
     public static final String KEY_FILTER_ID = "KEY_FILTER_ID";
@@ -156,7 +156,7 @@ public class GalleryActivity extends AppActivity {
                             if (galleryModel.isVideo()) {
                                 EventBusHelper.post("event_clear_temp_video");
                                 Intent intent = new Intent(GalleryActivity.this, VideoCropActivity.class);
-                                intent.putExtra("key_video", galleryModel.getFilePath());
+                                intent.putExtra(VideoCropActivity.KEY_VIDEO, galleryModel.getFilePath());
                                 intent.putExtra("KEY_TOPIC_NAME", GalleryActivity.this.mTopicName);
                                 GalleryActivity.this.startActivity(intent);
                                 GalleryActivity.this.finish();

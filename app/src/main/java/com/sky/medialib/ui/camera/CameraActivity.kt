@@ -25,7 +25,6 @@ import com.sky.media.image.core.view.ContainerViewHelper
 import com.sky.media.kit.record.IVideoRecorder
 import com.sky.media.kit.record.RecordListener
 import com.sky.media.kit.record.VideoRecorderCreator
-import com.sky.medialib.MainActivity
 import com.sky.medialib.PICK_PICTURE
 import com.sky.medialib.PictureEditActivity
 import com.sky.medialib.R
@@ -34,21 +33,21 @@ import com.sky.medialib.ui.camera.helper.CameraAudioHelper
 import com.sky.medialib.ui.camera.helper.CameraFilterBeautyHelper
 import com.sky.medialib.ui.camera.helper.CameraZoomHelper
 import com.sky.medialib.ui.camera.process.CameraProcessExt
+import com.sky.medialib.ui.crop.VideoCropActivity
 import com.sky.medialib.ui.dialog.BottomSheetDialog
 import com.sky.medialib.ui.dialog.SimpleAlertDialog
-import com.sky.medialib.ui.editvideo.VIDEO_PATH
 import com.sky.medialib.ui.editvideo.VideoEditActivity
 import com.sky.medialib.ui.gallery.GalleryActivity
 import com.sky.medialib.ui.kit.camera.CameraHolder
 import com.sky.medialib.ui.kit.common.animate.AnimationListener
 import com.sky.medialib.ui.kit.common.animate.ViewAnimator
 import com.sky.medialib.ui.kit.common.base.AppActivity
-import com.sky.medialib.ui.kit.common.network.RxUtil
 import com.sky.medialib.ui.kit.common.view.NavigationTabStrip
 import com.sky.medialib.ui.kit.effect.Effect
 import com.sky.medialib.ui.kit.manager.FocusManager
 import com.sky.medialib.ui.kit.manager.ToolFilterManager
 import com.sky.medialib.ui.kit.media.MediaKitExt
+import com.sky.medialib.ui.kit.model.PublishVideo
 import com.sky.medialib.ui.kit.view.ShutterView
 import com.sky.medialib.ui.kit.view.TimeCountDownView
 import com.sky.medialib.ui.kit.view.camera.RecordProgressView
@@ -56,26 +55,19 @@ import com.sky.medialib.ui.music.MusicChooseActivity
 import com.sky.medialib.ui.music.event.CutMusicInfoEvent
 import com.sky.medialib.util.*
 import com.weibo.soundtouch.SoundTouch
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.FlowableOnSubscribe
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.camera_focus_indicator.*
 import kotlinx.android.synthetic.main.camera_preview.*
 import kotlinx.android.synthetic.main.camera_preview_frame.*
 import kotlinx.android.synthetic.main.camera_preview_right.*
 import kotlinx.android.synthetic.main.camera_preview_top.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.io.File
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusListener,
     View.OnClickListener,RecordProgressView.OnRecordListener {
@@ -1192,7 +1184,9 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
     }
 
     private fun jumpVideoEditPage(mFinalVideoPath: String?) {
-        startActivity(Intent(this,VideoEditActivity::class.java).putExtra(VIDEO_PATH,mFinalVideoPath))
+        val publishVideo = PublishVideo()
+        publishVideo.videoPath = mFinalVideoPath
+        startActivity(Intent(this,VideoEditActivity::class.java).putExtra(VideoCropActivity.KEY_VIDEO, publishVideo))
     }
 
     override fun onKeyDown(i: Int, keyEvent: KeyEvent?): Boolean {

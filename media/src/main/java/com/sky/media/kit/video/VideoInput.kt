@@ -27,7 +27,6 @@ class VideoInput(val iRenderView: IRenderView) : TextureOutRender(),SurfaceTextu
     private var mMediaPlayer: IMediaPlayer? = null
     private var mMatrixHandle = 0
     private val mMatrix = FloatArray(16)
-    private val mRenderView: IRenderView? = null
     private var isNeedPlay = false
     private var isPrepared = false
     private var leftVolume = 1.0f
@@ -54,7 +53,7 @@ class VideoInput(val iRenderView: IRenderView) : TextureOutRender(),SurfaceTextu
             releaseMediaPlayer()
             playUri = uri
             mMediaPlayer = iMediaPlayer
-            mMediaPlayer!!.setDataSource(mRenderView!!.getContext(), playUri)
+            mMediaPlayer!!.setDataSource(iRenderView.getContext(), playUri)
             mMediaPlayer!!.setVolume(leftVolume, rightVolume)
             mMediaPlayer!!.setLooping(isLoop)
             reInitialize()

@@ -1,13 +1,389 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.editvideo.VideoEditActivity">
+    android:layout_height="match_parent">
 
-    <SurfaceView
-        android:id="@+id/surface_view"
+    <com.sky.media.image.core.view.ProcessRelativeContainer
+        android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <com.sky.media.image.core.view.ProcessSurfaceView
+            android:id="@+id/processing_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
+
+        <RelativeLayout
+            android:id="@+id/text_container_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.sky.media.image.core.view.ProcessRelativeContainer>
+
+    <RelativeLayout
+        android:id="@+id/process_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="48.0dip"
+        android:layout_marginTop="10.0dip">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/selector_titlebar_back" />
+
+        <ImageView
+            android:id="@+id/save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/edit_save_selector_41" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/process_rightbar"
+        android:layout_width="50.0dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="70.0dip"
+        android:layout_marginRight="12.0dip"
+        android:background="@drawable/shape_publish_bar_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="16.0dip"
+        android:paddingBottom="16.0dip">
+
+        <TextView
+            android:id="@+id/sound_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/selector_video_sound_on"
+            android:gravity="center"
+            android:shadowColor="#ff000000"
+            android:shadowDx="1.0"
+            android:shadowDy="1.5"
+            android:shadowRadius="1.0"
+            android:text="原音"
+            android:textColor="#ffffffff"
+            android:textSize="11.0sp" />
+
+        <RelativeLayout
+            android:id="@+id/music_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8.0dip"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/tip"
+                android:layout_width="42.0dip"
+                android:layout_height="42.0dip">
+
+                <ImageView
+                    android:id="@+id/music_cover"
+                    android:layout_width="24.0dip"
+                    android:layout_height="24.0dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/music_cover_mask"
+                    android:layout_width="42.0dip"
+                    android:layout_height="42.0dip"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/selector_video_music_off" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/music_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tip"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:maxWidth="50.0dip"
+                android:shadowColor="#80000000"
+                android:shadowDx="1.0"
+                android:shadowDy="1.0"
+                android:shadowRadius="1.0"
+                android:text="@string/camera_music"
+                android:textColor="@color/white"
+                android:textSize="11.0sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8.0dip"
+            android:drawableTop="@drawable/selector_video_text_btn"
+            android:gravity="center"
+            android:shadowColor="#ff000000"
+            android:shadowDx="1.0"
+            android:shadowDy="1.5"
+            android:shadowRadius="1.0"
+            android:text="文字"
+            android:textColor="#ffffffff"
+            android:textSize="11.0sp" />
+
+        <TextView
+            android:id="@+id/effect_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8.0dip"
+            android:drawableTop="@drawable/selector_edit_effect"
+            android:gravity="center"
+            android:shadowColor="#ff000000"
+            android:shadowDx="1.0"
+            android:shadowDy="1.5"
+            android:shadowRadius="1.0"
+            android:text="特效"
+            android:textColor="#ffffffff"
+            android:textSize="11.0sp" />
+
+        <TextView
+            android:id="@+id/beauty_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8.0dip"
+            android:drawableTop="@drawable/selector_posted_beauty"
+            android:gravity="center"
+            android:shadowColor="#ff000000"
+            android:shadowDx="1.0"
+            android:shadowDy="1.5"
+            android:shadowRadius="1.0"
+            android:text="美颜"
+            android:textColor="#ffffffff"
+            android:textSize="11.0sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/save_draft"
+        android:layout_width="140.0dip"
+        android:layout_height="40.0dip"
+        android:layout_above="@+id/publish_layout"
+        android:layout_marginLeft="15.0dip"
+        android:layout_marginTop="10.0dip"
+        android:layout_marginBottom="10.0dip"
+        android:background="@drawable/selector_video_save_draft_state"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:src="@drawable/selector_save_draft_img" />
+
+        <TextView
+            android:id="@+id/save_draft_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5.0dip"
+            android:duplicateParentState="true"
+            android:text="@string/save_into_draft"
+            android:textColor="@drawable/selector_save_draft_text"
+            android:textSize="17.0sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/publish"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dip"
+        android:layout_above="@+id/publish_layout"
+        android:layout_marginLeft="5.0dip"
+        android:layout_marginTop="10.0dip"
+        android:layout_marginRight="15.0dip"
+        android:layout_marginBottom="10.0dip"
+        android:layout_toRightOf="@+id/save_draft"
+        android:background="@drawable/selector_video_publish_state"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/release_button_icon_publish" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5.0dip"
+            android:text="@string/publish_video"
+            android:textColor="#ffffffff"
+            android:textSize="17.0sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/message_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/publish">
+
+        <TextView
+            android:id="@+id/add_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="27.0dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="13.0dip"
+            android:background="@drawable/edit_at_friends_selector_41"
+            android:drawableLeft="@drawable/posted_icon_topic"
+            android:drawablePadding="5.0dip"
+            android:gravity="center"
+            android:paddingBottom="2.0dip"
+            android:text="@string/add_topic"
+            android:textColor="#ffffffff"
+            android:textSize="14.0sp" />
+
+        <TextView
+            android:id="@+id/at_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="27.0dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="13.0dip"
+            android:layout_toRightOf="@+id/add_topic"
+            android:background="@drawable/edit_at_friends_selector_41"
+            android:drawablePadding="2.0dip"
+            android:gravity="center"
+            android:paddingBottom="2.0dip"
+            android:text="@string/at_friends"
+            android:textColor="#ffffffff"
+            android:textSize="14.0sp" />
+
+        <View
+            android:id="@+id/message_line"
+            android:layout_width="match_parent"
+            android:layout_height="1.0dip"
+            android:layout_above="@+id/at_friends"
+            android:layout_marginLeft="13.0dip"
+            android:layout_marginRight="13.0dip"
+            android:layout_marginBottom="10.0dip"
+            android:background="#80ffffff" />
+
+        <TextView
+            android:id="@+id/message_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/message_line"
+            android:layout_marginLeft="13.0dip"
+            android:layout_marginRight="55.0dip"
+            android:background="@color/transparent"
+            android:hint="@string/share_message_input"
+            android:lineSpacingExtra="5.0dip"
+            android:maxLines="3"
+            android:paddingBottom="6.0dip"
+            android:scrollbars="vertical"
+            android:textColor="@color/white"
+            android:textColorHint="#a0ffffff"
+            android:textSize="15.0sp" />
+
+        <TextView
+            android:id="@+id/message_text_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/message_line"
+            android:layout_alignRight="@+id/message_line"
+            android:layout_marginBottom="6.0dip"
+            android:textColor="#80ffffff"
+            android:textSize="14.0sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/publish_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10.0dip"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/zhi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#ff000000"
+            android:shadowDx="1.0"
+            android:shadowDy="1.5"
+            android:shadowRadius="1.0"
+            android:text=""
+            android:textColor="#ffffffff"
+            android:textSize="12.0sp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/current_filter_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:shadowColor="#7eeeeeee"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
+        android:textColor="#7effffff"
+        android:textSize="30.0sp" />
+
+    <View
+        android:id="@+id/filter_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/posted_beauty_tool"
+        layout="@layout/view_camera_beauty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/save_toast"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/save_toast_height"
+        android:layout_alignParentTop="true"
+        android:background="#ffff5f5f"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="30.0dip"
+            android:layout_height="30.0dip"
+            android:scaleType="centerCrop"
+            android:src="@drawable/button_confirm" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:text="@string/share_saving_msg"
+            android:textColor="#ffffffff"
+            android:textSize="17.0sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 </RelativeLayout>

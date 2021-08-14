@@ -9,4 +9,5 @@
     <dimen name="dialog_title_size">17.0sp</dimen>
     <dimen name="music_cover_blur_radius">5.0dip</dimen>
     <dimen name="toolbar_height">48.0dip</dimen>
+    <dimen name="save_toast_height">65.0dip</dimen>
 </resources>

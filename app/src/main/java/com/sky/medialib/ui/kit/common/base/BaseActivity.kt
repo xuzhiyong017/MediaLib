@@ -2,9 +2,6 @@ package com.sky.medialib.ui.kit.common.base
 
 import com.sky.media.kit.base.BaseActivity
 import com.sky.medialib.ui.dialog.LoadingDialog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 
 /**
  * @author: xuzhiyong
@@ -12,7 +9,7 @@ import kotlinx.coroutines.cancel
  * @Email: 18971269648@163.com
  * @description:
  */
-open class AppActivity : BaseActivity(){
+open abstract class AppActivity : BaseActivity(){
 
     private var mProgressDialog: LoadingDialog? = null
 

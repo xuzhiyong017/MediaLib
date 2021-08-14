@@ -36,7 +36,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
     private var mCapturing = false
     private var mConfig = Bitmap.Config.ARGB_8888
     protected var mGroupRender: BaseRender? = null
-    protected var mInput: T? = null
+    open var mInput: T? = null
     protected var mMainHandler = Handler(Looper.getMainLooper())
     protected var mOnscreenEndpoint: OnScreenEndPoint? = null
     protected var mPipeline: RenderPipeline? = null
