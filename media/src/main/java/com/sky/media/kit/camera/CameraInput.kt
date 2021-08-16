@@ -77,11 +77,11 @@ class CameraInput(val iRenderView : IRenderView,val mCamera: Camera) : TextureOu
 
     override fun bindShaderValues() {
         renderVertices!!.position(0)
-        GLES20.glVertexAttribPointer(positionHandle, 2, GLES20.GL_FLOAT, false, 8, renderVertices)
         GLES20.glEnableVertexAttribArray(positionHandle)
+        GLES20.glVertexAttribPointer(positionHandle, 2, GLES20.GL_FLOAT, false, 2 * 4, renderVertices)
         textureVertices[curRotation]!!.position(0)
-        GLES20.glVertexAttribPointer(texCoordHandle, 2, GLES20.GL_FLOAT, false, 8, textureVertices[curRotation])
         GLES20.glEnableVertexAttribArray(texCoordHandle)
+        GLES20.glVertexAttribPointer(texCoordHandle, 2, GLES20.GL_FLOAT, false, 2 * 4, textureVertices[curRotation])
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture_in)
         GLES20.glUniform1i(textureHandle, 0)

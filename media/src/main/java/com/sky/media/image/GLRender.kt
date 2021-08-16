@@ -1,6 +1,7 @@
 package com.sky.media.image
 
 import android.opengl.EGL14
+import android.opengl.EGL14.eglGetError
 import android.opengl.GLES20
 import com.sky.media.image.core.util.LogUtils
 import java.nio.ByteBuffer
@@ -37,10 +38,10 @@ abstract class GLRender {
     private var width = 0
     private var height = 0
 
-    protected var positionHandle = -1
-    protected var texCoordHandle = -1
-    protected open var textureHandle = -1
-    open var programHandle = -1
+    protected var positionHandle = 0
+    protected var texCoordHandle = 0
+    protected open var textureHandle = 0
+    open var programHandle = 0
 
     private var vertexShaderHandle = 0
     private var fragmentShaderHandle = 0
@@ -204,14 +205,14 @@ abstract class GLRender {
 
     open fun bindShaderValues(){
         renderVertices?.position(0)
-        GLES20.glVertexAttribPointer(positionHandle,2,GLES20.GL_FLOAT,false,0,renderVertices)
         GLES20.glEnableVertexAttribArray(positionHandle)
+        GLES20.glVertexAttribPointer(positionHandle,2,GLES20.GL_FLOAT,false,2 * 4,renderVertices)
         textureVertices[curRotation]?.position(0)
-        GLES20.glVertexAttribPointer(texCoordHandle,2,GLES20.GL_FLOAT,false,0,textureVertices[curRotation])
         GLES20.glEnableVertexAttribArray(texCoordHandle)
+        GLES20.glVertexAttribPointer(texCoordHandle,2,GLES20.GL_FLOAT,false,2 * 4,textureVertices[curRotation])
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,texture_in)
-        GLES20.glUniform1f(textureHandle,0f)
+        GLES20.glUniform1i(textureHandle,0)
     }
 
     protected open fun bindShaderAttributes() {
@@ -317,7 +318,6 @@ abstract class GLRender {
             )
             checkEGLError("glClearColor")
             bindShaderValues()
-            checkEGLError("bindShaderValues")
             GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
 
             //禁止顶点数组的句柄
@@ -379,10 +379,9 @@ abstract class GLRender {
     }
 
     open fun checkEGLError(str: String) {
-        val eglGetError = EGL14.eglGetError()
-        if (eglGetError != EGL14.EGL_SUCCESS) {
-            throw java.lang.RuntimeException("$str: EGL error: 0x" + Integer.toHexString(eglGetError)
-            )
+        val eglGetError = GLES20.glGetError()
+        if (eglGetError != GLES20.GL_NO_ERROR) {
+            throw RuntimeException("$str: GLES20 error: 0x" + Integer.toHexString(eglGetError) + " $this")
         }
     }
 }

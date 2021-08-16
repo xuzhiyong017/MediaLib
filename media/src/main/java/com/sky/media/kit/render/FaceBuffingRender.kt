@@ -150,6 +150,6 @@ class FaceBuffingRender : BaseRender(), IAdjustable {
     }
 
     override fun adjust(i: Int, i2: Int, i3: Int) {
-        mBuffingLevel = (i - i2).toFloat() * 1.0f / (i3 - i2).toFloat()
+        mBuffingLevel = (i - i2) * 1.0f / (i3 - i2)
     }
 }
