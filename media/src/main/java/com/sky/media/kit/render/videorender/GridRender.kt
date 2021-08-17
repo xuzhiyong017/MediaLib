@@ -28,12 +28,14 @@ open class GridRender : BaseRender(), IAdjustable, IRequireProgress {
 
     override fun initShaderHandles() {
         super.initShaderHandles()
-        mNumGridHandle = GLES20.glGetUniformLocation(this.programHandle, "numGrid")
+        mNumGridHandle = GLES20.glGetUniformLocation(this.programHandle, UNIFORM_NUM_GRID)
     }
 
     override fun bindShaderValues() {
         super.bindShaderValues()
+        checkEGLError("GridRender bindShaderValues start")
         GLES20.glUniform1i(mNumGridHandle, mNumGrid)
+        checkEGLError("GridRender bindShaderValues end")
     }
 
 

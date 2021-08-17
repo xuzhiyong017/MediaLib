@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+        <ImageView
+            android:id="@+id/crop_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="48.0dip"
+            android:layout_marginTop="13.0dip"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/selector_titlebar_back" />
+
+        <ImageView
+            android:id="@+id/crop_done"
+            android:layout_width="wrap_content"
+            android:layout_height="48.0dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="13.0dip"
+            android:paddingLeft="20.0dip"
+            android:paddingRight="20.0dip"
+            android:src="@drawable/selector_crop_done" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_marginLeft="@dimen/video_effect_left_margin"
+        android:layout_marginRight="@dimen/video_effect_right_margin"
+        android:layout_weight="1.0"
+        android:gravity="center">
+
+        <com.sky.media.image.core.view.ProcessFrameContainer
+            android:id="@+id/container_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <com.sky.media.image.core.view.ProcessSurfaceView
+                android:id="@+id/process_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/play" />
+        </com.sky.media.image.core.view.ProcessFrameContainer>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/video_effect_operation_panel_height"
+        android:background="#ff1a1c21"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60.0dip"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/current_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/video_effect_left_margin"
+                android:layout_marginBottom="4.0dip"
+                android:text="00:00"
+                android:textColor="#ffffffff"
+                android:textSize="12.0sp" />
+
+            <com.sky.medialib.ui.kit.view.SequenceSeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0"
+                android:progressDrawable="@android:color/transparent"
+                android:thumb="@drawable/effects_filter_key_frame_mdpi"
+                android:thumbOffset="12.0dip" />
+
+            <TextView
+                android:id="@+id/total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="@dimen/video_effect_right_margin"
+                android:layout_marginBottom="4.0dip"
+                android:text="00:15"
+                android:textColor="#ffffffff"
+                android:textSize="12.0sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6.0dip"
+            android:layout_marginBottom="6.0dip"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:text="选择位置后，长按使用效果"
+                android:textColor="#80ffffff"
+                android:textSize="13.0sp" />
+
+            <ImageView
+                android:id="@+id/undo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15.0dip"
+                android:src="@drawable/selector_video_effect_undo"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filter_list"
+            android:layout_width="wrap_content"
+            android:layout_height="111.0dip"
+            android:layout_gravity="center_horizontal"
+            android:fadingEdge="none"
+            android:overScrollMode="never" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/video_effect_bottom_bar_height"
+        android:background="#ff1a1c21"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/effect_filter"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1.0"
+            android:drawableBottom="@drawable/shoot_tab_foot_icon_hl"
+            android:drawablePadding="@dimen/video_effect_bottom_text_drawable_padding"
+            android:gravity="center"
+            android:paddingTop="10.0dip"
+            android:text="滤镜特效"
+            android:textColor="#ffffffff"
+            android:textSize="15.0sp" />
+
+        <View
+            android:layout_width="0.5dip"
+            android:layout_height="30.0dip"
+            android:layout_gravity="center_vertical"
+            android:background="#80ffffff" />
+
+        <TextView
+            android:id="@+id/effect_time"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:paddingTop="10.0dip"
+            android:text="时间特效"
+            android:textColor="#80ffffff"
+            android:textSize="15.0sp" />
+    </LinearLayout>
+</LinearLayout>

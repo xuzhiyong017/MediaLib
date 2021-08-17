@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/effects_filter_button_revoke_pressed_mdpi" />
+    <item android:drawable="@drawable/effects_filter_button_revoke_normal_mdpi" />
+</selector>

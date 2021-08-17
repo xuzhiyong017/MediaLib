@@ -86,15 +86,15 @@ public class VideoSaveSegment extends BaseSegment<VideoEditData> {
 
     private void showTips() {
         ViewAnimator.animate(this.mSaveToast).translationY((float) (-PixelUtil.dip2px(65.0f)), 0.0f)
-                .setDuration(400).interplolatorDecelerate().setOnStartListener(new AnimationListener.OnStartListener() {
+                .setDuration(2000).interplolatorDecelerate().setOnStartListener(new AnimationListener.OnStartListener() {
             @Override
             public void onStart() {
-                mSaveToast.setVisibility(View.GONE);
+                mSaveToast.setVisibility(View.VISIBLE);
             }
         }).setOnEndListener(new AnimationListener.OnEndListener() {
             @Override
             public void onEnd() {
-
+                mSaveToast.setVisibility(View.GONE);
             }
         }).start();
     }

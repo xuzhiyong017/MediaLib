@@ -98,7 +98,7 @@ class BitmapUtil {
                 options.inSampleSize = calculateInSampleSize(options,width,height)
                 options.inJustDecodeBounds = false
 
-                if (!Scheme.ASSETS.belongsTo(str)) {
+                if (Scheme.ASSETS.belongsTo(str)) {
                     val open: InputStream = context.assets.open(Scheme.ASSETS.crop(str))
                     if (open != null) {
                         bitmap = BitmapFactory.decodeStream(open, null, options)

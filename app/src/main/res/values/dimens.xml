@@ -10,4 +10,11 @@
     <dimen name="music_cover_blur_radius">5.0dip</dimen>
     <dimen name="toolbar_height">48.0dip</dimen>
     <dimen name="save_toast_height">65.0dip</dimen>
+    <dimen name="video_effect_blur_radius">10.0dip</dimen>
+    <dimen name="video_effect_bottom_bar_height">50.0dip</dimen>
+    <dimen name="video_effect_bottom_text_drawable_padding">10.0dip</dimen>
+    <dimen name="video_effect_left_margin">10.0dip</dimen>
+    <dimen name="video_effect_operation_panel_height">210.0dip</dimen>
+    <dimen name="video_effect_right_margin">10.0dip</dimen>
+    <dimen name="video_effect_title_bar_height">48.0dip</dimen>
 </resources>

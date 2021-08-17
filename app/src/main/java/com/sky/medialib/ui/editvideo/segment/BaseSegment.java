@@ -29,6 +29,6 @@ public abstract class BaseSegment<T extends IData> {
     public void onDestroy() {
     }
 
-    public void onActivityResult(int i, int i2, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     }
 }

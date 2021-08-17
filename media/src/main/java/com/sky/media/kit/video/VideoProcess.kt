@@ -31,8 +31,8 @@ open class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView
         var isNeedPlay = true
             private set
         var preparedListener: IMediaPlayer.OnPreparedListener? = null
-        var onCompletionListener: IMediaPlayer.OnCompletionListener? = null
-        var mediaPlayer: IMediaPlayer = SimpleMediaPlayer()
+        var completionListener: IMediaPlayer.OnCompletionListener? = null
+        var mediaPlayerEx: IMediaPlayer = SimpleMediaPlayer()
         var volume = 1.0f
             private set
 
@@ -63,12 +63,12 @@ open class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView
         }
 
         fun setOnCompletionListener(onCompletionListener: IMediaPlayer.OnCompletionListener?): MediaPlayerBuilder {
-            this.onCompletionListener = onCompletionListener
+            this.completionListener = onCompletionListener
             return this
         }
 
         fun setMediaPlayer(iMediaPlayer: IMediaPlayer): MediaPlayerBuilder {
-            mediaPlayer = iMediaPlayer
+            mediaPlayerEx = iMediaPlayer
             return this
         }
     }
@@ -144,12 +144,8 @@ open class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView
                 }
                 for (basicRender in arrayList) {
                     if (basicRender is IRequireProgress) {
-                        val duration =
-                            (timeStamp - baseSequence.start).toFloat() * 1.0f / 1000.0f / (basicRender as IRequireProgress).getDuration() as Float
-                        (basicRender as IRequireProgress).setProgress(
-                            duration - duration.toInt()
-                                .toFloat()
-                        )
+                        val duration = (timeStamp - baseSequence.start) * 1.0f / 1000.0f / (basicRender as IRequireProgress).getDuration()
+                        (basicRender as IRequireProgress).setProgress(duration - duration.toInt().toFloat())
                     }
                 }
             }
@@ -182,7 +178,7 @@ open class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView
         var haschangeSize2: Boolean
         val previewWidth = mediaPlayerBuilder.previewWidth
         val previewHeight = mediaPlayerBuilder.previewHeight
-        val mediaPlayer = mediaPlayerBuilder.mediaPlayer
+        val mediaPlayer = mediaPlayerBuilder.mediaPlayerEx
         val looping = mediaPlayerBuilder.isLooping
         val volume = mediaPlayerBuilder.volume
         val needPlay = mediaPlayerBuilder.isNeedPlay
@@ -269,7 +265,7 @@ open class VideoProcess(iContainerView: IContainerView, iRenderView: IRenderView
             override fun onPrepared(iMediaPlayer: IMediaPlayer) {
                 onPreparedListener?.onPrepared(iMediaPlayer)
                 iMediaPlayer.setOnCompletionListener { iMediaPlayer ->
-                    mediaPlayerBuilder.onCompletionListener?.onCompletion(
+                    mediaPlayerBuilder.completionListener?.onCompletion(
                         iMediaPlayer
                     )
                 }

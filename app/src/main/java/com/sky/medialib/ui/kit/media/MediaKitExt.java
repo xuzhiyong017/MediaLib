@@ -120,7 +120,7 @@ public class MediaKitExt {
             }
 
             public SurfaceTexture getSurfaceTexture() {
-                return a3.getSurfaceTexture();
+                return a3.createSurfaceTexture();
             }
         }, context);
         offscreenVideoProcess.destroy();

@@ -14,6 +14,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        ndk {
+            abiFilters.add("armeabi-v7a")
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -61,6 +64,8 @@ dependencies {
     implementation("com.airbnb.android:lottie:3.3.0")
     implementation("com.makeramen:roundedimageview:2.3.0")
     implementation("org.greenrobot:eventbus:3.2.0")
+    implementation("com.google.android.exoplayer:exoplayer:2.15.0")
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.23")
     implementation("com.jakewharton:butterknife:10.2.3")
     annotationProcessor("com.jakewharton:butterknife-compiler:10.2.3")
 

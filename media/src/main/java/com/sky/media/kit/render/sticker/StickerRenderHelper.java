@@ -158,8 +158,7 @@ public class StickerRenderHelper {
                         if (loadBitmap != null) {
                             this.mBitmapCache.put(str, loadBitmap);
                         }
-                    } else {
-                        Bitmap loadBitmap2 = bitmap;
+                        bitmap = loadBitmap;
                     }
                     linkedHashMap.put(pair, bitmap);
                     this.mStickerFrameMap.put(pair, Integer.valueOf(((Integer) this.mStickerFrameMap.get(pair)).intValue() + 1));

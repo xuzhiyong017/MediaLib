@@ -1,14 +1,11 @@
 package com.sky.media.image
 
-import android.opengl.EGL14
-import android.opengl.EGL14.eglGetError
 import android.opengl.GLES20
 import com.sky.media.image.core.util.LogUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import java.util.*
-import javax.microedition.khronos.egl.EGL
 
 /**
  * @author: xuzhiyong
@@ -16,6 +13,8 @@ import javax.microedition.khronos.egl.EGL
  * @Email: 18971269648@163.com
  * @description:
  */
+
+const val TAG = "GLRender"
 abstract class GLRender {
 
     private val FLOAT_SIZE_BYTES = 4 //一个float数据占四个字节
@@ -211,8 +210,11 @@ abstract class GLRender {
         GLES20.glEnableVertexAttribArray(texCoordHandle)
         GLES20.glVertexAttribPointer(texCoordHandle,2,GLES20.GL_FLOAT,false,2 * 4,textureVertices[curRotation])
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
+        checkEGLError("glActiveTexture")
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,texture_in)
+        checkEGLError("glBindTexture")
         GLES20.glUniform1i(textureHandle,0)
+        checkEGLError("textureHandle")
     }
 
     protected open fun bindShaderAttributes() {
@@ -296,7 +298,6 @@ abstract class GLRender {
         if(programHandle == 0){
             throw RuntimeException("Could not create program.")
         }
-
         initShaderHandles()
     }
 
@@ -308,7 +309,6 @@ abstract class GLRender {
                 GLES20.glViewport(0,0,width,height)
             }
             GLES20.glUseProgram(programHandle)
-            checkEGLError("glUseProgram")
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
             GLES20.glClearColor(
                 getBackgroundRed(),
@@ -316,7 +316,6 @@ abstract class GLRender {
                 getBackgroundBlue(),
                 getBackgroundAlpha()
             )
-            checkEGLError("glClearColor")
             bindShaderValues()
             GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
 
@@ -325,7 +324,6 @@ abstract class GLRender {
             GLES20.glDisableVertexAttribArray(texCoordHandle)
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0)
             GLES20.glUseProgram(0)
-            checkEGLError("glDisableVertexAttribArray")
         }
     }
 
@@ -343,7 +341,6 @@ abstract class GLRender {
             GLES20.glDeleteShader(fragmentShaderHandle)
             fragmentShaderHandle = 0
         }
-        checkEGLError("destroy")
     }
 
     open fun getBackgroundRed(): Float {
@@ -379,9 +376,9 @@ abstract class GLRender {
     }
 
     open fun checkEGLError(str: String) {
-        val eglGetError = GLES20.glGetError()
-        if (eglGetError != GLES20.GL_NO_ERROR) {
-            throw RuntimeException("$str: GLES20 error: 0x" + Integer.toHexString(eglGetError) + " $this")
-        }
+//        val eglGetError = GLES20.glGetError()
+//        if (eglGetError != GLES20.GL_NO_ERROR) {
+//            throw RuntimeException("$str: GLES20 error: 0x" + Integer.toHexString(eglGetError) + " $this")
+//        }
     }
 }

@@ -29,6 +29,10 @@ object ToolFilterManager {
     //editvideo
     var videoWhiteningTool: WhiteningTool? = null
     var videoBuffingTool: BuffingTool? = null
+    //effectvideo
+    var effectWhiteningTool: WhiteningTool? = null
+    var effectBuffingTool: BuffingTool? = null
+
     var clipScribbleTool :ScribbleTool? = null
     var paintScribbleTool :ScribbleTool? = null
 
@@ -37,6 +41,7 @@ object ToolFilterManager {
     val normalFilters: MutableList<FilterExt> = mutableListOf()
     val cacheFilterList: MutableList<FilterExt> = mutableListOf()
     val editVideoFilterList: MutableList<FilterExt> = mutableListOf()
+    val effectFilterList: MutableList<FilterExt> = mutableListOf()
     val magicFilterList: MutableList<MagicFilterExt> = mutableListOf()
 
     fun initEditPicture(context: Context){
@@ -176,12 +181,47 @@ object ToolFilterManager {
         return null
     }
 
+    fun getEffectVideoFilterById(i: Int): FilterExt? {
+        val h = switchId(i)
+        for (filterExt in effectFilterList) {
+            if (h == filterExt.mId) {
+                return filterExt
+            }
+        }
+        return null
+    }
+
 
     fun switchId(i: Int): Int {
         return when (i) {
             205 -> 211
             else -> i
         }
+    }
+
+    fun initEffectVideo(context: Context) {
+        if(effectFilterList.isEmpty()){
+            addEffectVideoFilters(initNormalFilter(context,true))
+        }else{
+            for (adjuster in effectFilterList) {
+                adjuster.adjuster?.resetAdjust()
+            }
+        }
+
+        effectBuffingTool?.adjuster?.resetAdjust()
+        effectWhiteningTool?.adjuster?.resetAdjust()
+
+        initEffectVideoBeautyTool()
+    }
+
+    private fun initEffectVideoBeautyTool() {
+        effectBuffingTool = BuffingTool()
+        effectWhiteningTool = WhiteningTool()
+    }
+
+    private fun addEffectVideoFilters(initNormalFilter: List<FilterExt>) {
+        effectFilterList.clear()
+        effectFilterList.addAll(initNormalFilter)
     }
 
 }

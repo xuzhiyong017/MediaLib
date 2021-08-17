@@ -177,10 +177,10 @@ public class VideoTextSegment extends BaseSegment<VideoEditData> implements Text
         }
     }
 
-    public void onActivityResult(int i, int i2, Intent intent) {
-        super.onActivityResult(i, i2, intent);
-        if (i2 != 0) {
-            switch (i) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode != 0) {
+            switch (requestCode) {
                 case 2:
                     this.toolbarProtocol.showBar();
                     if (intent != null) {

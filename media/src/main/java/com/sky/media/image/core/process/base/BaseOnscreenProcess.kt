@@ -314,7 +314,7 @@ abstract class BaseOnscreenProcess<T : TextureOutRender>(val mContainerView:ICon
     }
 
     protected open fun updateGroupRenderTarget() {
-        mGroupRender?.addNextRender(mOnscreenEndpoint!!)
+        mGroupRender?.addNextRender(mOnscreenEndpoint)
     }
 
     open fun refreshAllFilters() {

@@ -152,6 +152,7 @@ public class VideoBeautySegment extends BaseSegment<VideoEditData> {
     }
 
     private void init() {
+        ToolFilterManager.INSTANCE.initEditVideoFilter(activity);
         this.mBeautyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

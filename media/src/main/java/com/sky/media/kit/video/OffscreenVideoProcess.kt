@@ -71,12 +71,8 @@ class OffscreenVideoProcess @JvmOverloads constructor(i: Int = 0, i2: Int = 0) :
                 }
                 for (basicRender in arrayList) {
                     if (basicRender is IRequireProgress) {
-                        val duration =
-                            (j - sequence.start).toFloat() * 1.0f / 1000.0f / (basicRender as IRequireProgress).getDuration() as Float
-                        (basicRender as IRequireProgress).setProgress(
-                            duration - duration.toInt()
-                                .toFloat()
-                        )
+                        val duration = (j - sequence.start) * 1.0f / 1000.0f / (basicRender as IRequireProgress).getDuration()
+                        (basicRender as IRequireProgress).setProgress(duration - duration.toInt().toFloat())
                     }
                 }
             }

@@ -3,8 +3,6 @@ package com.sky.medialib.ui.editvideo;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -79,7 +77,6 @@ public class VideoEditActivity extends AppActivity implements IDataChangedListen
         super.onCreate(bundle);
         setContentView(R.layout.activity_video_edit);
         ImageBitmapCache.INSTANCE.clear();
-        ToolFilterManager.INSTANCE.initEditVideoFilter(this);
         ButterKnife.bind((Activity) this);
         EventBusHelper.register(this);
         if (dealIntent()) {

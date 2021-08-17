@@ -17,6 +17,7 @@ import com.sky.media.kit.BaseMediaApplication;
 import com.sky.media.kit.mediakit.MediaKit;
 import com.sky.media.kit.mediakit.MediaKitCompat;
 import com.sky.media.kit.mediakit.Size;
+import com.sky.media.kit.model.FilterExt;
 import com.sky.media.kit.video.VideoSequenceHelper;
 import com.sky.medialib.ui.kit.common.network.RxUtil;
 import com.sky.medialib.ui.kit.effect.Effect;
@@ -193,9 +194,9 @@ public class VideoProcessCenter {
         }, BackpressureStrategy.DROP).compose(RxUtil.rxSchedulers());
     }
 
-    void processVideoFilter(List list, String str, Stack stack, List list2, String str2, boolean z, FlowableEmitter flowableEmitter) throws Exception {
+    void processVideoFilter(List<Filter> list, String str, Stack stack, List<Watermark> list2, String str2, boolean z, FlowableEmitter flowableEmitter) throws Exception {
         boolean a;
-        List arrayList = new ArrayList();
+        List arrayList = new ArrayList<FilterExt>();
         if (Util.isNotEmptyList(list)) {
             arrayList.addAll(list);
         }
@@ -211,7 +212,7 @@ public class VideoProcessCenter {
         }
         String str3 = Storage.getFilePathByType(3) + getSimpleName(str).replace(".mp4", "_filter.mp4");
         String str4 = Storage.getFilePathByType(1) + Util.getNewVideoPath();
-        if (MediaKitExt.processVideoWithFilter(this.mContext, stack, list2, str, str3, arrayList, effectRender)) {
+        if (MediaKitExt.processVideoWithFilter(this.mContext, stack, arrayList, str, str3, list2, effectRender)) {
             a = MediaKitExt.doMusicAndVideo(str3, str4, str2, z, this.mContext);
         } else {
             a = false;

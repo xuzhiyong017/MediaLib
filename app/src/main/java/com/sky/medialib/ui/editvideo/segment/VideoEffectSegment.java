@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sky.media.image.core.base.BaseRender;
+import com.sky.media.image.core.filter.Adjuster;
 import com.sky.media.image.core.filter.Filter;
+import com.sky.media.image.core.render.SwitchRender;
 import com.sky.media.kit.base.BaseActivity;
+import com.sky.media.kit.filter.BuffingTool;
+import com.sky.media.kit.filter.WhiteningTool;
 import com.sky.media.kit.model.FilterExt;
 import com.sky.media.kit.video.VideoSequenceHelper;
 import com.sky.medialib.R;
@@ -15,13 +20,16 @@ import com.sky.medialib.ui.editvideo.segment.entity.VideoDraftEffect;
 import com.sky.medialib.ui.editvideo.segment.entity.VideoEditData;
 import com.sky.medialib.ui.editvideo.segment.proto.VideoPlayerProtocol;
 import com.sky.medialib.ui.kit.common.base.AppActivity;
+import com.sky.medialib.ui.kit.manager.ToolFilterManager;
 import com.sky.medialib.ui.kit.manager.VideoEffectManager;
 import com.sky.medialib.ui.kit.media.VideoProcessCenter;
 import com.sky.medialib.ui.kit.model.VideoEffect;
 import com.sky.medialib.ui.kit.view.SequenceSeekBar;
 import com.sky.medialib.util.ToastUtils;
+import  com.sky.medialib.ui.editvideo.effect.VideoEffectActivity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -66,37 +74,37 @@ public class VideoEffectSegment extends BaseSegment<VideoEditData> {
             @Override
             public void onClick(View v) {
                 //TODO
-//                VideoEffectActivity.EffectConfig aVar = new VideoEffectActivity.EffectConfig();
-//                aVar.isKeepVoice = mData.isKeepVoice();
-//                aVar.videoPath = mData.getVideoPath();
-//                aVar.musicPath = mData.getMusicPath();
-//                for (Filter filter : mData.processExt.getUsedFilters()) {
-//                    Adjuster adjuster = filter.getAdjuster();
-//                    if (filter instanceof BuffingTool) {
-//                        aVar.hasBuffingTool = true;
-//                        aVar.buffingLevel = adjuster.getProgress();
-//                    }else if (filter instanceof WhiteningTool) {
-//                        aVar.hasWhiteningTool = true;
-//                        aVar.whiteningLevel = adjuster.getProgress();
-//                    } else if (filter instanceof FilterExt) {
-//                        BaseRender render = adjuster.getRender();
-//                        if (render instanceof SwitchRender) {
-//                            Iterator<FilterExt> it = ToolFilterManager.INSTANCE.getCacheFilterList().iterator();
-//                            while (true) {
-//                                if (!it.hasNext()) {
-//                                    break;
-//                                }
-//                                Filter next = it.next();
-//                                if ((next instanceof FilterExt) && next.getAdjuster().getMRender() == ((SwitchRender) render).getCurrentRender()) {
-//                                    aVar.hasSwitchRender = true;
-//                                    aVar.switchRenderId = ((FilterExt) next).getMId();
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                VideoEffectActivity.launch(activity, aVar, 5);
+                VideoEffectActivity.EffectConfig aVar = new VideoEffectActivity.EffectConfig();
+                aVar.isKeepVoice = mData.isKeepVoice();
+                aVar.videoPath = mData.getVideoPath();
+                aVar.musicPath = mData.getMusicPath();
+                for (Filter filter : mData.processExt.getUsedFilters()) {
+                    Adjuster adjuster = filter.getAdjuster();
+                    if (filter instanceof BuffingTool) {
+                        aVar.hasBuffingTool = true;
+                        aVar.buffingLevel = adjuster.getProgress();
+                    }else if (filter instanceof WhiteningTool) {
+                        aVar.hasWhiteningTool = true;
+                        aVar.whiteningLevel = adjuster.getProgress();
+                    } else if (filter instanceof FilterExt) {
+                        BaseRender render = adjuster.getMRender();
+                        if (render instanceof SwitchRender) {
+                            Iterator<FilterExt> it = ToolFilterManager.INSTANCE.getEditVideoFilterList().iterator();
+                            while (true) {
+                                if (!it.hasNext()) {
+                                    break;
+                                }
+                                Filter next = it.next();
+                                if ((next instanceof FilterExt) && next.getAdjuster().getMRender() == ((SwitchRender) render).getCurrentRender()) {
+                                    aVar.hasSwitchRender = true;
+                                    aVar.switchRenderId = ((FilterExt) next).getMId();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                VideoEffectActivity.launch(activity, aVar, 5);
             }
         });
     }
@@ -167,10 +175,10 @@ public class VideoEffectSegment extends BaseSegment<VideoEditData> {
         ((VideoEditData) this.mData).setEffectList(arrayList);
     }
 
-    public void onActivityResult(int i, int i2, Intent intent) {
-        super.onActivityResult(i, i2, intent);
-        if (i2 != 0) {
-            switch (i) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode != 0) {
+            switch (requestCode) {
                 case 5:
                     VideoEffectManager.VideoEffectExt d = VideoEffectManager.getInstance().getVideoEffectExt();
                     if (d != null) {

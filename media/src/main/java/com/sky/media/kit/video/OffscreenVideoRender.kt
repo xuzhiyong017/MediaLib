@@ -15,7 +15,7 @@ class OffscreenVideoRender(i: Int, i2: Int) : TextureOutRender() {
     private var mMatrixHandle = 0
     open var surfaceTexture: SurfaceTexture? = null
 
-    private fun createSurfaceTexture(): SurfaceTexture? {
+    fun createSurfaceTexture(): SurfaceTexture? {
         if (surfaceTexture == null) {
             val iArr = IntArray(1)
             GLES20.glGenTextures(1, iArr, 0)

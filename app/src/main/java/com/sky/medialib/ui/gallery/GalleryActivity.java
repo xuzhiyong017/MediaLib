@@ -13,6 +13,7 @@ import android.provider.MediaStore.Images.Media;
 import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
@@ -73,6 +74,183 @@ public class GalleryActivity extends AppActivity {
     RelativeLayout mTopBar;
     private String mTopicName;
 
+
+
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setContentView(R.layout.activity_gallery);
+        ButterKnife.bind((Activity) this);
+        initData();
+        initView();
+        loadAllImage();
+    }
+
+    protected boolean isSupportSwipeBack() {
+        return false;
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        this.mStickerId = intent.getStringExtra("KEY_STICKER_ID");
+        this.mFilterId = intent.getStringExtra("KEY_FILTER_ID");
+        this.mTopicName = intent.getStringExtra("KEY_TOPIC_NAME");
+        this.mIsPicEditSelectBar = intent.getBooleanExtra("key_no_select_bar", false);
+    }
+
+    private void initView() {
+        this.mAdapter = new GalleryAdapter(this, 3);
+        this.mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        this.mRecyclerView.setAdapter(this.mAdapter);
+        this.mGalleryTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mGalleryTitle.isSelected()) {
+                    hideFolderLayout();
+                } else {
+                    showFolderLayout();
+                }
+            }
+        });
+        this.mBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void loadAllImage() {
+        showProgressDialog("加载中");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String string;
+                List arrayList = new ArrayList();
+                List arrayList2 = new ArrayList();
+                Cursor query = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, new String[]{"_data", "date_modified"}, "mime_type=? or mime_type=?", new String[]{"image/jpeg", "image/png"}, "date_modified DESC");
+                if (query != null) {
+                    int columnIndex = query.getColumnIndex("_data");
+                    int columnIndex2 = query.getColumnIndex("date_modified");
+                    while (query.moveToNext() && !isFinishing()) {
+                        string = query.getString(columnIndex);
+                        long j = query.getLong(columnIndex2);
+                        if (string != null) {
+                            File file = new File(string);
+                            if (file.exists() && file.canRead() && file.isFile() && file.length() > 10 * 1024) {
+                                GalleryModel galleryModel = new GalleryModel(string, string);
+                                galleryModel.setModifyTime(j);
+                                arrayList.add(galleryModel);
+                            }
+                        }
+                    }
+                    query.close();
+                }
+                Cursor query2 = getContentResolver().query(Video.Media.EXTERNAL_CONTENT_URI, new String[]{"_data", "duration", "_id", "date_modified", "width", "height"}, "(mime_type= ?)", new String[]{"video/mp4"}, "date_modified DESC");
+                String[] strArr = new String[]{"_data"};
+                if (query2 != null) {
+                    int columnIndex3 = query2.getColumnIndex("_data");
+                    int columnIndex4 = query2.getColumnIndex("_id");
+                    int columnIndex5 = query2.getColumnIndex("date_modified");
+                    while (query2.moveToNext() && !isFinishing()) {
+                        String string2 = query2.getString(columnIndex3);
+                        long j2 = query2.getLong(columnIndex5);
+                        long j3 = query2.getLong(query2.getColumnIndex("duration"));
+                        if (string2 != null) {
+                            File file2 = new File(string2);
+                            if (file2.exists() && file2.canRead() && file2.isFile() && file2.length() > 10 * 1024 && file2.length() <= 50 * 1024 * 1024) {
+                                String string3 = query2.getString(columnIndex4);
+                                query = getContentResolver().query(Thumbnails.EXTERNAL_CONTENT_URI, strArr, "(video_id = ?)", new String[]{"" + string3}, null);
+                                GalleryModel galleryModel2 = new GalleryModel();
+                                if (query != null) {
+                                    while (query.moveToNext()) {
+                                        string = query.getString(query.getColumnIndex("_data"));
+                                        File file3 = new File(string);
+                                        if (file3.exists() && file3.canRead() && file3.isFile()) {
+                                            galleryModel2.setCoverPath(string);
+                                        }
+                                    }
+                                    query.close();
+                                }
+                                int i = query2.getInt(query2.getColumnIndex("width"));
+                                int i2 = query2.getInt(query2.getColumnIndex("height"));
+                                galleryModel2.setFilePath(string2);
+                                galleryModel2.setModifyTime(j2);
+                                galleryModel2.setDuration(j3);
+                                galleryModel2.setVideoWidth(i);
+                                galleryModel2.setVideoHeight(i2);
+                                arrayList2.add(galleryModel2);
+                            }
+                        }
+                    }
+                    query2.close();
+                }
+                mAllImages = mergeList(arrayList, arrayList2);
+                mCurrentImages.clear();
+                mCurrentImages.addAll(mAllImages);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissProgressDialog();
+                        mAdapter.setImages(mCurrentImages);
+                        loadFolder();
+                    }
+                });
+            }
+        }).start();
+    }
+
+
+    private void loadFolder() {
+        mGalleryFolderAdapter = new GalleryFolderAdapter(this);
+        GalleryFolder galleryFolder = new GalleryFolder();
+        galleryFolder.setCount(mCurrentImages.size());
+        galleryFolder.addImages(mCurrentImages);
+        if (!(mCurrentImages.isEmpty() || mCurrentImages.get(0) == null || TextUtils.isEmpty(((GalleryModel) mCurrentImages.get(0)).getFilePath()))) {
+            galleryFolder.setFirstImagePath(((GalleryModel) mCurrentImages.get(0)).getFilePath());
+        }
+        galleryFolder.setDir("/相机胶卷");
+        mFilteredFolders.put("/相机胶卷", galleryFolder);
+        mGalleryFolderAdapter.setFolder(galleryFolder);
+        mFolderList.setAdapter(mGalleryFolderAdapter);
+        mFolderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GalleryFolder a = mGalleryFolderAdapter.getItem(position);
+                mCurrentImages.clear();
+                mCurrentImages.addAll(a.getImages());
+                mAdapter.setImages(mCurrentImages);
+                mGalleryFolderAdapter.setFolder(a);
+                mGalleryTitle.setText(a.getName());
+                hideFolderLayout();
+            }
+        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (GalleryModel galleryModel : mAllImages) {
+                    if (galleryModel != null) {
+                        String absolutePath = new File(galleryModel.getFilePath()).getParentFile().getAbsolutePath();
+                        if (new File(absolutePath).isDirectory()) {
+                            if (mFilteredFolders.containsKey(absolutePath)) {
+                                ((GalleryFolder) mFilteredFolders.get(absolutePath)).addImage(galleryModel);
+                            } else {
+                                GalleryFolder galleryFolder = new GalleryFolder();
+                                galleryFolder.setDir(absolutePath);
+                                galleryFolder.addImage(galleryModel);
+                                mFilteredFolders.put(absolutePath, galleryFolder);
+                            }
+                        }
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mGalleryFolderAdapter.setFolderList(new ArrayList(mFilteredFolders.values()));
+                    }
+                });
+            }
+        }).start();
+    }
 
 
     class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -191,181 +369,6 @@ public class GalleryActivity extends AppActivity {
         }
     }
 
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.activity_gallery);
-        ButterKnife.bind((Activity) this);
-        initData();
-        initView();
-        loadAllImage();
-    }
-
-    protected boolean isSupportSwipeBack() {
-        return false;
-    }
-
-    private void initData() {
-        Intent intent = getIntent();
-        this.mStickerId = intent.getStringExtra("KEY_STICKER_ID");
-        this.mFilterId = intent.getStringExtra("KEY_FILTER_ID");
-        this.mTopicName = intent.getStringExtra("KEY_TOPIC_NAME");
-        this.mIsPicEditSelectBar = intent.getBooleanExtra("key_no_select_bar", false);
-    }
-
-    private void initView() {
-        this.mAdapter = new GalleryAdapter(this, 3);
-        this.mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        this.mRecyclerView.setAdapter(this.mAdapter);
-        this.mGalleryTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mGalleryTitle.isSelected()) {
-                    hideFolderLayout();
-                } else {
-                    showFolderLayout();
-                }
-            }
-        });
-        this.mBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-
-    private void loadAllImage() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String string;
-                List arrayList = new ArrayList();
-                List arrayList2 = new ArrayList();
-                Cursor query = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, new String[]{"_data", "date_modified"}, "mime_type=? or mime_type=?", new String[]{"image/jpeg", "image/png"}, "date_modified DESC");
-                if (query != null) {
-                    int columnIndex = query.getColumnIndex("_data");
-                    int columnIndex2 = query.getColumnIndex("date_modified");
-                    while (query.moveToNext() && !isFinishing()) {
-                        string = query.getString(columnIndex);
-                        long j = query.getLong(columnIndex2);
-                        if (string != null) {
-                            File file = new File(string);
-                            if (file.exists() && file.canRead() && file.isFile() && file.length() > 10240) {
-                                GalleryModel galleryModel = new GalleryModel(string, string);
-                                galleryModel.setModifyTime(j);
-                                arrayList.add(galleryModel);
-                            }
-                        }
-                    }
-                    query.close();
-                }
-                Cursor query2 = getContentResolver().query(Video.Media.EXTERNAL_CONTENT_URI, new String[]{"_data", "duration", "_id", "date_modified", "width", "height"}, "(mime_type= ?)", new String[]{"video/mp4"}, "date_modified DESC");
-                String[] strArr = new String[]{"_data"};
-                if (query2 != null) {
-                    int columnIndex3 = query2.getColumnIndex("_data");
-                    int columnIndex4 = query2.getColumnIndex("_id");
-                    int columnIndex5 = query2.getColumnIndex("date_modified");
-                    while (query2.moveToNext() && !isFinishing()) {
-                        String string2 = query2.getString(columnIndex3);
-                        long j2 = query2.getLong(columnIndex5);
-                        long j3 = query2.getLong(query2.getColumnIndex("duration"));
-                        if (string2 != null) {
-                            File file2 = new File(string2);
-                            if (file2.exists() && file2.canRead() && file2.isFile() && file2.length() > 10240 && file2.length() <= 52428800) {
-                                String string3 = query2.getString(columnIndex4);
-                                query = getContentResolver().query(Thumbnails.EXTERNAL_CONTENT_URI, strArr, "(video_id = ?)", new String[]{"" + string3}, null);
-                                GalleryModel galleryModel2 = new GalleryModel();
-                                if (query != null) {
-                                    while (query.moveToNext()) {
-                                        string = query.getString(query.getColumnIndex("_data"));
-                                        File file3 = new File(string);
-                                        if (file3.exists() && file3.canRead() && file3.isFile()) {
-                                            galleryModel2.setCoverPath(string);
-                                        }
-                                    }
-                                    query.close();
-                                }
-                                int i = query2.getInt(query2.getColumnIndex("width"));
-                                int i2 = query2.getInt(query2.getColumnIndex("height"));
-                                galleryModel2.setFilePath(string2);
-                                galleryModel2.setModifyTime(j2);
-                                galleryModel2.setDuration(j3);
-                                galleryModel2.setVideoWidth(i);
-                                galleryModel2.setVideoHeight(i2);
-                                arrayList2.add(galleryModel2);
-                            }
-                        }
-                    }
-                    query2.close();
-                }
-                mAllImages = mergeList(arrayList, arrayList2);
-                mCurrentImages.clear();
-                mCurrentImages.addAll(mAllImages);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.setImages(mCurrentImages);
-                        loadFolder();
-                    }
-                });
-            }
-        }).start();
-    }
-
-
-    private void loadFolder() {
-        mGalleryFolderAdapter = new GalleryFolderAdapter(this);
-        GalleryFolder galleryFolder = new GalleryFolder();
-        galleryFolder.setCount(mCurrentImages.size());
-        galleryFolder.addImages(mCurrentImages);
-        if (!(mCurrentImages.isEmpty() || mCurrentImages.get(0) == null || TextUtils.isEmpty(((GalleryModel) mCurrentImages.get(0)).getFilePath()))) {
-            galleryFolder.setFirstImagePath(((GalleryModel) mCurrentImages.get(0)).getFilePath());
-        }
-        galleryFolder.setDir("/相机胶卷");
-        mFilteredFolders.put("/相机胶卷", galleryFolder);
-        mGalleryFolderAdapter.setFolder(galleryFolder);
-        mFolderList.setAdapter(mGalleryFolderAdapter);
-        mFolderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GalleryFolder a = mGalleryFolderAdapter.getItem(position);
-                mCurrentImages.clear();
-                mCurrentImages.addAll(a.getImages());
-                mAdapter.setImages(mCurrentImages);
-                mGalleryFolderAdapter.setFolder(a);
-                mGalleryTitle.setText(a.getName());
-                hideFolderLayout();
-            }
-        });
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (GalleryModel galleryModel : mAllImages) {
-                    if (galleryModel != null) {
-                        String absolutePath = new File(galleryModel.getFilePath()).getParentFile().getAbsolutePath();
-                        if (new File(absolutePath).isDirectory()) {
-                            if (mFilteredFolders.containsKey(absolutePath)) {
-                                ((GalleryFolder) mFilteredFolders.get(absolutePath)).addImage(galleryModel);
-                            } else {
-                                GalleryFolder galleryFolder = new GalleryFolder();
-                                galleryFolder.setDir(absolutePath);
-                                galleryFolder.addImage(galleryModel);
-                                mFilteredFolders.put(absolutePath, galleryFolder);
-                            }
-                        }
-                    }
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mGalleryFolderAdapter.setFolderList(new ArrayList(mFilteredFolders.values()));
-                    }
-                });
-            }
-        }).start();
-    }
-
-
     private void hideFolderLayout() {
         mFolderList.setVisibility(View.GONE);
         mGalleryTitle.setSelected(false);
@@ -409,5 +412,11 @@ public class GalleryActivity extends AppActivity {
 
     public String getPageId() {
         return "30000198";
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        dismissProgressDialog();
+        return super.onKeyDown(keyCode, event);
     }
 }
