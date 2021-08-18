@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.sky.media.kit.base.BaseActivity;
 import com.sky.medialib.R;
 import com.sky.medialib.ui.dialog.BottomSheetDialog;
@@ -105,12 +107,14 @@ public class VideoMusicSegment extends BaseSegment<VideoEditData> implements Mus
         } else if (((VideoEditData) this.mData).isCameraMusic()) {
             Glide.with(activity).load(mData.getMusic().photo)
                     .placeholder(R.drawable.shoot_button_music_disabled)
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                     .into(this.mMusicCover);
             this.mMusicCoverMask.setImageResource(R.drawable.shoot_button_music_cover_disabled);
             this.mMusicName.setTextColor(-1711276033);
         } else {
             Glide.with(activity).load(mData.getMusic().photo)
                     .placeholder(R.drawable.shoot_button_music_normal)
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                     .into(this.mMusicCover);
             this.mMusicCoverMask.setImageResource(R.drawable.shoot_button_music_cover);
         }
