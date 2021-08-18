@@ -54,7 +54,7 @@ class StickerView @JvmOverloads constructor(
     private val showTextDebug = false
     private val mDrawFilter: PaintFlagsDrawFilter
     private val textPaintSize: Int
-    private var f9226c: FloatArray? = null
+    private var sourceVerteries: FloatArray? = null
     private lateinit var mRoundCornerPos: FloatArray
     private var f9228e: RectF? = null
     private var f9229f: RectF? = null
@@ -142,17 +142,18 @@ class StickerView @JvmOverloads constructor(
             val measureText = (mTextPadding * 2).toFloat() + mTextPaint!!.measureText(
                 drawTextList!![0]
             )
-            f9226c = floatArrayOf(
+            val height = mTextPaint!!.textSize * drawTextList!!.size + mTextPadding * 2
+            sourceVerteries = floatArrayOf(
                 0.0f,
                 0.0f,
                 measureText,
                 0.0f,
                 measureText,
-                0f,
+                height,
                 0.0f,
-                0f,
+                height,
                 measureText / 2.0f,
-                (mTextPaint!!.textSize * drawTextList!!.size.toFloat() + (mTextPadding * 2).toFloat()) / 2.0f
+                height / 2.0f
             )
             mMatrix = Matrix()
             mDrawTextPos = FloatArray(10)
@@ -191,9 +192,9 @@ class StickerView @JvmOverloads constructor(
     }
 
     val textOriginalSize: PointF?
-        get() = if (f9226c == null) {
+        get() = if (sourceVerteries == null) {
             null
-        } else PointF(f9226c!![4], f9226c!![5])
+        } else PointF(sourceVerteries!![4], sourceVerteries!![5])
 
     fun setTextColor(i: Int) {
         textColor = i
@@ -219,7 +220,7 @@ class StickerView @JvmOverloads constructor(
             isFocusable = true
             val width = waterBitmap!!.width.toFloat()
             val height = waterBitmap!!.height.toFloat()
-            f9226c = floatArrayOf(
+            sourceVerteries = floatArrayOf(
                 0.0f,
                 0.0f,
                 width,
@@ -389,7 +390,7 @@ class StickerView @JvmOverloads constructor(
     val centerPoint: PointF
         get() {
             if (mRoundCornerPos[8] == 0.0f || mRoundCornerPos[9] == 0.0f) {
-                mRotateMatrix!!.mapPoints(mRoundCornerPos, f9226c)
+                mRotateMatrix!!.mapPoints(mRoundCornerPos, sourceVerteries)
             }
             return PointF(mRoundCornerPos[8], mRoundCornerPos[9])
         }
@@ -421,7 +422,7 @@ class StickerView @JvmOverloads constructor(
                 mRotateMatrix!!.postScale(f, f, mRoundCornerPos[8], mRoundCornerPos[9])
                 aspectRatio = f9199G
             }
-            mRotateMatrix!!.mapPoints(mRoundCornerPos, f9226c)
+            mRotateMatrix!!.mapPoints(mRoundCornerPos, sourceVerteries)
             sqrt = Math.sqrt(
                 ((mRoundCornerPos[4] - mRoundCornerPos[2]) * (mRoundCornerPos[4] - mRoundCornerPos[2]) + (mRoundCornerPos[5] - mRoundCornerPos[3]) * (mRoundCornerPos[5] - mRoundCornerPos[3])).toDouble()
             ).toFloat()
@@ -470,7 +471,7 @@ class StickerView @JvmOverloads constructor(
             }
             canvas.restore()
         } else if (stickerType == 1) {
-            mRotateMatrix!!.mapPoints(mRoundCornerPos, f9226c)
+            mRotateMatrix!!.mapPoints(mRoundCornerPos, sourceVerteries)
             if (waterBitmap != null) {
                 mRotateMatrix!!.mapRect(f9229f, f9228e)
                 if (isFlipper) {
