@@ -15,29 +15,29 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 
 public class WatermarkRenderCreator {
-    public static StickerRender createWatermarkRender(Context context, String str, int i, int i2, float f, IBitmapCache iBitmapCache) {
+    public static StickerRender createWatermarkRender(Context context, String str, int x, int y, float scale, IBitmapCache iBitmapCache) {
         Options options = new Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(str, options);
-        int i3 = options.outWidth;
-        int i4 = options.outHeight;
+        int width = options.outWidth;
+        int height = options.outHeight;
         StickerRender stickerRender = new StickerRender(context, iBitmapCache);
         Sticker sticker = new Sticker();
         sticker.component = new ArrayList();
         Sticker.Component component = new Component();
         component.type = 1;
-        component.left = Math.round(((float) i) / f);
-        component.top = Math.round(((float) i2) / f);
-        component.width = i3;
-        component.height = i4;
-        component.scale = f;
+        component.left = Math.round(((float) x) / scale);
+        component.top = Math.round(((float) y) / scale);
+        component.width = width;
+        component.height = height;
+        component.scale = scale;
         sticker.componentResourceMap = new LinkedHashMap();
         sticker.componentResourceMap.put(component, Collections.singletonList(str));
         stickerRender.setSticker(sticker);
         return stickerRender;
     }
 
-    public static StickerRender createWatermarkRender(Context context, String str, int i, int i2, float f) {
-        return createWatermarkRender(context, str, i, i2, f, ImageBitmapCache.INSTANCE);
+    public static StickerRender createWatermarkRender(Context context, String str, int x, int y, float scale) {
+        return createWatermarkRender(context, str, x, y, scale, ImageBitmapCache.INSTANCE);
     }
 }

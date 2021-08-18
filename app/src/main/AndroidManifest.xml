@@ -87,6 +87,15 @@
             android:theme="@style/AppTheme.Fullscreen"
             android:hardwareAccelerated="false"
             />
+
+        <activity
+            android:name=".ui.input.TextInputActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Translucent"
+            android:hardwareAccelerated="false"
+            android:windowSoftInputMode="adjustUnspecified|stateVisible|adjustResize"
+            />
     </application>
 
 </manifest>

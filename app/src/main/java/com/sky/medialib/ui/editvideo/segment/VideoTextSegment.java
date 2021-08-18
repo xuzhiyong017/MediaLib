@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.sky.medialib.ui.editvideo.segment.entity.VideoDraftText;
 import com.sky.medialib.ui.editvideo.segment.entity.VideoEditData;
 import com.sky.medialib.ui.editvideo.segment.proto.TextWatermarksProtocol;
 import com.sky.medialib.ui.editvideo.segment.proto.ToolbarProtocol;
+import com.sky.medialib.ui.input.TextInputActivity;
 import com.sky.medialib.ui.kit.common.base.AppActivity;
 import com.sky.medialib.ui.kit.media.Watermark;
 import com.sky.medialib.ui.kit.view.StickerView;
@@ -50,8 +52,7 @@ public class VideoTextSegment extends BaseSegment<VideoEditData> implements Text
                 curStickerView = null;
                 toolbarProtocol.hideBar();
                 mData.jumpInputActivity = true;
-                //TODO
-//                activity.startActivityForResult(new Intent(activity, TextInputActivity.class), 2);
+                activity.startActivityForResult(new Intent(activity, TextInputActivity.class), 2);
             }
         });
     }
@@ -115,11 +116,10 @@ public class VideoTextSegment extends BaseSegment<VideoEditData> implements Text
                 curStickerView = stickerView;
                 toolbarProtocol.hideBar();
                 mData.jumpInputActivity = true;
-                //TODO
-//                Intent intent = new Intent(activity, TextInputActivity.class);
-//                intent.putExtra("KEY_WORDS", stickerView.getText());
-//                intent.putExtra("KEY_COLOR", stickerView.getTextColor());
-//                activity.startActivityForResult(intent, 2);
+                Intent intent = new Intent(activity, TextInputActivity.class);
+                intent.putExtra("KEY_WORDS", stickerView.getText());
+                intent.putExtra("KEY_COLOR", stickerView.getTextColor());
+                activity.startActivityForResult(intent, 2);
             }
         });
         stickerView.setOnStickerDeleteListener(new StickerView.OnStickerDeleteListener() {
@@ -133,7 +133,6 @@ public class VideoTextSegment extends BaseSegment<VideoEditData> implements Text
                     mData.setWaterMarkList(h);
                 }
             }
-
         });
         stickerView.setOnStickerChangedListener(new StickerView.OnStickerChangedListener() {
             @Override
@@ -155,9 +154,9 @@ public class VideoTextSegment extends BaseSegment<VideoEditData> implements Text
                 }
             }
         });
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, -2);
-        layoutParams.addRule(8, R.id.processing_view);
-        layoutParams.addRule(6, R.id.processing_view);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.processing_view);
+        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.processing_view);
         this.mTextContainer.addView(stickerView, layoutParams);
         return stickerView;
     }
@@ -186,17 +185,17 @@ public class VideoTextSegment extends BaseSegment<VideoEditData> implements Text
                     if (intent != null) {
                         String stringExtra = intent.getStringExtra("KEY_WORDS");
                         int intExtra = intent.getIntExtra("KEY_COLOR", -1);
-                        if (this.curStickerView != null) {
-                            this.curStickerView.setText(stringExtra, 2);
-                            this.curStickerView.setTextColor(intExtra);
+                        if (curStickerView != null) {
+                            curStickerView.setText(stringExtra, 2);
+                            curStickerView.setTextColor(intExtra);
                             return;
                         } else if (!TextUtils.isEmpty(stringExtra)) {
                             List arrayList;
                             StickerView a = createSticker(stringExtra, intExtra);
                             Matrix matrix = new Matrix();
                             PointF textOriginalSize = a.getTextOriginalSize();
-                            int previewWidth = ((VideoEditData) this.mData).processExt.getMContainerView().getPreviewWidth() / 2;
-                            int previewHeight = ((VideoEditData) this.mData).processExt.getMContainerView().getPreviewHeight() / 2;
+                            int previewWidth = mData.processExt.getMContainerView().getPreviewWidth() / 2;
+                            int previewHeight = mData.processExt.getMContainerView().getPreviewHeight() / 2;
                             if (textOriginalSize != null) {
                                 previewWidth = (int) (((float) previewWidth) - (textOriginalSize.x / 2.0f));
                                 previewHeight = (int) (((float) previewHeight) - (textOriginalSize.y / 2.0f));
@@ -209,14 +208,14 @@ public class VideoTextSegment extends BaseSegment<VideoEditData> implements Text
                             float[] fArr = new float[9];
                             matrix.getValues(fArr);
                             videoDraftText.matrix = fArr;
-                            List h = ((VideoEditData) this.mData).getWaterMarkList();
+                            List h = mData.getWaterMarkList();
                             if (h == null) {
                                 arrayList = new ArrayList();
                             } else {
                                 arrayList = h;
                             }
                             arrayList.add(videoDraftText);
-                            ((VideoEditData) this.mData).setWaterMarkList(arrayList);
+                            mData.setWaterMarkList(arrayList);
                             a.setTag(videoDraftText);
                             return;
                         } else {

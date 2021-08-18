@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
 class PictureStickerHelper(val mContext: Activity, val screenWidth:Int, val screenHeight:Int) {
 
     var sticker_layout:RelativeLayout = mContext.findViewById(R.id.sticker_layout)
-    var curStickerView:StickerView? = null
+    var curStickerView: StickerView? = null
     val mStickerRecyclerView:RecyclerView by lazy {
         mContext.findViewById(R.id.sticker_gallery)
     }

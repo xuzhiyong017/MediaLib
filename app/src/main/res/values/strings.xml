@@ -69,4 +69,21 @@
 是否继续?"</string>
     <string name="back_edit_video_to_draft">是否保存当前编辑?</string>
     <string name="continue_back_camera">继续</string>
+    <string name="text_input_most">最多%s字</string>
+
+    <array name="edit_text_colors">
+        <item>#ffffffff</item>
+        <item>#fff5330d</item>
+        <item>#ffffbb47</item>
+        <item>#ffffeb00</item>
+        <item>#ffc2ff2f</item>
+        <item>#ff00b10a</item>
+        <item>#ff26d2ff</item>
+        <item>#ff177bfe</item>
+        <item>#ff0037c8</item>
+        <item>#ff935afc</item>
+        <item>#ffff99ff</item>
+        <item>#fffc6991</item>
+        <item>#ff000000</item>
+    </array>
 </resources>

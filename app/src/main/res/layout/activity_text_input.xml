@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/text_input_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#66000000">
+
+    <com.sky.medialib.ui.input.LimitEditText
+        android:id="@+id/edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#66000000"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
+        android:lineSpacingExtra="6.0dip"
+        android:minHeight="35.0dip"
+        android:overScrollMode="always"
+        android:paddingLeft="20.0dip"
+        android:paddingTop="12.0dip"
+        android:paddingRight="20.0dip"
+        android:paddingBottom="8.0dip"
+        android:scrollHorizontally="false"
+        android:textColor="#ffffffff"
+        android:textCursorDrawable="@null"
+        android:textSize="17.0sp"
+        app:limitSize="100" />
+
+    <com.sky.medialib.ui.kit.common.view.colorpick.ColorSeekView
+        android:id="@+id/color_seek_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="25.0dip"
+        android:layout_marginRight="14.0dip" />
+</RelativeLayout>
