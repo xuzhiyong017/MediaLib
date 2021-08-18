@@ -4,20 +4,17 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.opengl.GLES20
-import android.opengl.GLES30
 import android.util.Pair
 import com.sky.media.image.core.base.BaseRender
 import com.sky.media.image.core.base.TextureOutRender
 import com.sky.media.image.core.cache.IBitmapCache
 import com.sky.media.image.core.util.TextureBindUtil
 import com.sky.media.kit.face.Face
-import com.sky.media.kit.render.sticker.Sticker.FacePoint
 import com.sky.media.kit.render.sticker.trigger.OnTriggerStartListener
 import com.sky.media.kit.render.sticker.trigger.TriggerActionFactory
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
-import java.util.*
 import kotlin.math.sqrt
 
 class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender() {
@@ -66,6 +63,8 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
             markNeedDraw()
         }
         texture_in = textureId
+        setWidth(textureOutRender.getWidth())
+        setHeight(textureOutRender.getHeight())
         onDrawFrame()
     }
 
@@ -78,7 +77,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
         )
         if (stickerResource != null) {
             GLES20.glEnable(GLES20.GL_BLEND)
-            GLES20.glBlendFunc(1, 771)
+            GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
             for ((key, value) in stickerResource) {
                 val pair = key as Pair<Sticker.Component, Face?>
                 val component = pair.first as Sticker.Component
@@ -95,7 +94,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
                     )
                 }
             }
-            GLES20.glDisable(3042)
+            GLES20.glDisable(GLES20.GL_BLEND)
         }
     }
 
@@ -127,10 +126,10 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
         var width = component.scale * bitmap.width.toFloat()
         var height = bitmap.height.toFloat() * component.scale
         val f = width / height
-        val f2 = component.scale * component.top.toFloat()
-        val f3 = component.scale * component.right.toFloat()
-        val f4 = component.scale * component.left.toFloat()
-        val f5 = component.scale * component.bottom.toFloat()
+        val top = component.scale * component.top.toFloat()
+        val right = component.scale * component.right.toFloat()
+        val left = component.scale * component.left.toFloat()
+        val bottom = component.scale * component.bottom.toFloat()
         when (component.full) {
             1 -> {
                 width = getWidth().toFloat()
@@ -157,7 +156,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
         val pointF7: PointF
         when (component.anchor) {
             0 -> {
-                pointF4 = PointF(f4, getHeight().toFloat() - f2)
+                pointF4 = PointF(left, getHeight().toFloat() - top)
                 pointF6 = PointF(pointF4.x + width, pointF4.y)
                 pointF5 = PointF(pointF4.x, pointF4.y - height)
                 pointF = PointF(width + pointF4.x, pointF5.y)
@@ -166,7 +165,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
                 pointF5 = pointF4
             }
             1 -> {
-                pointF6 = PointF(getWidth().toFloat() - f3, getHeight().toFloat() - f2)
+                pointF6 = PointF(getWidth().toFloat() - right, getHeight().toFloat() - top)
                 pointF5 = PointF(pointF6.x - width, pointF6.y)
                 pointF2 = PointF(pointF5.x, pointF5.y - height)
                 pointF = PointF(pointF6.x, pointF2.y)
@@ -175,7 +174,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
                 pointF2 = pointF7
             }
             2 -> {
-                pointF5 = PointF(f4, f5)
+                pointF5 = PointF(left, bottom)
                 pointF6 = PointF(width + pointF5.x, pointF5.y)
                 pointF2 = PointF(pointF6.x, height + pointF6.y)
                 pointF7 = pointF6
@@ -184,19 +183,19 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
                 pointF = pointF7
             }
             3 -> {
-                pointF6 = PointF(getWidth().toFloat() - f3, f5)
+                pointF6 = PointF(getWidth().toFloat() - right, bottom)
                 pointF5 = PointF(pointF6.x - width, pointF6.y)
                 pointF2 = PointF(pointF5.x, height + pointF5.y)
                 pointF7 = pointF6
                 pointF6 = pointF5
                 pointF5 = pointF2
-                pointF2 = PointF(pointF6.x, pointF2.y)
+                pointF2 = PointF(pointF7.x, pointF2.y)
                 pointF = pointF7
             }
             4 -> {
                 pointF5 = PointF(
-                    (getWidth() / 2).toFloat() - width / 2.0f + f4,
-                    (getHeight() / 2).toFloat() + height / 2.0f - f2
+                    (getWidth() / 2).toFloat() - width / 2.0f + left,
+                    (getHeight() / 2).toFloat() + height / 2.0f - top
                 )
                 pointF6 = PointF(width + pointF5.x, pointF5.y)
                 pointF2 = PointF(pointF5.x, pointF5.y - height)
@@ -207,8 +206,8 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
             }
             5 -> {
                 pointF5 = PointF(
-                    (getWidth() / 2).toFloat() - width / 2.0f + f4,
-                    getHeight().toFloat() - f2
+                    (getWidth() / 2).toFloat() - width / 2.0f + left,
+                    getHeight().toFloat() - top
                 )
                 pointF6 = PointF(width + pointF5.x, pointF5.y)
                 pointF2 = PointF(pointF5.x, pointF5.y - height)
@@ -219,8 +218,8 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
             }
             6 -> {
                 pointF6 = PointF(
-                    getWidth().toFloat() - f3,
-                    (getHeight() / 2).toFloat() + height / 2.0f - f2
+                    getWidth().toFloat() - right,
+                    (getHeight() / 2).toFloat() + height / 2.0f - top
                 )
                 pointF5 = PointF(pointF6.x - width, pointF6.y)
                 pointF2 = PointF(pointF5.x, pointF5.y - height)
@@ -230,7 +229,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
                 pointF2 = pointF7
             }
             7 -> {
-                pointF5 = PointF((getWidth() / 2).toFloat() - width / 2.0f + f4, f5)
+                pointF5 = PointF((getWidth() / 2).toFloat() - width / 2.0f + left, bottom)
                 pointF6 = PointF(width + pointF5.x, pointF5.y)
                 pointF2 = PointF(pointF5.x, height + pointF5.y)
                 pointF7 = pointF6
@@ -240,7 +239,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
                 pointF = pointF7
             }
             8 -> {
-                pointF4 = PointF(f4, (getHeight() / 2).toFloat() + height / 2.0f - f2)
+                pointF4 = PointF(left, (getHeight() / 2).toFloat() + height / 2.0f - top)
                 pointF6 = PointF(pointF4.x + width, pointF4.y)
                 pointF5 = PointF(pointF4.x, pointF4.y - height)
                 pointF = PointF(width + pointF4.x, pointF5.y)
@@ -267,6 +266,7 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
         fArr[5] = pointF2.y
         fArr[6] = pointF5.x
         fArr[7] = pointF5.y
+
         val put =
             ByteBuffer.allocateDirect(fArr.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
                 .put(fArr)
@@ -290,9 +290,9 @@ class StickerRender(context: Context?, iBitmapCache: IBitmapCache?) : BaseRender
         GLES20.glVertexAttribPointer(positionHandle, 2, GLES20.GL_FLOAT, false, 0, floatBufferArr[0])
         GLES20.glVertexAttribPointer(texCoordHandle, 2, GLES20.GL_FLOAT, false, 0, floatBufferArr[1])
         if (floatBufferArr[0].limit() > 8) {
-            GLES20.glDrawArrays(4, 0, floatBufferArr[0].limit() / 2)
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, floatBufferArr[0].limit() / 2)
         } else {
-            GLES20.glDrawArrays(5, 0, 4)
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
         }
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
     }

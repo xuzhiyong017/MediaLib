@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.Thumbnails;
@@ -127,10 +128,10 @@ public class GalleryActivity extends AppActivity {
                 String string;
                 List arrayList = new ArrayList();
                 List arrayList2 = new ArrayList();
-                Cursor query = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, new String[]{"_data", "date_modified"}, "mime_type=? or mime_type=?", new String[]{"image/jpeg", "image/png"}, "date_modified DESC");
+                Cursor query = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, new String[]{Media.DATA, Media.DATE_MODIFIED}, "mime_type=? or mime_type=?", new String[]{"image/jpeg", "image/png"}, "date_modified DESC");
                 if (query != null) {
-                    int columnIndex = query.getColumnIndex("_data");
-                    int columnIndex2 = query.getColumnIndex("date_modified");
+                    int columnIndex = query.getColumnIndex(Media.DATA);
+                    int columnIndex2 = query.getColumnIndex(Media.DATE_MODIFIED);
                     while (query.moveToNext() && !isFinishing()) {
                         string = query.getString(columnIndex);
                         long j = query.getLong(columnIndex2);
@@ -146,41 +147,22 @@ public class GalleryActivity extends AppActivity {
                     query.close();
                 }
                 Cursor query2 = getContentResolver().query(Video.Media.EXTERNAL_CONTENT_URI, new String[]{"_data", "duration", "_id", "date_modified", "width", "height"}, "(mime_type= ?)", new String[]{"video/mp4"}, "date_modified DESC");
-                String[] strArr = new String[]{"_data"};
                 if (query2 != null) {
                     int columnIndex3 = query2.getColumnIndex("_data");
-                    int columnIndex4 = query2.getColumnIndex("_id");
                     int columnIndex5 = query2.getColumnIndex("date_modified");
                     while (query2.moveToNext() && !isFinishing()) {
                         String string2 = query2.getString(columnIndex3);
                         long j2 = query2.getLong(columnIndex5);
                         long j3 = query2.getLong(query2.getColumnIndex("duration"));
-                        if (string2 != null) {
-                            File file2 = new File(string2);
-                            if (file2.exists() && file2.canRead() && file2.isFile() && file2.length() > 10 * 1024 && file2.length() <= 50 * 1024 * 1024) {
-                                String string3 = query2.getString(columnIndex4);
-                                query = getContentResolver().query(Thumbnails.EXTERNAL_CONTENT_URI, strArr, "(video_id = ?)", new String[]{"" + string3}, null);
-                                GalleryModel galleryModel2 = new GalleryModel();
-                                if (query != null) {
-                                    while (query.moveToNext()) {
-                                        string = query.getString(query.getColumnIndex("_data"));
-                                        File file3 = new File(string);
-                                        if (file3.exists() && file3.canRead() && file3.isFile()) {
-                                            galleryModel2.setCoverPath(string);
-                                        }
-                                    }
-                                    query.close();
-                                }
-                                int i = query2.getInt(query2.getColumnIndex("width"));
-                                int i2 = query2.getInt(query2.getColumnIndex("height"));
-                                galleryModel2.setFilePath(string2);
-                                galleryModel2.setModifyTime(j2);
-                                galleryModel2.setDuration(j3);
-                                galleryModel2.setVideoWidth(i);
-                                galleryModel2.setVideoHeight(i2);
-                                arrayList2.add(galleryModel2);
-                            }
-                        }
+                        int i = query2.getInt(query2.getColumnIndex("width"));
+                        int i2 = query2.getInt(query2.getColumnIndex("height"));
+                        GalleryModel galleryModel2 = new GalleryModel();
+                        galleryModel2.setFilePath(string2);
+                        galleryModel2.setModifyTime(j2);
+                        galleryModel2.setDuration(j3);
+                        galleryModel2.setVideoWidth(i);
+                        galleryModel2.setVideoHeight(i2);
+                        arrayList2.add(galleryModel2);
                     }
                     query2.close();
                 }

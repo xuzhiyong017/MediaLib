@@ -318,12 +318,6 @@ abstract class GLRender {
             )
             bindShaderValues()
             GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
-
-            //禁止顶点数组的句柄
-            GLES20.glDisableVertexAttribArray(positionHandle)
-            GLES20.glDisableVertexAttribArray(texCoordHandle)
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0)
-            GLES20.glUseProgram(0)
         }
     }
 

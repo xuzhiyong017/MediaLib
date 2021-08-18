@@ -178,11 +178,18 @@ public class VideoProcessCenter {
         this.mTaskQueue.start();
     }
 
-    private Effect readWaterMarkEffect(int width, int height) {
+    public static Effect readWaterMarkEffectBySaveVideo(int width, int height) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         gsonBuilder.disableHtmlEscaping();
-        return EffectReader.readEffect(BaseMediaApplication.sContext, BitmapUtil.Scheme.ASSETS.wrap("watermark/"), str -> gsonBuilder.create().fromJson(str,Effect.class), width, height);
+        return EffectReader.readEffect(BaseMediaApplication.sContext, BitmapUtil.Scheme.ASSETS.wrap("watermark/"), str -> gsonBuilder.create().fromJson(str,Effect.class), width, height,0);
+    }
+
+    public static Effect readWaterMarkEffectByCameraPreview(int width, int height) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        gsonBuilder.disableHtmlEscaping();
+        return EffectReader.readEffect(BaseMediaApplication.sContext, BitmapUtil.Scheme.ASSETS.wrap("watermark/"), str -> gsonBuilder.create().fromJson(str,Effect.class), width, height,1);
     }
 
     public Flowable<Object> processVideo(final String str, final Stack<VideoSequenceHelper.BaseSequence> stack, final List<Filter> list, final String str2, final boolean z, final List<Watermark> list2) {
@@ -206,7 +213,7 @@ public class VideoProcessCenter {
             if (c == null) {
                 c = new Size(this.mContext.getResources().getDisplayMetrics().widthPixels, this.mContext.getResources().getDisplayMetrics().heightPixels);
             }
-            Effect a2 = readWaterMarkEffect(c.width, c.height);
+            Effect a2 = readWaterMarkEffectBySaveVideo(c.width, c.height);
             effectRender = new EffectRender(this.mContext, ImageBitmapCache.INSTANCE);
             effectRender.setEffect(a2);
         }

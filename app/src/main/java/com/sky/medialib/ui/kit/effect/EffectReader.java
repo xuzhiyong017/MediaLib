@@ -19,23 +19,31 @@ import java.util.LinkedHashMap;
 
 public class EffectReader {
     public static final String EFFECT_JSON = "effect.json";
+    public static final String EFFECT_JSON_PREVIEW_CAMERA = "effect_camera.json";
 
     public interface IEffectParser {
         Effect parse(String str) throws Exception;
     }
 
     public static Effect readEffect(Context context, String str, IEffectParser iEffectParser) {
-        return readEffect(context, str, iEffectParser, context.getResources().getDisplayMetrics().widthPixels, context.getResources().getDisplayMetrics().heightPixels);
+        return readEffect(context, str, iEffectParser, context.getResources().getDisplayMetrics().widthPixels, context.getResources().getDisplayMetrics().heightPixels,0);
     }
 
+    public static String getEffectJsonFilePath(int type){
+        if(type == 0){
+            return EFFECT_JSON;
+        }else{
+            return EFFECT_JSON_PREVIEW_CAMERA;
+        }
+    }
 
-    public static Effect readEffect(Context context,String str, IEffectParser iEffectParser, int i, int i2){
+    public static Effect readEffect(Context context,String str, IEffectParser iEffectParser, int width, int height,int type){
         BufferedReader bufferedReader = null;
         InputStreamReader inputStreamReader = null;
         InputStream inputStream = null;
         Effect effect = null;
         try {
-            inputStream = BitmapUtil.Scheme.ASSETS.belongsTo(str) ? context.getAssets().open(BitmapUtil.Scheme.ASSETS.crop(str) + EFFECT_JSON) : BitmapUtil.Scheme.FILE.belongsTo(str) ? new FileInputStream(new File(BitmapUtil.Scheme.FILE.crop(str)) + EFFECT_JSON) : new FileInputStream(new File(str + EFFECT_JSON));
+            inputStream = BitmapUtil.Scheme.ASSETS.belongsTo(str) ? context.getAssets().open(BitmapUtil.Scheme.ASSETS.crop(str) + getEffectJsonFilePath(type)) : BitmapUtil.Scheme.FILE.belongsTo(str) ? new FileInputStream(new File(BitmapUtil.Scheme.FILE.crop(str)) + getEffectJsonFilePath(type)) : new FileInputStream(new File(str + getEffectJsonFilePath(type)));
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -84,7 +92,7 @@ public class EffectReader {
                         filter.src = str + filter.src;
                     } else if (filter.type == 4) {
                         if (filter.component != null && !filter.component.isEmpty()) {
-                            float min = ((float) Math.min(i, i2)) / 720.0f;
+                            float min = ((float) Math.min(width, height)) / 720.0f;
                             LinkedHashMap linkedHashMap = new LinkedHashMap();
                             for (Sticker.Component component : filter.component) {
                                 component.src = str + component.src;

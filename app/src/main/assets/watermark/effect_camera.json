@@ -1,0 +1,25 @@
+{
+  "name": "动态水印",
+  "version": 0,
+  "type": 0,
+  "filter": [
+    {
+      "type": 4,
+      "component": [
+        {
+          "src": "watermark",
+          "length": 51,
+          "width": 150,
+          "height": 192,
+          "scale": 1,
+          "duration": 3000,
+          "full": 0,
+          "anchor": 0,
+          "left": 10,
+          "top": 100,
+          "type": 1
+        }
+      ]
+    }
+  ]
+}

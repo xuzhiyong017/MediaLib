@@ -19,9 +19,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.sky.media.image.core.cache.ImageBitmapCache
+import com.sky.media.image.core.filter.Adjuster
 import com.sky.media.image.core.out.VideoFrameOutput
 import com.sky.media.image.core.util.LogUtils
 import com.sky.media.image.core.view.ContainerViewHelper
+import com.sky.media.kit.model.FilterExt
 import com.sky.media.kit.record.IVideoRecorder
 import com.sky.media.kit.record.RecordListener
 import com.sky.media.kit.record.VideoRecorderCreator
@@ -44,9 +46,11 @@ import com.sky.medialib.ui.kit.common.animate.ViewAnimator
 import com.sky.medialib.ui.kit.common.base.AppActivity
 import com.sky.medialib.ui.kit.common.view.NavigationTabStrip
 import com.sky.medialib.ui.kit.effect.Effect
+import com.sky.medialib.ui.kit.effect.EffectRender
 import com.sky.medialib.ui.kit.manager.FocusManager
 import com.sky.medialib.ui.kit.manager.ToolFilterManager
 import com.sky.medialib.ui.kit.media.MediaKitExt
+import com.sky.medialib.ui.kit.media.VideoProcessCenter
 import com.sky.medialib.ui.kit.model.PublishVideo
 import com.sky.medialib.ui.kit.view.ShutterView
 import com.sky.medialib.ui.kit.view.TimeCountDownView
@@ -205,7 +209,7 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
         mFocusManager = FocusManager("continuous-picture")
         mCameraProcess = CameraProcessExt(frame,processing_view)
         mCameraOpenThread.start()
-        face_view.needShowFps(true)
+        face_view.needShowFps(false)
         bindTopView()
         bindRightView()
         bindBottomView()
@@ -738,6 +742,10 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
                 R.id.camera_bottombar_beauty -> {
                     showBeautyFilterLayout()
                 }
+                R.id.camera_bottombar_sticker -> {
+                    //deal watermark
+                    toggleWaterMark()
+                }
                 R.id.camera_rightbar_speed -> {
                     toggleShootBar()
                 }
@@ -810,6 +818,25 @@ class CameraActivity : AppActivity(),View.OnTouchListener,FocusManager.OnFocusLi
                 }
             }
         }
+    }
+
+    var waterFilterExt: FilterExt? = null
+
+    private fun toggleWaterMark() {
+        if(waterFilterExt == null){
+            val a2: Effect = VideoProcessCenter.readWaterMarkEffectByCameraPreview(mCameraProcess.mInput?.getWidth() ?: 720, mCameraProcess.mInput?.getHeight() ?: 1280)
+            val effectRender = EffectRender(this, ImageBitmapCache.getInstance())
+            effectRender.effect = a2
+            val adjuster2 = Adjuster(effectRender)
+            adjuster2.initProgress = 100
+            waterFilterExt = FilterExt()
+            waterFilterExt!!.adjuster = adjuster2
+            mCameraProcess.addFilter(waterFilterExt)
+        }else{
+            mCameraProcess.removeFilter(waterFilterExt!!)
+            waterFilterExt = null
+        }
+
     }
 
     private operator fun next() {
